@@ -6,6 +6,7 @@ if module_path not in sys.path:
 if ROOT_PATH not in sys.path:
     sys.path.append(ROOT_PATH)
 
+
 import utilities
 import inspect
 import tensorflow as tf
