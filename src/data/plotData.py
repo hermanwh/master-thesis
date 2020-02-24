@@ -1,23 +1,22 @@
+
+import sys, os
+ROOT_PATH = os.path.abspath(".").split("src")[0]
+module_path = os.path.abspath(os.path.join(ROOT_PATH+"/src/utils/"))
+if module_path not in sys.path:
+    sys.path.append(module_path)
+if ROOT_PATH not in sys.path:
+    sys.path.append(ROOT_PATH)
+
+import matplotlib.pyplot as plt
 import pandas as pd
 import time
 import utilities
-import sys
-import matplotlib.pyplot as plt
-
-def plotData(df):
-    for column in df.columns:
-        if column != "Date":
-            fig, ax1 = plt.subplots()
-            ax1.set_title('Plot of dataset column ' + column)
-            color = 'darkgreen'
-            ax1.set_xlabel('Date')
-            ax1.set_ylabel(utilities.getColumnDescriptionOfColumn(column), color=color)
-            ax1.plot(df.index, df[column], color=color)
-            ax1.tick_params(axis='y', labelcolor=color)
-            ax1.grid(1, axis='y')
-    plt.show()
+from configs import getConfig
 
 def main(filename, relevantColumns):
+    subdir = filename.split('/')[-2]
+    columns, relevantColumns, labelNames, columnUnits, timestamps = getConfig(subdir)
+
     start_time = time.time()
     utilities.printEmptyLine()
 
@@ -25,15 +24,16 @@ def main(filename, relevantColumns):
     print("Plots the pandas dataframe")
     utilities.printHorizontalLine()
 
-    df = utilities.readFile(filename)
+    df = utilities.readDataFile(filename)
     df = utilities.getDataWithTimeIndex(df)
 
     if relevantColumns:
-        df = utilities.dropIrrelevantColumns(df)
+        df = utilities.dropIrrelevantColumns(df, [relevantColumns, labelNames])
     if 'Index' in df.columns:
         df.drop('Index', axis=1, inplace=True)
 
-    plotData(df)
+    utilities.plotData(df, plt, columnDescriptions=labelNames, relevantColumns=relevantColumns)
+    plt.show()
 
     try:
         print("Running of", pyName, "finished in", time.time() - start_time, "seconds")

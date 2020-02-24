@@ -149,7 +149,7 @@ def train(df_train, df_test, column):
 
     train_generator = TimeseriesGenerator(X_train, y_train, length=ENROL_WINDOW, sampling_rate=1, batch_size=128)
     test_generator = TimeseriesGenerator(X_test, y_test, length=ENROL_WINDOW, sampling_rate=1, batch_size=128)
-    
+
     train_X, train_y = train_generator[0]
     test_X, test_y = test_generator[0]
 
@@ -174,7 +174,6 @@ def train(df_train, df_test, column):
     # Stop training when a monitored quantity has stopped improving.
     callback = [EarlyStopping(monitor="loss", min_delta = 0.00001, patience = 15, mode = 'auto', restore_best_weights=True)] 
 
-    
     # Using regression loss function 'Mean Standard Error' and validation metric 'Mean Absolute Error'
     model.compile(loss='mse', optimizer='rmsprop', metrics=['mae'])
 
@@ -186,7 +185,6 @@ def train(df_train, df_test, column):
                                     verbose=2, \
                                     shuffle=False, \
                                     initial_epoch=0)
-    
     
     utilities.printHorizontalLine()
 
@@ -201,7 +199,6 @@ def train(df_train, df_test, column):
     plotResults(column, df_test, df_train, pred_test, pred_train, y_test, y_train)
     utilities.printHorizontalLine()
     
-
 def main(fileName, column):
     utilities.printEmptyLine()
     

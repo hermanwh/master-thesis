@@ -224,7 +224,7 @@ def getConfigE():
 	traintime = ["2015-03-01 00:00:00", "2016-01-01 00:00:00"]
 	testtime = ["2017-11-13 00:00:00", "2018-06-01 00:00:00"]
 	validtime = ["2015-10-01 00:00:00", "2016-01-01 00:00:00"]
-	
+
 	time = [traintime, testtime, validtime]
 
 	return [columns, relevantColumns, columnDescriptions, columnUnits, timestamps]

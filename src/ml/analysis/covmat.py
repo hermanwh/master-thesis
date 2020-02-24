@@ -13,7 +13,7 @@ from sklearn.preprocessing import StandardScaler
 
 def covmat(df, relevantColumns=None, columnDescriptions=None):
     if relevantColumns:
-        df = utilities.dropIrrelevantColumns(df, {relevantColumns, columnDescriptions})
+        df = utilities.dropIrrelevantColumns(df, [relevantColumns, columnDescriptions])
 
     if 'Date' in df.columns:
         df = df.drop('Date', axis=1, inplace=False)

@@ -81,7 +81,7 @@ def main(filename, targetColumn):
     scaler.fit(X_train)
     X_train = scaler.transform(X_train)
     X_test = scaler.transform(X_test)
-
+    """
     model = kerasSequentialRegressionModelWithRegularization([[50, ACTIVATION], [20, ACTIVATION]], X_train.shape[1])
     
     model = getModel(X_train.shape[1])
@@ -98,9 +98,8 @@ def main(filename, targetColumn):
                 )
               ]
             )
-    
-
-    #model = sklearnRidgeCV(X_train, y_train)
+    """
+    model = sklearnRidgeCV(X_train, y_train)
 
     pred_train = model.predict(X_train)
     pred_test = model.predict(X_test)
@@ -117,9 +116,9 @@ def main(filename, targetColumn):
     y_train_transpose = y_train.reshape(-1, 1)
 
     utilities.plotDataColumn(df_train, plt, targetColumn, pred_train, y_train, labelNames)
-    utilities.plotDataColumnSingle(df_train, plt, targetColumn, y_train_transpose - pred_train, labelNames)
+    utilities.plotDataColumnSingle(df_train, plt, targetColumn, y_train - pred_train, labelNames)
     utilities.plotDataColumn(df_test, plt, targetColumn, pred_test, y_test, labelNames)
-    utilities.plotDataColumnSingle(df_test, plt, targetColumn, y_test_transpose - pred_test, labelNames)
+    utilities.plotDataColumnSingle(df_test, plt, targetColumn, y_test - pred_test, labelNames)
     plt.show()
 
 # usage: python ml/covmat.py datasets/filename.csv relevantColumns(bool)
