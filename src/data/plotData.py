@@ -13,8 +13,8 @@ import time
 import utilities
 from configs import getConfig
 
-def main(filename, relevantColumns):
-    subdir = filename.split('/')[-2]
+def main(filename, showRelevantColumns):
+    subdir = filename.split('/')[-2].upper()
     columns, relevantColumns, labelNames, columnUnits, timestamps = getConfig(subdir)
 
     start_time = time.time()
@@ -27,12 +27,12 @@ def main(filename, relevantColumns):
     df = utilities.readDataFile(filename)
     df = utilities.getDataWithTimeIndex(df)
 
-    if relevantColumns:
+    if showRelevantColumns:
         df = utilities.dropIrrelevantColumns(df, [relevantColumns, labelNames])
     if 'Index' in df.columns:
         df.drop('Index', axis=1, inplace=True)
 
-    utilities.plotData(df, plt, columnDescriptions=labelNames, relevantColumns=relevantColumns)
+    utilities.plotData(df, plt, columnDescriptions=labelNames)
     plt.show()
 
     try:

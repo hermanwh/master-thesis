@@ -34,15 +34,25 @@ from keras.layers import Dense, CuDNNLSTM, Dropout
 from keras.layers.advanced_activations import LeakyReLU
 from keras.callbacks import EarlyStopping
 
-from configs import getConfig
+from configs import (getConfig, getConfigDirs)
+
+from utilities import (readDataFile,
+                       getDataWithTimeIndex,
+                       getDataByTimeframe,
+                       printEmptyLine,
+                       plotData,
+                       plotDataColumnSingle
+                       )
 
 import utilities
 
-EPOCHS = 20
-BATCH_SIZE = 16
+EPOCHS = 300
+UNITS = 128
+BATCH_SIZE = 128
 TEST_SIZE = 0.2
-SHUFFLE = True
-VERBOSE = 1
+SHUFFLE = False
+VERBOSE = 2
+LEARNING_RATE = 0.00144
 
 ENROL_WINDOW = 1
 
@@ -53,18 +63,22 @@ LOSS = 'mean_squared_error'
 OPTIMIZER = 'adam'
 METRICS = ['mean_squared_error']
 
-columns, relevantColumns, columnDescriptions, columnUnits, timestamps = getConfig('B')
-traintime, testtime, validtime = timestamps
-
-def getLSTMModel(INPUT_DIM):
+def getModel(train_X, y_train, ALPHA=0.5, DROPOUT=0.1):
     model = Sequential()
-    model.add(LSTM(50, return_sequences=True, input_shape=(INPUT_DIM,1)))
-    model.add(Dropout(0.2))
-    model.add(LSTM(100, return_sequences=False))
-    model.add(Dropout(0.2))
-    model.add(Dense(1))
+    model.add(LSTM(UNITS, input_shape=(train_X.shape[1], train_X.shape[2])))
+    model.add(LeakyReLU(alpha=ALPHA)) 
+    model.add(Dropout(DROPOUT))
+    model.add(Dense(y_train.shape[1]))
     return model
 
+def getLSTMModel(inputDim, outputDim=1, dropoutRate=0.2):
+    model = Sequential()
+    model.add(LSTM(50, return_sequences=True, input_shape=(inputDim,1)))
+    model.add(Dropout(dropoutRate))
+    model.add(LSTM(100, return_sequences=False))
+    model.add(Dropout(dropoutRate))
+    model.add(Dense(outputDim))
+    return model
 
 def lstm_128(x_shape, y_shape): 
     input_layer = Input(shape=(None,x_shape[-1]))
@@ -77,78 +91,39 @@ def lstm_128(x_shape, y_shape):
     
     model = Model(input_layer, output_layer) 
     return model
-
-def lstm_test(batch_size, X):
-    model = Sequential()
-    model.add(LSTM(neurons, batch_input_shape=(batch_size, X.shape[1], X.shape[2]), stateful=True))
-    model.add(Dense(1))
-    model.compile(loss='mean_squared_error', optimizer='adam')
-
-def getModel(INPUT_DIM):
-    model = Sequential()
-    model.add(Dense(50, input_dim=INPUT_DIM, activation=ACTIVATION))
-    model.add(Dense(20, activation=ACTIVATION))
-    model.add(Dense(1, activation=ACTIVATION))
-    return model
-
-def plotResults(column, df_test, df_train, pred_test, pred_train, y_test, y_train):
-    fig, ax1 = plt.subplots()
-    ax1.set_title("Test set values and predictions")
-    color = 'darkgreen'
-    ax1.set_xlabel('Date')
-    ax1.set_ylabel(column)
-    ax1.plot(df_test.index[ENROL_WINDOW:], pred_test, color=color, label="Test predictions")
-    ax1.tick_params(axis='y', labelcolor=color)
-    ax1.grid(1, axis='y')
-
-    color = 'red'
-    print(df_test.index.shape)
-    print(df_test.index[ENROL_WINDOW:].shape)
-    ax1.plot(df_test.index[ENROL_WINDOW:], y_test[ENROL_WINDOW:], color=color, label="Test targets", alpha=0.5)
-
-    fig1, ax2 = plt.subplots()
-    ax2.set_title("Training set values and predictions")
-    color = 'darkgreen'
-    ax2.set_xlabel('Date')
-    ax2.set_ylabel(column)
-    ax2.plot(df_train.index[ENROL_WINDOW:], pred_train, color=color, label="Train predictions")
-    ax2.tick_params(axis='y', labelcolor=color)
-    ax2.grid(1, axis='y')
-
-    color = 'red'
-    ax2.plot(df_train.index[ENROL_WINDOW:], y_train[ENROL_WINDOW:], color=color, label="Train targets", alpha=0.5)
-
-    ax1.legend(loc='upper left')
-    ax2.legend(loc='upper left')
-
-    fig1.autofmt_xdate()
-    fig.autofmt_xdate()
     
-    plt.show()
+def main(fileName, targetColumns):
+    subdir = filename.split('/')[-2]
+    columns, relevantColumns, labelNames, columnUnits, timestamps = getConfig(subdir)
 
-def train(df_train, df_test, column):
-    print(f"Column: {column}")
+    df = readDataFile(filename)
+    df = getDataWithTimeIndex(df)
+    df = df.dropna()
 
-    X_train = df_train.drop(column, axis=1).values
-    y_train = df_train[column].values
+    traintime, testtime, validtime = timestamps
 
-    X_test = df_test.drop(column, axis=1).values
-    y_test = df_test[column].values
+    if relevantColumns is not None:
+        df = utilities.dropIrrelevantColumns(df, [relevantColumns, labelNames])
 
-    print(X_train)
-    print(X_train.shape)
+    start_train, end_train = traintime
+    start_test, end_test = testtime
+
+    df_train = utilities.getDataByTimeframe(df, start_train, end_train)
+    df_test = utilities.getDataByTimeframe(df, start_test, end_test)
+
+    X_train = df_train.drop(targetColumns, axis=1).values
+    y_train = df_train[targetColumns].values
+
+    X_test = df_test.drop(targetColumns, axis=1).values
+    y_test = df_test[targetColumns].values
 
     scaler = StandardScaler()
     scaler.fit(X_train)
     X_train = scaler.transform(X_train)
     X_test = scaler.transform(X_test)
 
-    print(X_train)
-    print(X_train.shape)
-    print(X_train.shape[0])
-
-    train_generator = TimeseriesGenerator(X_train, y_train, length=ENROL_WINDOW, sampling_rate=1, batch_size=128)
-    test_generator = TimeseriesGenerator(X_test, y_test, length=ENROL_WINDOW, sampling_rate=1, batch_size=128)
+    train_generator = TimeseriesGenerator(X_train, y_train, length=ENROL_WINDOW, sampling_rate=1, batch_size=BATCH_SIZE)
+    test_generator = TimeseriesGenerator(X_test, y_test, length=ENROL_WINDOW, sampling_rate=1, batch_size=BATCH_SIZE)
 
     train_X, train_y = train_generator[0]
     test_X, test_y = test_generator[0]
@@ -160,30 +135,28 @@ def train(df_train, df_test, column):
     print("Number of total samples in training feature set: {}".format(train_samples))
     print("Number of samples in testing feature set: {}".format(test_samples))
 
-    units = 128
-    num_epoch = 300
-    learning_rate = 0.00144
-
-    model = Sequential()
-    model.add(LSTM(units, input_shape=(train_X.shape[1], train_X.shape[2])))
-    model.add(LeakyReLU(alpha=0.5)) 
-    model.add(Dropout(0.1))
-    model.add(Dense(1))
-
-    adam = Adam(lr=learning_rate)
     # Stop training when a monitored quantity has stopped improving.
-    callback = [EarlyStopping(monitor="loss", min_delta = 0.00001, patience = 15, mode = 'auto', restore_best_weights=True)] 
+    callbacks = [
+        EarlyStopping(
+            monitor="loss", min_delta = 0.00001, patience = 15, mode = 'auto', restore_best_weights=True
+        ),
+        ReduceLROnPlateau(
+            monitor = 'loss', factor = 0.5, patience = 10, verbose = 1, min_lr=5e-4,
+        )
+    ] 
+
+    model = getModel(train_X, y_train)
 
     # Using regression loss function 'Mean Standard Error' and validation metric 'Mean Absolute Error'
     model.compile(loss='mse', optimizer='rmsprop', metrics=['mae'])
 
     # fit network
     history = model.fit_generator(train_generator, \
-                                    epochs=num_epoch, \
+                                    epochs=EPOCHS, \
                                     validation_data=test_generator, \
-                                    callbacks = callback, \
-                                    verbose=2, \
-                                    shuffle=False, \
+                                    callbacks = callbacks, \
+                                    verbose=VERBOSE, \
+                                    shuffle=SHUFFLE, \
                                     initial_epoch=0)
     
     utilities.printHorizontalLine()
@@ -192,50 +165,40 @@ def train(df_train, df_test, column):
     pred_test = model.predict(test_generator)
     r2_train = r2_score(y_train[ENROL_WINDOW:], pred_train)
     r2_test = r2_score(y_test[ENROL_WINDOW:], pred_test)
-    print('Dense R2 score train:', r2_train)
-    print('Dense R2 score test:', r2_test)
-    
-    print("Plotting resulting graphs")
-    plotResults(column, df_test, df_train, pred_test, pred_train, y_test, y_train)
-    utilities.printHorizontalLine()
-    
-def main(fileName, column):
-    utilities.printEmptyLine()
-    
-    print("Running", pyName)
-    print("Learns model and predicts output values using the provided dataset")
-    utilities.printHorizontalLine()
 
-    df = pd.read_csv(fileName)
-    df['Date'] = pd.to_datetime(df['Date'], dayfirst=True)
-    df = utilities.getDataWithTimeIndex(df)
-    df = df.dropna()
+    train_metrics = utilities.compareMetrics(y_train[ENROL_WINDOW:], pred_train)
+    test_metrics = utilities.compareMetrics(y_test[ENROL_WINDOW:], pred_test)
 
-    start_train, end_train = traintime
-    start_test, end_test = testtime
+    print(train_metrics)
+    print(test_metrics)
 
-    df_train = utilities.getDataByTimeframe(df, start_train, end_train)
-    df_test = utilities.getDataByTimeframe(df, start_test, end_test)
+    print(y_train.shape)
+    print(pred_train.shape)
 
-    train(df_train, df_test, column)
+    for i in range(y_train.shape[1]):
+        print(y_train[:, i])
+        utilities.plotDataColumn(df_train.iloc[ENROL_WINDOW:], plt, targetColumns[i], pred_train[:, i], y_train[:, i][ENROL_WINDOW:], labelNames)
+        utilities.plotDataColumnSingle(df_train.iloc[ENROL_WINDOW:], plt, targetColumns[i], y_train[:, i][ENROL_WINDOW:] - pred_train[:, i], labelNames)
+        utilities.plotDataColumn(df_test.iloc[ENROL_WINDOW:], plt, targetColumns[i], pred_test[:, i], y_test[:, i][ENROL_WINDOW:], labelNames)
+        utilities.plotDataColumnSingle(df_test.iloc[ENROL_WINDOW:], plt, targetColumns[i], y_test[:, i][ENROL_WINDOW:] - pred_test[:, i], labelNames)
+    plt.show()
 
-    utilities.printEmptyLine()
 
 pyName = "training_lstm.py"
 arguments = [
     "- file name (string)",
-    "- target column (string)",
+    "- target columns (sequence of strings)",
 ]
 
-# usage: python ml/training.py datasets/file.csv PDT203
+# usage: python ml/training.py datasets/file.csv col1 col2 col3 ...
 if __name__ == "__main__":
     try:
         filename = sys.argv[1]
-        column = sys.argv[2]
+        targetColumns = sys.argv[2:]
     except:
         print(pyName, "was called with inappropriate arguments")
         print("Please provide the following arguments:")
         for argument in arguments:
             print(argument)
         sys.exit()
-    main(filename, column)
+    main(filename, targetColumns)

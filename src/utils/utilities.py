@@ -123,18 +123,25 @@ def plotData(df, plt, columnDescriptions=None, relevantColumns=None, color='dark
     else:
         columns = df.columns
 
+    columnDescKeys = list(columnDescriptions.keys())
+    dfcolumns = df.columns
+
     for column in columns:
         if column != "Date":
-            fig, ax1 = plt.subplots()
-            ax1.set_title('Plot of dataset column ' + column)
-            ax1.set_xlabel('Date')
-            if columnDescriptions is not None and column in columnDescriptions:
-                ax1.set_ylabel(column + " " + columnDescriptions[column], color=color)
+            if  column in df.columns:
+                fig, ax1 = plt.subplots()
+                ax1.set_title('Plot of dataset column ' + column)
+                ax1.set_xlabel('Date')
+                print(column)
+                if columnDescriptions is not None and column in columnDescKeys:
+                    ax1.set_ylabel(column + " " + columnDescriptions[column], color=color)
+                else:
+                    ax1.set_ylabel(column, color=color)
+                ax1.plot(df.index, df[column], color=color)
+                ax1.tick_params(axis='y', labelcolor=color)
+                ax1.grid(1, axis='y')
             else:
-                ax1.set_ylabel(column, color=color)
-            ax1.plot(df.index, df[column], color=color)
-            ax1.tick_params(axis='y', labelcolor=color)
-            ax1.grid(1, axis='y')
+                print("Column " + column + "not in dataset")
 
 def plotDataByTimeframe(df, plt, start, end, columnDescriptions=None):
     df = getDataByTimeframe(df, start, end)
@@ -174,7 +181,10 @@ def compareMetrics(y_true, y_pred):
     mse = mean_squared_error(y_true, y_pred)
     #msle = mean_squared_log_error(y_true, y_pred)
     mae = mean_absolute_error(y_true, y_pred)
-    maxerror = max_error(y_true, y_pred)
+    if y_true.shape[1] > 1:
+        maxerror = None
+    else:
+        maxerror = max_error(y_true, y_pred)
     return [r2, mse, mae, maxerror]
 
 def printEmptyLine():

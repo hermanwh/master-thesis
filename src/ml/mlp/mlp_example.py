@@ -81,10 +81,9 @@ def main(filename, targetColumn):
     scaler.fit(X_train)
     X_train = scaler.transform(X_train)
     X_test = scaler.transform(X_test)
-    """
-    model = kerasSequentialRegressionModelWithRegularization([[50, ACTIVATION], [20, ACTIVATION]], X_train.shape[1])
     
-    model = getModel(X_train.shape[1])
+    model = kerasSequentialRegressionModel([[50, ACTIVATION], [20, ACTIVATION]], X_train.shape[1], outputDim=y_train.shape[1])
+    
     model.compile(loss=LOSS, optimizer=OPTIMIZER, metrics=METRICS)
     model.fit(X_train,
               y_train,
@@ -98,8 +97,8 @@ def main(filename, targetColumn):
                 )
               ]
             )
-    """
-    model = sklearnRidgeCV(X_train, y_train)
+    
+    #model = sklearnRidgeCV(X_train, y_train)
 
     pred_train = model.predict(X_train)
     pred_test = model.predict(X_test)
@@ -109,7 +108,20 @@ def main(filename, targetColumn):
 
     print(train_metrics)
     print(test_metrics)
-    
+
+    print(y_train.shape)
+    print(pred_train.shape)
+
+    for i in range(y_train.shape[1]):
+        """
+        utilities.plotDataColumn(df_train, plt, targetColumn[i], pred_train[:, i], y_train[:, i], labelNames)
+        utilities.plotDataColumnSingle(df_train, plt, targetColumn[i], y_train[:, i] - pred_train[:, i], labelNames)
+        """
+        utilities.plotDataColumn(df_test, plt, targetColumn[i], pred_test[:, i], y_test[:, i], labelNames)
+        utilities.plotDataColumnSingle(df_test, plt, targetColumn[i], y_test[:, i] - pred_test[:, i], labelNames)
+    plt.show()
+
+    """
     pred_transpose = pred_train.reshape(-1, 1)
     y_transpose = y_train.reshape(-1, 1)
     y_test_transpose = y_test.reshape(-1, 1)
@@ -120,9 +132,10 @@ def main(filename, targetColumn):
     utilities.plotDataColumn(df_test, plt, targetColumn, pred_test, y_test, labelNames)
     utilities.plotDataColumnSingle(df_test, plt, targetColumn, y_test - pred_test, labelNames)
     plt.show()
+    """
 
-# usage: python ml/covmat.py datasets/filename.csv relevantColumns(bool)
+# usage: python ml/covmat.py datasets/filename.csv targetCol
 if __name__ == "__main__":
     filename = sys.argv[1]
-    targetCol = sys.argv[2]
+    targetCol = sys.argv[2:]
     main(filename, targetCol)

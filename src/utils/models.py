@@ -7,7 +7,7 @@ from keras.models import Sequential
 from keras.layers import Dense
 from keras.regularizers import l2, l1
 
-def kerasSequentialRegressionModel(layers, inputDim):
+def kerasSequentialRegressionModel(layers, inputDim, outputDim=1):
     model = Sequential()
 
     firstLayerNeurons, firstLayerActivation = layers[0]
@@ -16,10 +16,10 @@ def kerasSequentialRegressionModel(layers, inputDim):
     for neurons, activation in layers[1:]:
         model.add(Dense(neurons, activation=activation))
     
-    model.add(Dense(1, activation='linear'))
+    model.add(Dense(outputDim, activation='linear'))
     return model
 
-def kerasSequentialRegressionModelWithRegularization(layers, inputDim, l1_rate=0.01, l2_rate=0.01):
+def kerasSequentialRegressionModelWithRegularization(layers, inputDim, outputDim=1, l1_rate=0.01, l2_rate=0.01):
     model = Sequential()
 
     firstLayerNeurons, firstLayerActivation = layers[0]
@@ -32,7 +32,7 @@ def kerasSequentialRegressionModelWithRegularization(layers, inputDim, l1_rate=0
                 kernel_regularizer=l2(l2_rate),
                 activity_regularizer=l1(l1_rate)))
     
-    model.add(Dense(1, activation='linear'))
+    model.add(Dense(outputDim, activation='linear'))
     return model
 
 
