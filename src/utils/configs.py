@@ -256,6 +256,9 @@ def getConfigF():
 	}
 
 	irrelevantColumns = [
+		'PDT0108_MA_Y',
+		'PDT0119_MA_Y',
+		'PDT0118_MA_Y',
 		'TT0104_MA_Y',
 		'TIC0103_CA_YX',
 		'TI0115_MA_Y',
@@ -289,11 +292,15 @@ def getConfigF():
 		'TIC0103_CA_Y': '%',
 		'TIC0105_CA_Y': '%',
 	}
-
+	"""
 	traintime = ["2017-07-01 00:00:00", "2018-05-01 00:00:00"]
 	testtime = ["2017-07-01 00:00:00", "2020-02-01 00:00:00"]
-	validtime = ["2018-12-01 00:00:00", "2018-05-01 00:00:00"]
-
+	validtime = ["2018-01-01 00:00:00", "2018-05-01 00:00:00"]
+	"""
+	traintime = ["2017-08-05 00:00:00", "2018-05-01 00:00:00"]
+	testtime = ["2017-08-05 00:00:00", "2020-02-01 00:00:00"]
+	validtime = ["2018-01-01 00:00:00", "2018-05-01 00:00:00"]
+	
 	timestamps = [traintime, testtime, validtime]
 
 	return [columns, relevantColumns, columnDescriptions, columnUnits, timestamps]

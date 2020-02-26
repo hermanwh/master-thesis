@@ -81,10 +81,11 @@ def main(filename, targetColumn):
     scaler.fit(X_train)
     X_train = scaler.transform(X_train)
     X_test = scaler.transform(X_test)
-    
+    """
     model = kerasSequentialRegressionModel([[50, ACTIVATION], [20, ACTIVATION]], X_train.shape[1], outputDim=y_train.shape[1])
     
     model.compile(loss=LOSS, optimizer=OPTIMIZER, metrics=METRICS)
+    
     model.fit(X_train,
               y_train,
               epochs=EPOCHS,
@@ -97,8 +98,8 @@ def main(filename, targetColumn):
                 )
               ]
             )
-    
-    #model = sklearnRidgeCV(X_train, y_train)
+    """
+    model = sklearnRidgeCV(X_train, y_train)
 
     pred_train = model.predict(X_train)
     pred_test = model.predict(X_test)
@@ -120,6 +121,8 @@ def main(filename, targetColumn):
         utilities.plotDataColumn(df_test, plt, targetColumn[i], pred_test[:, i], y_test[:, i], labelNames)
         utilities.plotDataColumnSingle(df_test, plt, targetColumn[i], y_test[:, i] - pred_test[:, i], labelNames)
     plt.show()
+
+
 
     """
     pred_transpose = pred_train.reshape(-1, 1)

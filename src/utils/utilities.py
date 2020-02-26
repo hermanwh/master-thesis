@@ -6,6 +6,8 @@ import matplotlib.dates as mdates
 import pyims
 from sklearn.metrics import r2_score, mean_squared_log_error, mean_squared_error, mean_absolute_error, max_error
 
+INTERPOLDEG = 3
+
 def testForGPU():
     if tf.test.gpu_device_name():
         print('Default GPU Device: {}'.format(tf.test.gpu_device_name()))
@@ -84,37 +86,59 @@ def getDataByTimeframe(df, start, end):
     return df
 
 def plotDataColumnSingle(df, plt, column, data, columnDescriptions=None, color='darkgreen'):
-    fig, ax1 = plt.subplots()
-    ax1.set_title("Plot")
-    ax1.set_xlabel('Date')
+    fig, ax = plt.subplots()
+    ax.set_xlabel('Date')
     if columnDescriptions:
-        ax1.set_ylabel(columnDescriptions[column])
+        ax.set_ylabel(columnDescriptions[column])
+        ax.set_title("Deviation for " + columnDescriptions[column])
     else:
-        ax1.set_ylabel(column)
-    ax1.plot(df.index, data, color=color, label="Data")
-    ax1.tick_params(axis='y', labelcolor=color)
-    ax1.grid(1, axis='y')
+        ax.set_ylabel(column)
+        ax.set_title("Deviation for " + column)
+    ax.plot(df.index, data, color=color, label="Data")
+    ax.axvline(x=pd.to_datetime("2018-05-01 00:00:00", dayfirst=True), color='blue')
+    ax.tick_params(axis='y', labelcolor=color)
+    ax.grid(1, axis='y')
 
-    ax1.legend(loc='upper left')
+    z = np.polyfit(range(len(data)), data, INTERPOLDEG)
+    p = np.poly1d(z)
+    func = p(range(len(data)))
+    ax.plot(df.index, func, color='black', label="Pol.fit")
+
+    fig.subplots_adjust(right=0.7)
+
+    ax.legend(bbox_to_anchor=(1.05, 1), loc='upper left', borderaxespad=0.)
     fig.autofmt_xdate()
 
 def plotDataColumn(df, plt, column, pred, y, columnDescriptions=None, color1='darkgreen', color2='red'):
-    fig, ax1 = plt.subplots()
-    ax1.set_title("Targets vs predictions")
+    fig, ax = plt.subplots()
     color = color1
-    ax1.set_xlabel('Date')
+    ax.set_xlabel('Date')
     if columnDescriptions:
-        ax1.set_ylabel(columnDescriptions[column])
+        ax.set_ylabel(columnDescriptions[column])
+        ax.set_title("Predictions for " + columnDescriptions[column])
     else:
-        ax1.set_ylabel(column)
-    ax1.plot(df.index, pred, color=color, label="Predictions")
-    ax1.tick_params(axis='y', labelcolor=color)
-    ax1.grid(1, axis='y')
+        ax.set_ylabel(column)
+        ax.set_title("Predictions for " + column)
+    ax.plot(df.index, pred, color=color, label="Prediction", alpha=0.5)
+    z = np.polyfit(range(len(pred)), pred, INTERPOLDEG)
+    p = np.poly1d(z)
+    func = p(range(len(pred)))
+    ax.plot(df.index, func, color=color, label="Pol. fit, pred")
+
+    ax.axvline(x=pd.to_datetime("2018-05-01 00:00:00", dayfirst=True), color='blue')
+    ax.tick_params(axis='y', labelcolor=color)
+    ax.grid(1, axis='y')
 
     color = color2
-    ax1.plot(df.index, y, color=color, label="Targets", alpha=0.5)
+    ax.plot(df.index, y, color=color, label="Target", alpha=0.5)
+    z = np.polyfit(range(len(y)), y, INTERPOLDEG)
+    p = np.poly1d(z)
+    func = p(range(len(y)))
+    ax.plot(df.index, func, color=color, label="Pol. fit, target")
 
-    ax1.legend(loc='upper left')
+    fig.subplots_adjust(right=0.7)
+
+    ax.legend(bbox_to_anchor=(1.05, 1), loc='upper left', borderaxespad=0.)
     fig.autofmt_xdate()
 
 def plotData(df, plt, columnDescriptions=None, relevantColumns=None, color='darkgreen'):
@@ -129,17 +153,17 @@ def plotData(df, plt, columnDescriptions=None, relevantColumns=None, color='dark
     for column in columns:
         if column != "Date":
             if  column in df.columns:
-                fig, ax1 = plt.subplots()
-                ax1.set_title('Plot of dataset column ' + column)
-                ax1.set_xlabel('Date')
+                fig, ax = plt.subplots()
+                ax.set_title('Plot of dataset column ' + column)
+                ax.set_xlabel('Date')
                 print(column)
                 if columnDescriptions is not None and column in columnDescKeys:
-                    ax1.set_ylabel(column + " " + columnDescriptions[column], color=color)
+                    ax.set_ylabel(column + " " + columnDescriptions[column], color=color)
                 else:
-                    ax1.set_ylabel(column, color=color)
-                ax1.plot(df.index, df[column], color=color)
-                ax1.tick_params(axis='y', labelcolor=color)
-                ax1.grid(1, axis='y')
+                    ax.set_ylabel(column, color=color)
+                ax.plot(df.index, df[column], color=color)
+                ax.tick_params(axis='y', labelcolor=color)
+                ax.grid(1, axis='y')
             else:
                 print("Column " + column + "not in dataset")
 
@@ -147,14 +171,14 @@ def plotDataByTimeframe(df, plt, start, end, columnDescriptions=None):
     df = getDataByTimeframe(df, start, end)
     for column in df.columns:
         if column != "Date":
-            fig, ax1 = plt.subplots()
-            ax1.set_title('Plot of dataset column ' + column)
+            fig, ax = plt.subplots()
+            ax.set_title('Plot of dataset column ' + column)
             color = 'darkgreen'
-            ax1.set_xlabel('Date')
-            ax1.set_ylabel(columnDescriptions[column], color=color)
-            ax1.plot(df.index, df[column], color=color)
-            ax1.tick_params(axis='y', labelcolor=color)
-            ax1.grid(1, axis='y')
+            ax.set_xlabel('Date')
+            ax.set_ylabel(columnDescriptions[column], color=color)
+            ax.plot(df.index, df[column], color=color)
+            ax.tick_params(axis='y', labelcolor=color)
+            ax.grid(1, axis='y')
     plt.show()
 
 def printData(df):
