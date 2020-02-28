@@ -295,7 +295,7 @@ def main(filename, targetColumns):
                     0.5,
                 ]
             ],
-            desc="Ensamble, ",
+            desc="Ensemble, ",
             columnDescriptions=labelNames,
             trainEndStr=end_train,
         )
