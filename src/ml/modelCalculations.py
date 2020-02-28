@@ -30,10 +30,11 @@ from keras.models import Sequential
 from keras.layers import Dense
 from sklearn.preprocessing import MinMaxScaler, StandardScaler
 from configs import (getConfig)
+from keras.callbacks.callbacks import EarlyStopping, ReduceLROnPlateau
 
 import matplotlib.pyplot as plt
 
-EPOCHS = 10000
+EPOCHS = 3000
 BATCH_SIZE = 128
 TEST_SIZE = 0.2
 SHUFFLE = True
@@ -44,7 +45,7 @@ LOSS = 'mean_squared_error'
 OPTIMIZER = 'adam'
 METRICS = ['mean_squared_error']
 
-def main(filename, targetColumn):
+def main(filename, targetColumns):
     subdir = filename.split('/')[-2]
     columns, relevantColumns, labelNames, columnUnits, timestamps = getConfig(subdir)
 
@@ -64,64 +65,110 @@ def main(filename, targetColumn):
     df_train = utilities.getDataByTimeframe(df, start_train, end_train)
     df_test = utilities.getDataByTimeframe(df, start_test, end_test)
 
-    X_train = df_train.drop(targetColumn, axis=1).values
-    y_train = df_train[targetColumn].values
+    X_train = df_train.drop(targetColumns, axis=1).values
+    y_train = df_train[targetColumns].values
 
-    X_test = df_test.drop(targetColumn, axis=1).values
-    y_test = df_test[targetColumn].values
+    X_test = df_test.drop(targetColumns, axis=1).values
+    y_test = df_test[targetColumns].values
 
-    callback = tf.keras.callbacks.EarlyStopping(monitor='loss', patience=10)
-
+    callbacks = [
+        EarlyStopping(
+            monitor="loss", min_delta = 0.00001, patience = 15, mode = 'auto', restore_best_weights=True
+        ),
+        ReduceLROnPlateau(
+            monitor = 'loss', factor = 0.5, patience = 10, verbose = 1, min_lr=5e-4,
+        )
+    ]
     #scaler = MinMaxScaler(feature_range=(0,1))
     scaler = StandardScaler()
     scaler.fit(X_train)
     X_train = scaler.transform(X_train)
     X_test = scaler.transform(X_test)
-
-    keras_seq_mod_norm = kerasSequentialRegressionModel([[50, ACTIVATION], [20, ACTIVATION]], X_train.shape[1])
-    keras_seq_mod_simple = kerasSequentialRegressionModel([[20, ACTIVATION]], X_train.shape[1])
-    keras_seq_mod_ex_simple = kerasSequentialRegressionModel([[X_train.shape[1], ACTIVATION]], X_train.shape[1])
-    keras_seq_mod_regl = kerasSequentialRegressionModelWithRegularization([[50, ACTIVATION], [20, ACTIVATION]], X_train.shape[1])
-
+    """
+    keras_seq_mod_regl = kerasSequentialRegressionModelWithRegularization(X_train, y_train, [[50, ACTIVATION], [20, ACTIVATION] ],  [LOSS, OPTIMIZER, METRICS, EPOCHS, BATCH_SIZE, VERBOSE, callbacks])
+    keras_seq_mod_norm = kerasSequentialRegressionModel(X_train, y_train, [[20, ACTIVATION] ],  [LOSS, OPTIMIZER, METRICS, EPOCHS, BATCH_SIZE, VERBOSE, callbacks])
+    keras_seq_mod_simple = kerasSequentialRegressionModel(X_train, y_train, [[X_train.shape[1], ACTIVATION]],  [LOSS, OPTIMIZER, METRICS, EPOCHS, BATCH_SIZE, VERBOSE, callbacks])
+    keras_seq_mod_ex_simple = kerasSequentialRegressionModel(X_train, y_train, [[50, ACTIVATION], [20, ACTIVATION] ],  [LOSS, OPTIMIZER, METRICS, EPOCHS, BATCH_SIZE, VERBOSE, callbacks])
+    
     modelsList = [
         [keras_seq_mod_norm, "seq_norm"],
-        [keras_seq_mod_regl, "seq_regl"],
+        #[keras_seq_mod_regl, "seq_regl"],
         [keras_seq_mod_simple, "seq_norm_ez"],
         [keras_seq_mod_ex_simple, "seq_norm_eeez"],
-        [sklearnLinear, "k_linear"],
-        [sklearnRidgeCV, "k_ridge"],
+        [sklearnLinear(X_train, y_train), "k_linear"],
+        [sklearnRidgeCV(X_train, y_train), "k_ridge"],
     ]
+    """
     
+    r1 = kerasSequentialRegressionModelWithRegularization(X_train, y_train, [[50, ACTIVATION], [20, ACTIVATION] ],  [LOSS, OPTIMIZER, METRICS, EPOCHS, BATCH_SIZE, VERBOSE, callbacks], l1_rate=1.0, l2_rate=1.0)
+    r2 = kerasSequentialRegressionModelWithRegularization(X_train, y_train, [[50, ACTIVATION], [20, ACTIVATION] ],  [LOSS, OPTIMIZER, METRICS, EPOCHS, BATCH_SIZE, VERBOSE, callbacks], l1_rate=0.1, l2_rate=0.1)
+    r3 = kerasSequentialRegressionModelWithRegularization(X_train, y_train, [[50, ACTIVATION], [20, ACTIVATION] ],  [LOSS, OPTIMIZER, METRICS, EPOCHS, BATCH_SIZE, VERBOSE, callbacks], l1_rate=0.01, l2_rate=0.01)
+    r4 = kerasSequentialRegressionModelWithRegularization(X_train, y_train, [[50, ACTIVATION], [20, ACTIVATION] ],  [LOSS, OPTIMIZER, METRICS, EPOCHS, BATCH_SIZE, VERBOSE, callbacks], l1_rate=0.001, l2_rate=0.001)
+    r5 = kerasSequentialRegressionModelWithRegularization(X_train, y_train, [[50, ACTIVATION], [20, ACTIVATION] ],  [LOSS, OPTIMIZER, METRICS, EPOCHS, BATCH_SIZE, VERBOSE, callbacks], l1_rate=0.0001, l2_rate=0.0001)
+    
+    modelsList = [
+        [r1, "1.0"],
+        [r2, "0.1"],
+        [r3, "0.01"],
+        [r4, "0.001"],
+        [r5, "0.0001"],
+    ]
+
     names = []
     r2_train = []
     r2_test = []
 
     for modObj in modelsList:
         mod, name = modObj
-        if inspect.isfunction(mod):
-            model = mod(X_train, y_train)
-        else:
-            model = mod
-            model.compile(loss=LOSS, optimizer=OPTIMIZER, metrics=METRICS)
-            model.fit(X_train,
-                      y_train,
-                      epochs=EPOCHS,
-                      batch_size=BATCH_SIZE,
-                      verbose=VERBOSE,
-                      callbacks=[
-                        callback, 
-                        tf.keras.callbacks.ReduceLROnPlateau(
-                            monitor = 'loss', factor = 0.5, patience = 10, verbose = 1, min_lr=5e-4,
-                        )]
-                      )
+        
+        model = mod.train()
+
         pred_train = model.predict(X_train)
         pred_test = model.predict(X_test)
 
-        train_metrics = utilities.compareMetrics(y_train, pred_train)
-        test_metrics = utilities.compareMetrics(y_test, pred_test)
+        train_metrics = utilities.calculateMetrics(y_train, pred_train)
+        test_metrics = utilities.calculateMetrics(y_test, pred_test)
         
-        utilities.plotDataColumn(df_train, plt, targetColumn, pred_train, y_train, labelNames)
-        utilities.plotDataColumn(df_test, plt, targetColumn, pred_test, y_test, labelNames)
+        for i in range(y_train.shape[1]):
+            utilities.plotColumns(
+                df_test,
+                plt,
+                [
+                    [
+                        'Deviation', 
+                        targetColumns[i],
+                        y_test[:, i] - pred_test[:, i],
+                        'darkgreen',
+                        0.5,
+                    ]
+                ],
+                desc="Deviation, ",
+                columnDescriptions=labelNames,
+                trainEndStr=end_train,
+            )
+            utilities.plotColumns(
+                df_test,
+                plt,
+                [
+                    [
+                        'Predictions',
+                        targetColumns[i],
+                        pred_test[:, i],
+                        'darkgreen',
+                        0.5,
+                    ],
+                    [
+                        'Targets',
+                        targetColumns[i],
+                        y_test[:, i],
+                        'red',
+                        0.5,
+                    ]
+                ],
+                desc="Prediction vs. targets, ",
+                columnDescriptions=labelNames,
+                trainEndStr=end_train,
+            )
 
         r2_train.append(train_metrics[0])
         r2_test.append(test_metrics[0])
@@ -161,8 +208,8 @@ def main(filename, targetColumn):
     pred_train = model.predict(X_train)
     pred_test = model.predict(X_test)
 
-    train_metrics = utilities.compareMetrics(y_train, pred_train)
-    test_metrics = utilities.compareMetrics(y_test, pred_test)
+    train_metrics = utilities.calculateMetrics(y_train, pred_train)
+    test_metrics = utilities.calculateMetrics(y_test, pred_test)
 
     print(train_metrics)
     print(test_metrics)
@@ -182,5 +229,5 @@ def main(filename, targetColumn):
 # usage: python ml/covmat.py datasets/filename.csv
 if __name__ == "__main__":
     filename = sys.argv[1]
-    targetCol = sys.argv[2]
+    targetCol = sys.argv[2:]
     main(filename, targetCol)

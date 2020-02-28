@@ -28,6 +28,7 @@ from keras.models import Sequential
 from keras.layers import Dense
 from sklearn.preprocessing import MinMaxScaler, StandardScaler
 from configs import (getConfig, getConfigDirs)
+from keras.callbacks.callbacks import EarlyStopping, ReduceLROnPlateau
 
 import matplotlib.pyplot as plt
 
@@ -42,14 +43,7 @@ LOSS = 'mean_squared_error'
 OPTIMIZER = 'adam'
 METRICS = ['mean_squared_error']
 
-def getModel(INPUT_DIM):
-    model = Sequential()
-    model.add(Dense(50, input_dim=INPUT_DIM, activation=ACTIVATION))
-    model.add(Dense(20, activation=ACTIVATION))
-    model.add(Dense(1, activation=ACTIVATION))
-    return model
-
-def main(filename, targetColumn):
+def main(filename, targetColumns):
     subdir = filename.split('/')[-2]
     columns, relevantColumns, labelNames, columnUnits, timestamps = getConfig(subdir)
 
@@ -68,74 +62,83 @@ def main(filename, targetColumn):
     df_train = utilities.getDataByTimeframe(df, start_train, end_train)
     df_test = utilities.getDataByTimeframe(df, start_test, end_test)
 
-    X_train = df_train.drop(targetColumn, axis=1).values
-    y_train = df_train[targetColumn].values
+    X_train = df_train.drop(targetColumns, axis=1).values
+    y_train = df_train[targetColumns].values
 
-    X_test = df_test.drop(targetColumn, axis=1).values
-    y_test = df_test[targetColumn].values
-
-    callback = tf.keras.callbacks.EarlyStopping(monitor='loss', patience=10)
+    X_test = df_test.drop(targetColumns, axis=1).values
+    y_test = df_test[targetColumns].values
 
     scaler = MinMaxScaler(feature_range=(0,1))
     #scaler = StandardScaler()
     scaler.fit(X_train)
     X_train = scaler.transform(X_train)
     X_test = scaler.transform(X_test)
-    """
-    model = kerasSequentialRegressionModel([[50, ACTIVATION], [20, ACTIVATION]], X_train.shape[1], outputDim=y_train.shape[1])
-    
-    model.compile(loss=LOSS, optimizer=OPTIMIZER, metrics=METRICS)
-    
-    model.fit(X_train,
-              y_train,
-              epochs=EPOCHS,
-              batch_size=BATCH_SIZE,
-              verbose=VERBOSE,
-              callbacks=[
-                callback, 
-                tf.keras.callbacks.ReduceLROnPlateau(
-                    monitor = 'loss', factor = 0.5, patience = 10, verbose = 1, min_lr=5e-4,
-                )
-              ]
-            )
-    """
-    model = sklearnRidgeCV(X_train, y_train)
+
+    callbacks = [
+        EarlyStopping(
+            monitor="loss", min_delta = 0.00001, patience = 15, mode = 'auto', restore_best_weights=True
+        ),
+        ReduceLROnPlateau(
+            monitor = 'loss', factor = 0.5, patience = 10, verbose = 1, min_lr=5e-4,
+        )
+    ]
+
+    model = kerasSequentialRegressionModelWithRegularization(X_train, y_train, [[50, ACTIVATION], [20, ACTIVATION] ],  [LOSS, OPTIMIZER, METRICS, EPOCHS, BATCH_SIZE, VERBOSE, callbacks])
+    #model = kerasSequentialRegressionModel(X_train, y_train, [[50, ACTIVATION], [20, ACTIVATION] ],  [LOSS, OPTIMIZER, METRICS, EPOCHS, BATCH_SIZE, VERBOSE, callbacks])
+    #model = sklearnRidgeCV(X_train, y_train)
+
+    model = model.train()
 
     pred_train = model.predict(X_train)
     pred_test = model.predict(X_test)
 
-    train_metrics = utilities.compareMetrics(y_train, pred_train)
-    test_metrics = utilities.compareMetrics(y_test, pred_test)
+    train_metrics = utilities.calculateMetrics(y_train, pred_train)
+    test_metrics = utilities.calculateMetrics(y_test, pred_test)
 
     print(train_metrics)
     print(test_metrics)
 
-    print(y_train.shape)
-    print(pred_train.shape)
-
     for i in range(y_train.shape[1]):
-        """
-        utilities.plotDataColumn(df_train, plt, targetColumn[i], pred_train[:, i], y_train[:, i], labelNames)
-        utilities.plotDataColumnSingle(df_train, plt, targetColumn[i], y_train[:, i] - pred_train[:, i], labelNames)
-        """
-        utilities.plotDataColumn(df_test, plt, targetColumn[i], pred_test[:, i], y_test[:, i], labelNames)
-        utilities.plotDataColumnSingle(df_test, plt, targetColumn[i], y_test[:, i] - pred_test[:, i], labelNames)
+        utilities.plotColumns(
+            df_test,
+            plt,
+            [
+                [
+                    'Deviation', 
+                    targetColumns[i],
+                    y_test[:, i] - pred_test[:, i],
+                    'darkgreen',
+                    0.5,
+                ]
+            ],
+            desc="Deviation, ",
+            columnDescriptions=labelNames,
+            trainEndStr=end_train,
+        )
+        utilities.plotColumns(
+            df_test,
+            plt,
+            [
+                [
+                    'Predictions',
+                    targetColumns[i],
+                    pred_test[:, i],
+                    'darkgreen',
+                    0.5,
+                ],
+                [
+                    'Targets',
+                    targetColumns[i],
+                    y_test[:, i],
+                    'red',
+                    0.5,
+                ]
+            ],
+            desc="Prediction vs. targets, ",
+            columnDescriptions=labelNames,
+            trainEndStr=end_train,
+        )
     plt.show()
-
-
-
-    """
-    pred_transpose = pred_train.reshape(-1, 1)
-    y_transpose = y_train.reshape(-1, 1)
-    y_test_transpose = y_test.reshape(-1, 1)
-    y_train_transpose = y_train.reshape(-1, 1)
-
-    utilities.plotDataColumn(df_train, plt, targetColumn, pred_train, y_train, labelNames)
-    utilities.plotDataColumnSingle(df_train, plt, targetColumn, y_train - pred_train, labelNames)
-    utilities.plotDataColumn(df_test, plt, targetColumn, pred_test, y_test, labelNames)
-    utilities.plotDataColumnSingle(df_test, plt, targetColumn, y_test - pred_test, labelNames)
-    plt.show()
-    """
 
 # usage: python ml/covmat.py datasets/filename.csv targetCol
 if __name__ == "__main__":

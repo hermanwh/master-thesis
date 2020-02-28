@@ -44,6 +44,12 @@ from utilities import (readDataFile,
                        plotDataColumnSingle
                        )
 
+from models import (
+    kerasLSTMSingleLayer,
+    kerasLSTMSingleLayerLeaky,
+    kerasLSTMMultiLayer,
+)
+
 import utilities
 
 EPOCHS = 300
@@ -62,35 +68,6 @@ ACTIVATION = 'relu'
 LOSS = 'mean_squared_error'
 OPTIMIZER = 'adam'
 METRICS = ['mean_squared_error']
-
-def getModel(train_X, y_train, ALPHA=0.5, DROPOUT=0.1):
-    model = Sequential()
-    model.add(LSTM(UNITS, input_shape=(train_X.shape[1], train_X.shape[2])))
-    model.add(LeakyReLU(alpha=ALPHA)) 
-    model.add(Dropout(DROPOUT))
-    model.add(Dense(y_train.shape[1]))
-    return model
-
-def getLSTMModel(inputDim, outputDim=1, dropoutRate=0.2):
-    model = Sequential()
-    model.add(LSTM(50, return_sequences=True, input_shape=(inputDim,1)))
-    model.add(Dropout(dropoutRate))
-    model.add(LSTM(100, return_sequences=False))
-    model.add(Dropout(dropoutRate))
-    model.add(Dense(outputDim))
-    return model
-
-def lstm_128(x_shape, y_shape): 
-    input_layer = Input(shape=(None,x_shape[-1]))
-    layer_1 = layers.LSTM(128,
-                         dropout = 0.3,
-                         recurrent_dropout = 0.3,
-                         return_sequences = True)(input_layer, training=True)
-
-    output_layer = layers.Dense(y_shape[-1])(layer_1)
-    
-    model = Model(input_layer, output_layer) 
-    return model
     
 def main(fileName, targetColumns):
     subdir = filename.split('/')[-2]
@@ -145,7 +122,7 @@ def main(fileName, targetColumns):
         )
     ] 
 
-    model = getModel(train_X, y_train)
+    model = kerasLSTMSingleLayerLeaky(train_X, y_train, units=UNITS, dropout=0.1, alpha=0.5)
 
     # Using regression loss function 'Mean Standard Error' and validation metric 'Mean Absolute Error'
     model.compile(loss='mse', optimizer='rmsprop', metrics=['mae'])
@@ -166,23 +143,54 @@ def main(fileName, targetColumns):
     r2_train = r2_score(y_train[ENROL_WINDOW:], pred_train)
     r2_test = r2_score(y_test[ENROL_WINDOW:], pred_test)
 
-    train_metrics = utilities.compareMetrics(y_train[ENROL_WINDOW:], pred_train)
-    test_metrics = utilities.compareMetrics(y_test[ENROL_WINDOW:], pred_test)
+    train_metrics = utilities.calculateMetrics(y_train[ENROL_WINDOW:], pred_train)
+    test_metrics = utilities.calculateMetrics(y_test[ENROL_WINDOW:], pred_test)
 
     print(train_metrics)
     print(test_metrics)
 
-    print(y_train.shape)
-    print(pred_train.shape)
-
     for i in range(y_train.shape[1]):
-        print(y_train[:, i])
-        utilities.plotDataColumn(df_train.iloc[ENROL_WINDOW:], plt, targetColumns[i], pred_train[:, i], y_train[:, i][ENROL_WINDOW:], labelNames)
-        utilities.plotDataColumnSingle(df_train.iloc[ENROL_WINDOW:], plt, targetColumns[i], y_train[:, i][ENROL_WINDOW:] - pred_train[:, i], labelNames)
-        utilities.plotDataColumn(df_test.iloc[ENROL_WINDOW:], plt, targetColumns[i], pred_test[:, i], y_test[:, i][ENROL_WINDOW:], labelNames)
-        utilities.plotDataColumnSingle(df_test.iloc[ENROL_WINDOW:], plt, targetColumns[i], y_test[:, i][ENROL_WINDOW:] - pred_test[:, i], labelNames)
-    plt.show()
+        utilities.plotColumns(
+            df_test.iloc[ENROL_WINDOW:],
+            plt,
+            [
+                [
+                    'Prediction',
+                    targetColumns[i],
+                    pred_test[:, i],
+                    'darkgreen',
+                    0.5,
+                ],
+                [
+                    'Target',
+                    targetColumns[i],
+                    y_test[:, i][ENROL_WINDOW:],
+                    'red',
+                    0.5,
+                ]
+            ],
+            desc="Prediction vs. targets, ",
+            columnDescriptions=labelNames,
+            trainEndStr=end_train,
+        )
+        utilities.plotColumns(
+            df_test.iloc[ENROL_WINDOW:],
+            plt,
+            [
+                [
+                    'Deviation', 
+                    targetColumns[i],
+                    y_test[:, i][ENROL_WINDOW:] - pred_test[:, i],
+                    'darkgreen',
+                    0.5,
+                ]
+            ],
+            desc="Deviation, ",
+            columnDescriptions=labelNames,
+            trainEndStr=end_train,
+        )
 
+    plt.show()
 
 pyName = "training_lstm.py"
 arguments = [

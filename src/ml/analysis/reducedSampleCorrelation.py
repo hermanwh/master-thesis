@@ -79,12 +79,13 @@ def main(filename, targetColumn):
         X_test = X_test.drop(targetColumn, axis=1).values
 
         model = sklearnRidgeCV(X_train, y_train)
+        model = model.train()
 
         pred_train = model.predict(X_train)
         pred_test = model.predict(X_test)
 
-        train_metrics = utilities.compareMetrics(y_train, pred_train)
-        test_metrics = utilities.compareMetrics(y_test, pred_test)
+        train_metrics = utilities.calculateMetrics(y_train, pred_train)
+        test_metrics = utilities.calculateMetrics(y_test, pred_test)
 
         r2_scores_train.append(train_metrics[0])
         r2_scores_test.append(test_metrics[0])
@@ -94,9 +95,45 @@ def main(filename, targetColumn):
         y_test_transpose = y_test.reshape(-1, 1)
         y_train_transpose = y_train.reshape(-1, 1)
 
-        utilities.plotDataColumn(df_train, plt, targetColumn, pred_train, y_train, labelNames)
-        utilities.plotDataColumn(df_test, plt, targetColumn, pred_test, y_test, labelNames)
-    
+        utilities.plotColumns(
+            df_test,
+            plt,
+            [
+                [
+                    'Deviation', 
+                    targetColumn,
+                    y_test - pred_test,
+                    'darkgreen',
+                    0.5,
+                ]
+            ],
+            desc="Deviation, ",
+            columnDescriptions=labelNames,
+            trainEndStr=end_train,
+        )
+        utilities.plotColumns(
+            df_test,
+            plt,
+            [
+                [
+                    'Predictions',
+                    targetColumn,
+                    pred_test,
+                    'darkgreen',
+                    0.5,
+                ],
+                [
+                    'Targets',
+                    targetColumn,
+                    y_test,
+                    'red',
+                    0.5,
+                ]
+            ],
+            desc="Prediction vs. targets, ",
+            columnDescriptions=labelNames,
+            trainEndStr=end_train,
+        )
     print(r2_scores_train)
     print(r2_scores_test)
     plt.show()

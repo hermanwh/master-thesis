@@ -93,7 +93,6 @@ def main(filename):
     decoder_layer = autoencoder.layers[-1]
     decoder = Model(encoded_input, decoder_layer(encoded_input))
 
-    #model = getModel(X_train.shape[1])
     autoencoder.compile(loss=LOSS, optimizer=OPTIMIZER)
     autoencoder.fit(train,
               train,
