@@ -84,21 +84,11 @@ def main(filename, targetColumns):
     scaler.fit(X_train)
     X_train = scaler.transform(X_train)
     X_test = scaler.transform(X_test)
-    """
-    keras_seq_mod_regl = kerasSequentialRegressionModelWithRegularization(X_train, y_train, [[50, ACTIVATION], [20, ACTIVATION] ],  [LOSS, OPTIMIZER, METRICS, EPOCHS, BATCH_SIZE, VERBOSE, callbacks])
-    keras_seq_mod_norm = kerasSequentialRegressionModel(X_train, y_train, [[20, ACTIVATION] ],  [LOSS, OPTIMIZER, METRICS, EPOCHS, BATCH_SIZE, VERBOSE, callbacks])
-    keras_seq_mod_simple = kerasSequentialRegressionModel(X_train, y_train, [[X_train.shape[1], ACTIVATION]],  [LOSS, OPTIMIZER, METRICS, EPOCHS, BATCH_SIZE, VERBOSE, callbacks])
-    keras_seq_mod_ex_simple = kerasSequentialRegressionModel(X_train, y_train, [[50, ACTIVATION], [20, ACTIVATION] ],  [LOSS, OPTIMIZER, METRICS, EPOCHS, BATCH_SIZE, VERBOSE, callbacks])
     
-    modelsList = [
-        [keras_seq_mod_norm, "seq_norm"],
-        #[keras_seq_mod_regl, "seq_regl"],
-        [keras_seq_mod_simple, "seq_norm_ez"],
-        [keras_seq_mod_ex_simple, "seq_norm_eeez"],
-        [sklearnLinear(X_train, y_train), "k_linear"],
-        [sklearnRidgeCV(X_train, y_train), "k_ridge"],
-    ]
-    """
+    keras_seq_mod_regl = kerasSequentialRegressionModelWithRegularization(X_train, y_train, [[50, ACTIVATION], [20, ACTIVATION] ],  [LOSS, OPTIMIZER, METRICS, EPOCHS, BATCH_SIZE, VERBOSE, callbacks])
+    keras_seq_mod_simple = kerasSequentialRegressionModel(X_train, y_train, [[20, ACTIVATION] ],  [LOSS, OPTIMIZER, METRICS, EPOCHS, BATCH_SIZE, VERBOSE, callbacks])
+    keras_seq_mod_v_simple = kerasSequentialRegressionModel(X_train, y_train, [[X_train.shape[1], ACTIVATION]],  [LOSS, OPTIMIZER, METRICS, EPOCHS, BATCH_SIZE, VERBOSE, callbacks])
+    keras_seq_mod = kerasSequentialRegressionModel(X_train, y_train, [[50, ACTIVATION], [20, ACTIVATION] ],  [LOSS, OPTIMIZER, METRICS, EPOCHS, BATCH_SIZE, VERBOSE, callbacks])
     
     r1 = kerasSequentialRegressionModelWithRegularization(X_train, y_train, [[50, ACTIVATION], [20, ACTIVATION] ],  [LOSS, OPTIMIZER, METRICS, EPOCHS, BATCH_SIZE, VERBOSE, callbacks], l1_rate=1.0, l2_rate=1.0)
     r2 = kerasSequentialRegressionModelWithRegularization(X_train, y_train, [[50, ACTIVATION], [20, ACTIVATION] ],  [LOSS, OPTIMIZER, METRICS, EPOCHS, BATCH_SIZE, VERBOSE, callbacks], l1_rate=0.1, l2_rate=0.1)
@@ -106,19 +96,57 @@ def main(filename, targetColumns):
     r4 = kerasSequentialRegressionModelWithRegularization(X_train, y_train, [[50, ACTIVATION], [20, ACTIVATION] ],  [LOSS, OPTIMIZER, METRICS, EPOCHS, BATCH_SIZE, VERBOSE, callbacks], l1_rate=0.001, l2_rate=0.001)
     r5 = kerasSequentialRegressionModelWithRegularization(X_train, y_train, [[50, ACTIVATION], [20, ACTIVATION] ],  [LOSS, OPTIMIZER, METRICS, EPOCHS, BATCH_SIZE, VERBOSE, callbacks], l1_rate=0.0001, l2_rate=0.0001)
     
+
     modelsList = [
-        [r1, "1.0"],
-        [r2, "0.1"],
-        [r3, "0.01"],
+        [keras_seq_mod, "MLP normal"],
+        [keras_seq_mod_regl, "MLP regularized"],
+        [keras_seq_mod_simple, "MLP simple"],
+        [keras_seq_mod_v_simple, "MLP very simple"],
+        [r1, "1.0 regulariation"],
         [r4, "0.001"],
         [r5, "0.0001"],
+        [sklearnLinear(X_train, y_train), "linear"],
+        [sklearnRidgeCV(X_train, y_train), "ridge"],
     ]
 
     names = []
     r2_train = []
     r2_test = []
 
-    for modObj in modelsList:
+    deviationsList = []
+    columnsList = []
+    for i in range(y_train.shape[1]):
+        columnsList.append([])
+        columnsList[i].append([
+                        'Targets',
+                        targetColumns[i],
+                        y_test[:, i],
+                        'red',
+                        0.5,
+                    ])
+
+        deviationsList.append([])
+
+    #colors = ['#92a8d1','#034f84','#f7cac9','#f7786b','#deeaee','#b1cbbb','#eea29a','#c94c4c']
+    #colors = ['#686256','#c1502e','#587e76','#a96e5b','#454140','#bd5734','#7a3b2e']
+    colors = [
+        '#0C0910',
+        '#453750',
+        '#73648A',
+        '#9882AC',
+        '#A393BF',
+        '#8AAA79',
+        '#657153',
+        '#837569',
+        '#B7B6C2',
+        '#D1D5DE',
+        '#D58936',
+        '#A44200',
+        '#69140E',
+        '#3C1518'
+    ]
+
+    for i, modObj in enumerate(modelsList):
         mod, name = modObj
         
         model = mod.train()
@@ -129,7 +157,22 @@ def main(filename, targetColumns):
         train_metrics = utilities.calculateMetrics(y_train, pred_train)
         test_metrics = utilities.calculateMetrics(y_test, pred_test)
         
-        for i in range(y_train.shape[1]):
+        for j in range(y_train.shape[1]):
+            columnsList[j].append([
+                        name,
+                        targetColumns[j],
+                        pred_test[:, j],
+                        colors[i],
+                        0.3,
+                    ])
+            deviationsList[j].append([
+                        name,
+                        targetColumns[j],
+                        y_test[:, j] - pred_test[:, j],
+                        colors[i],
+                        0.3,
+                    ])
+            """
             utilities.plotColumns(
                 df_test,
                 plt,
@@ -169,10 +212,30 @@ def main(filename, targetColumns):
                 columnDescriptions=labelNames,
                 trainEndStr=end_train,
             )
+            """
 
         r2_train.append(train_metrics[0])
         r2_test.append(test_metrics[0])
         names.append(name)        
+    for i in range(y_train.shape[1]):
+        utilities.plotColumns(
+            df_test,
+            plt,
+            deviationsList[i],
+            desc="Deviation, ",
+            columnDescriptions=labelNames,
+            trainEndStr=end_train,
+            interpol=True,
+        )
+        utilities.plotColumns(
+            df_test,
+            plt,
+            columnsList[i],
+            desc="Prediction vs. targets, ",
+            columnDescriptions=labelNames,
+            trainEndStr=end_train,
+            interpol=True,
+        )
 
     y_pos = np.arange(len(names))
 

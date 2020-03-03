@@ -1,0 +1,36 @@
+# -- figure --
+figure.figsize : 12,4
+figure.dpi : 200
+
+
+# -- axes --
+axes.titlesize : 14
+axes.labelsize : 10
+axes.grid : True
+# axes.color_cycle : 053B89, 072159, 1261A0, BE0209, E2514A, E96F36, FCA55D, 282739
+
+
+# -- lines --
+lines.linewidth : 1.5
+lines.markersize : 3
+
+
+# grid
+grid.linestyle : dashed
+
+
+# -- ticks --
+xtick.labelsize : 8
+ytick.labelsize : 8
+xtick.color : 000000
+ytick.color : 000000
+
+
+# -- legend --
+legend.fontsize : 14
+legend.handlelength : 2
+
+
+# -- font & text --
+font.family : serif
+text.color : 000000

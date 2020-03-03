@@ -52,9 +52,9 @@ from models import (
 
 import utilities
 
-EPOCHS = 300
+EPOCHS = 1500
 UNITS = 128
-BATCH_SIZE = 128
+BATCH_SIZE = 128*2
 TEST_SIZE = 0.2
 SHUFFLE = False
 VERBOSE = 2
@@ -172,6 +172,7 @@ def main(fileName, targetColumns):
             desc="Prediction vs. targets, ",
             columnDescriptions=labelNames,
             trainEndStr=end_train,
+            interpol=True,
         )
         utilities.plotColumns(
             df_test.iloc[ENROL_WINDOW:],
@@ -188,6 +189,7 @@ def main(fileName, targetColumns):
             desc="Deviation, ",
             columnDescriptions=labelNames,
             trainEndStr=end_train,
+            interpol=True,
         )
 
     plt.show()

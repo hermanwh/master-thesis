@@ -33,7 +33,8 @@ def getConfigA():
 	}
 
 	irrelevantColumns = [
-
+		'XV127.CMD',
+		'XV127.ZSH'
 	]
 
 	columns = list(columnDescriptions.keys())
@@ -164,7 +165,6 @@ def getConfigD():
 	}
 
 	irrelevantColumns = [
-
 	]
 
 	columns = list(columnDescriptions.keys())
@@ -174,9 +174,9 @@ def getConfigD():
 
 	}
 
-	traintime = ["2020-01-01 02:00:00", "2020-01-31 22:00:00"]
-	testtime = ["2020-01-31 23:00:00", "2020-04-30 23:00:00"]
-	validtime = ["2020-01-20 02:00:00", "2020-01-31 22:00:00"]
+	traintime = ["2020-01-01 02:00:00", "2020-03-01 00:00:00"]
+	testtime = ["2020-03-01 00:00:00", "2020-04-30 23:00:00"]
+	validtime = ["2020-02-01 02:00:00", "2020-03-01 00:00:00"]
 
 	timestamps = [traintime, testtime, validtime]
 
@@ -264,6 +264,7 @@ def getConfigF():
 		'TI0115_MA_Y',
 		'TT0652_MA_Y',
 		'TIC0103_CA_Y',
+		'PIC0104_CA_YX',
 	]
 
 	columns = list(columnDescriptions.keys())
@@ -296,11 +297,15 @@ def getConfigF():
 	traintime = ["2017-07-01 00:00:00", "2018-05-01 00:00:00"]
 	testtime = ["2017-07-01 00:00:00", "2020-02-01 00:00:00"]
 	validtime = ["2018-01-01 00:00:00", "2018-05-01 00:00:00"]
-	"""
+	
 	traintime = ["2017-08-05 00:00:00", "2018-05-01 00:00:00"]
 	testtime = ["2017-08-05 00:00:00", "2020-02-01 00:00:00"]
 	validtime = ["2018-01-01 00:00:00", "2018-05-01 00:00:00"]
-	
+	"""
+	traintime = ["2017-08-05 00:00:00", "2018-05-01 00:00:00"]
+	testtime = ["2017-08-05 00:00:00", "2019-02-01 00:00:00"]
+	validtime = ["2018-10-01 00:00:00", "2019-02-01 00:00:00"]
+
 	timestamps = [traintime, testtime, validtime]
 
 	return [columns, relevantColumns, columnDescriptions, columnUnits, timestamps]

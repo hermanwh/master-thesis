@@ -32,7 +32,7 @@ def main(filename, showRelevantColumns):
     if 'Index' in df.columns:
         df.drop('Index', axis=1, inplace=True)
 
-    utilities.plotData(df, plt, columnDescriptions=labelNames)
+    utilities.plotData(df, plt, columnDescriptions=labelNames, columnUnits=columnUnits)
     plt.show()
 
     try:

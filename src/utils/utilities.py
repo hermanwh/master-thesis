@@ -8,6 +8,17 @@ from sklearn.metrics import r2_score, mean_squared_log_error, mean_squared_error
 
 INTERPOLDEG = 3
 
+def getColorScheme():
+    return {
+        'b1':"#0051FF",
+        'b2':"#007CFF",
+        'b3':"#4DA3FE",
+        'r1':"#FF0101",
+        'r2':"#FF3B3B",
+        'r3':"#EB7D00",
+        'r4':"#EBCF00",
+    }
+
 def testForGPU():
     if tf.test.gpu_device_name():
         print('Default GPU Device: {}'.format(tf.test.gpu_device_name()))
@@ -97,7 +108,7 @@ def plotDataColumnSingle(df, plt, column, data, columnDescriptions=None, color='
     ax.legend(bbox_to_anchor=(1.05, 1), loc='upper left', borderaxespad=0.)
     fig.autofmt_xdate()
 
-def plotColumns(df, plt, args, desc="", columnDescriptions=None, trainEndStr=None):
+def plotColumns(df, plt, args, desc="", columnDescriptions=None, trainEndStr=None, interpol=False):
     fig,ax = plt.subplots()
     ax.set_xlabel('Date')
     for i, arg in enumerate(args):
@@ -108,11 +119,20 @@ def plotColumns(df, plt, args, desc="", columnDescriptions=None, trainEndStr=Non
         else:
             ax.set_ylabel(column)
             ax.set_title(desc + column)
-        ax.plot(df.index, data, color=color, label=label, alpha=alpha)
-        z = np.polyfit(range(len(data)), data, INTERPOLDEG)
-        p = np.poly1d(z)
-        func = p(range(len(data)))
-        ax.plot(df.index, func, color=color, label="Pol. fit, " + label)
+        if color is not None:
+            ax.plot(df.index, data, color=color, label=label, alpha=alpha)
+        else:
+            ax.plot(df.index, data, label=label, alpha=alpha)
+    if interpol:
+        for i, arg in enumerate(args):
+            label, column, data, color, alpha = arg
+            z = np.polyfit(range(len(data)), data, INTERPOLDEG)
+            p = np.poly1d(z)
+            func = p(range(len(data)))
+            if color is not None:
+                ax.plot(df.index, func, color=color, label="Pol. fit, " + label, alpha=1.0)
+            else:
+                ax.plot(df.index, func, label="Pol. fit, " + label, alpha=1.0)
 
     if trainEndStr:
         ax.axvline(x=pd.to_datetime(trainEndStr, dayfirst=True), color='blue')
@@ -123,31 +143,61 @@ def plotColumns(df, plt, args, desc="", columnDescriptions=None, trainEndStr=Non
     ax.legend(bbox_to_anchor=(1.05, 1), loc='upper left', borderaxespad=0.)
     fig.autofmt_xdate()
 
-def plotData(df, plt, columnDescriptions=None, relevantColumns=None, color='darkgreen'):
+def duoPlot(y1, y2, x, plt, columnDescriptions=None, relevantColumns=None, columnUnits=None, color1='darkgreen', color2='red'):
+    fig, ax1 = plt.subplots(1, 1, figsize=(8,6), dpi=100)
+    ax1.plot(x, y1, color=color1, alpha=1.0)
+    ax2 = ax1.twinx()
+    ax2.plot(x, y2, color=color2, alpha=0.5)
+
+    ax1.set_xlabel('x axis', fontsize=20)
+    ax1.tick_params(axis='x', rotation=0, labelsize=12)
+    ax1.set_ylabel('Label 1', color=color1, fontsize=20)
+    ax1.tick_params(axis='y', rotation=0, labelcolor='tab:red' )
+    ax2.set_ylabel("Label 2", color=color2, fontsize=20)
+    ax2.tick_params(axis='y', labelcolor='tab:blue')
+
+    ax1.grid(alpha=.4)
+    ax2.set_title("Plot", fontsize=22)
+    plt.show()
+
+def plotData(df, plt, columnDescriptions=None, relevantColumns=None, columnUnits=None, color='darkgreen'):
     if relevantColumns is not None:
         columns = relevantColumns
     else:
         columns = df.columns
 
     columnDescKeys = list(columnDescriptions.keys())
+    columnUnitKeys = list(columnUnits.keys())
     dfcolumns = df.columns
+
+    #duoPlot(df['TT0102_MA_Y'], df['TT0106_MA_Y'], df.index, plt, columnDescriptions=columnDescriptions, relevantColumns=relevantColumns, columnUnits=columnUnits)
 
     for column in columns:
         if column != "Date":
             if  column in df.columns:
-                fig, ax = plt.subplots()
-                ax.set_title('Plot of dataset column ' + column)
+                fig, ax = plt.subplots(1, 1, figsize=(8, 6), dpi=100)
                 ax.set_xlabel('Date')
-                print(column)
                 if columnDescriptions is not None and column in columnDescKeys:
-                    ax.set_ylabel(column + " " + columnDescriptions[column], color=color)
+                    ax.set_title(columnDescriptions[column] + " " + column)
                 else:
-                    ax.set_ylabel(column, color=color)
-                ax.plot(df.index, df[column], color=color)
-                ax.tick_params(axis='y', labelcolor=color)
-                ax.grid(1, axis='y')
+                    ax.set_title(column)
+                if columnUnits is not None and column in columnUnitKeys:
+                    ax.set_ylabel(columnUnits[column])
+                else:
+                    ax.set_ylabel(column)
+                plt.gca().spines["top"].set_alpha(.3)
+                plt.gca().spines["bottom"].set_alpha(.3)
+                plt.gca().spines["right"].set_alpha(.3)
+                plt.gca().spines["left"].set_alpha(.3)
+                plt.plot(df.index, df[column], label=column, lw=1.5, color=color)
+                plt.text(df.shape[0]+1, df[column].values[-1], column, fontsize=14, color=color)
+                plt.tick_params(axis="both", which="both", bottom=False, top=False, labelbottom=True, left=False, right=False, labelleft=True)
+                plt.grid(1, alpha=0.5)
+                plt.legend(loc=(1.01, 0.01), ncol=1)
             else:
                 print("Column " + column + "not in dataset")
+
+    
 
 def plotDataByTimeframe(df, plt, start, end, columnDescriptions=None, relevantColumns=None):
     df = getDataByTimeframe(df, start, end)
@@ -188,9 +238,6 @@ def calculateMetrics(y_true, y_pred):
     mse = mean_squared_error(y_true, y_pred)
     #msle = mean_squared_log_error(y_true, y_pred)
     mae = mean_absolute_error(y_true, y_pred)
-    print(y_true.shape)
-    print(y_true.shape)
-    print(len(y_true.shape))
     
     if len(y_true.shape) > 1 and y_true.shape and y_true.shape[1] > 1:
         maxerror = None
