@@ -60,7 +60,7 @@ SHUFFLE = False
 VERBOSE = 2
 LEARNING_RATE = 0.00144
 
-ENROL_WINDOW = 16
+ENROL_WINDOW = 1
 
 sc = MinMaxScaler(feature_range=(0,1))
 
@@ -98,7 +98,7 @@ def main(fileName, targetColumns):
     scaler.fit(X_train)
     X_train = scaler.transform(X_train)
     X_test = scaler.transform(X_test)
-
+    
     train_generator = TimeseriesGenerator(X_train, y_train, length=ENROL_WINDOW, sampling_rate=1, batch_size=BATCH_SIZE)
     test_generator = TimeseriesGenerator(X_test, y_test, length=ENROL_WINDOW, sampling_rate=1, batch_size=BATCH_SIZE)
 
@@ -107,10 +107,13 @@ def main(fileName, targetColumns):
 
     train_samples = train_X.shape[0]*len(train_generator)
     test_samples = test_X.shape[0]*len(test_generator)
-
+    """
     print("Size of individual batches: {}".format(test_X.shape[1]))
     print("Number of total samples in training feature set: {}".format(train_samples))
     print("Number of samples in testing feature set: {}".format(test_samples))
+    """
+    print(train_X.shape)
+    print(X_train.shape)
 
     # Stop training when a monitored quantity has stopped improving.
     callbacks = [
@@ -122,8 +125,10 @@ def main(fileName, targetColumns):
         )
     ] 
 
-    model = kerasLSTMSingleLayerLeaky(train_X, y_train, units=UNITS, dropout=0.1, alpha=0.5)
+    model = kerasLSTMSingleLayerLeaky(X_train, y_train, [LOSS, OPTIMIZER, METRICS, EPOCHS, BATCH_SIZE, VERBOSE, callbacks, ENROL_WINDOW], units=UNITS, dropout=0.1, alpha=0.5)
+    model.train()
 
+    """
     # Using regression loss function 'Mean Standard Error' and validation metric 'Mean Absolute Error'
     model.compile(loss='mse', optimizer='rmsprop', metrics=['mae'])
 
@@ -135,6 +140,9 @@ def main(fileName, targetColumns):
                                     verbose=VERBOSE, \
                                     shuffle=SHUFFLE, \
                                     initial_epoch=0)
+    """
+
+    print(model.history)
     
     utilities.printHorizontalLine()
 

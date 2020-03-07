@@ -40,9 +40,7 @@ def getConfigA():
 	columns = list(columnDescriptions.keys())
 	relevantColumns = list(filter((lambda column: column not in irrelevantColumns), columns))
 
-	columnUnits = {
-
-	}
+	columnUnits = None
 
 	traintime = ["2016-07-01 00:00:00", "2016-10-06 00:00:00"]
 	testtime = ["2016-10-06 00:00:00", "2017-03-01 00:00:00"]
@@ -74,9 +72,7 @@ def getConfigB():
 	columns = list(columnDescriptions.keys())
 	relevantColumns = list(filter((lambda column: column not in irrelevantColumns), columns))
 
-	columnUnits = {
-
-	}
+	columnUnits = None
 
 	traintime = ["2016-07-01 00:00:00", "2016-10-06 00:00:00"]
 	testtime = ["2016-07-01 00:00:00", "2017-03-01 00:00:00"]
@@ -137,9 +133,7 @@ def getConfigC():
 	columns = list(columnDescriptions.keys())
 	relevantColumns = list(filter((lambda column: column not in irrelevantColumns), columns))
 
-	columnUnits = {
-
-	}
+	columnUnits = None
 
 	traintime = ["2019-09-15 12:00:00", "2019-09-18 12:00:00"]
 	testtime = ["2019-09-15 12:00:00", "2019-09-28 08:00:00"]
@@ -174,9 +168,7 @@ def getConfigD():
 	columns = list(columnDescriptions.keys())
 	relevantColumns = list(filter((lambda column: column not in irrelevantColumns), columns))
 
-	columnUnits = {
-
-	}
+	columnUnits = None
 
 	traintime = ["2020-01-01 00:00:00", "2020-03-01 00:00:00"]
 	testtime = ["2020-01-01 00:00:00", "2020-07-01 00:00:00"]

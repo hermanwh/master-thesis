@@ -6,55 +6,80 @@ from sklearn.tree import DecisionTreeRegressor
 from keras.models import Sequential
 from keras.layers import Dense, Activation, Dropout
 from keras.regularizers import l2, l1
+from keras.preprocessing.sequence import TimeseriesGenerator
 
 from keras.layers.recurrent import GRU, LSTM
 from keras.layers.advanced_activations import LeakyReLU
 
+
+
 class MachinLearningModel():
-    def __init__(self, model, X_train, y_train, args=None):
+    def __init__(self, model, X_train, y_train, args=None, name=None):
         self.model = model
-        self.args = args
         self.X_train = X_train
         self.y_train = y_train
+        self.args = args
+        self.name = name
+        self.history = None
 
     def train(self):
         if self.args:
-            loss, optimizer, metrics, epochs, batchSize, verbose, callbacks = self.args
-
-            model = self.model
-            model.compile(loss=loss, optimizer=optimizer, metrics=metrics)
-            model.fit(self.X_train,
-                    self.y_train,
-                    epochs=epochs,
-                    batch_size=batchSize,
-                    verbose=verbose,
-                    callbacks=callbacks,
-                    )
-            return model
+            loss, optimizer, metrics, epochs, batchSize, verbose, callbacks, enrolWindow = self.args
+            if enrolWindow is not None:
+                train_generator = TimeseriesGenerator(self.X_train, self.y_train, length=enrolWindow, sampling_rate=1, batch_size=batchSize)
+                self.model.compile(loss=loss, optimizer=optimizer, metrics=metrics)
+                self.history = self.model.fit_generator(train_generator,
+                        epochs=epochs,
+                        verbose=verbose,
+                        callbacks = callbacks,
+                        )
+            else:
+                self.model.compile(loss=loss, optimizer=optimizer, metrics=metrics)
+                self.history = self.model.fit(self.X_train,
+                        self.y_train,
+                        epochs=epochs,
+                        batch_size=batchSize,
+                        verbose=verbose,
+                        callbacks=callbacks,
+                        )
         else:
-            model = self.model
-            model.fit(self.X_train, self.y_train)
-            return model
+            self.history = self.model.fit(self.X_train, self.y_train)
 
-def kerasLSTMSingleLayerLeaky(train_X, y_train, units=128, dropout=0.1, alpha=0.5):
+    def predict(self, X_test, y_test=None):
+        if y_test is not None:
+            test_generator = TimeseriesGenerator(X_test, y_test, length=self.args[7], sampling_rate=1, batch_size=self.args[4])
+            return self.model.predict(test_generator)
+        else:
+            return self.model.predict(X_test)
+
+    def save(self, path):
+        if self.args:
+            self.model.save_model(path)
+        else:
+            print("Gotta do something with the weights...")
+
+def kerasLSTMSingleLayerLeaky(X_train, y_train, args, units=128, dropout=0.1, alpha=0.5):
+    loss, optimizer, metrics, epochs, batchSize, verbose, callbacks, enrolWindow = args
     model = Sequential()
-    model.add(LSTM(units, input_shape=(train_X.shape[1], train_X.shape[2])))
+    model.add(LSTM(units, input_shape=(enrolWindow, X_train.shape[1])))
     model.add(LeakyReLU(alpha=alpha)) 
     model.add(Dropout(dropout))
     model.add(Dense(y_train.shape[1]))
-    return model
+    return MachinLearningModel(model, X_train, y_train, args)
 
-def kerasLSTMMultiLayer(train_X, y_train, units=[50, 100], dropoutRate=0.2):
+def kerasLSTMMultiLayer(X_train, y_train, args, units=[50, 100], dropoutRate=0.2):
+    loss, optimizer, metrics, epochs, batchSize, verbose, callbacks, enrolWindow = args
     model = Sequential()
-    model.add(LSTM(units[0], return_sequences=True, input_shape=(train_X.shape[1], train_X.shape[2])))
+    model.add(LSTM(units[0], return_sequences=True, input_shape=(enrolWindow, X_train.shape[1])))
     model.add(Dropout(dropoutRate))
     model.add(LSTM(units[1], return_sequences=False))
     model.add(Dropout(dropoutRate))
     model.add(Dense(y_train.shape[1]))
-    return model
+    return MachinLearningModel(model, X_train, y_train, args)
 
-def kerasLSTMSingleLayer(train_X, y_train, units=128, dropout=0.3, recurrentDropout=0.3): 
-    input_layer = Input(shape=(None,train_X.shape[-1]))
+def kerasLSTMSingleLayer(X_train, y_train, args, units=128, dropout=0.3, recurrentDropout=0.3): 
+    loss, optimizer, metrics, epochs, batchSize, verbose, callbacks, enrolWindow = args
+    input_layer = Input(shape=(None,X_train.shape[-1]))
     layer_1 = layers.LSTM(units,
                          dropout = dropout,
                          recurrent_dropout = recurrentDropout,
@@ -63,10 +88,10 @@ def kerasLSTMSingleLayer(train_X, y_train, units=128, dropout=0.3, recurrentDrop
     output_layer = layers.Dense(y_train.shape[-1])(layer_1)
     
     model = Model(input_layer, output_layer) 
-    return model
+    return MachinLearningModel(model, X_train, y_train, args)
 
 def kerasSequentialRegressionModel(X_train, y_train, layers, args):
-    loss, optimizer, metrics, epochs, batchSize, verbose, callbacks = args
+    loss, optimizer, metrics, epochs, batchSize, verbose, callbacks, enrolWindow = args
     
     model = Sequential()
 
@@ -81,7 +106,7 @@ def kerasSequentialRegressionModel(X_train, y_train, layers, args):
     return MachinLearningModel(model, X_train, y_train, args)
 
 def kerasSequentialRegressionModelWithRegularization(X_train, y_train, layers, args, l1_rate=0.01, l2_rate=0.01, ):
-    loss, optimizer, metrics, epochs, batchSize, verbose, callbacks = args
+    loss, optimizer, metrics, epochs, batchSize, verbose, callbacks, enrolWindow = args
     
     model = Sequential()
 
