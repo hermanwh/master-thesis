@@ -60,7 +60,7 @@ SHUFFLE = False
 VERBOSE = 2
 LEARNING_RATE = 0.00144
 
-ENROL_WINDOW = 1
+ENROL_WINDOW = 16
 
 sc = MinMaxScaler(feature_range=(0,1))
 

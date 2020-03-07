@@ -1,0 +1,4 @@
+Train metrics: [0.8237280925037695, 2.797651723223562, 1.1244070303039506, None]
+Test metrics: [-0.7014987347320247, 23.959159579122428, 3.312639093888388, None]
+Input columns: ['Gasseksport rate', 'Varm side A temperatur inn', 'Varm side A temperatur ut', 'Varm side C temperatur inn', 'Varm side C temperatur ut', 'Kald side temperatur inn']
+Output columns: ['Kald side A temperatur ut', 'Kald side C temperatur ut']

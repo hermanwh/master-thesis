@@ -165,6 +165,10 @@ def getConfigD():
 	}
 
 	irrelevantColumns = [
+		'50FT001',
+		'50PDT001',
+		'20PDT001',
+		'50TV001',
 	]
 
 	columns = list(columnDescriptions.keys())
@@ -174,9 +178,9 @@ def getConfigD():
 
 	}
 
-	traintime = ["2020-01-01 02:00:00", "2020-03-01 00:00:00"]
-	testtime = ["2020-03-01 00:00:00", "2020-04-30 23:00:00"]
-	validtime = ["2020-02-01 02:00:00", "2020-03-01 00:00:00"]
+	traintime = ["2020-01-01 00:00:00", "2020-03-01 00:00:00"]
+	testtime = ["2020-01-01 00:00:00", "2020-07-01 00:00:00"]
+	validtime = ["2020-03-01 00:00:00", "2020-04-01 00:00:00"]
 
 	timestamps = [traintime, testtime, validtime]
 
@@ -256,6 +260,7 @@ def getConfigF():
 	}
 
 	irrelevantColumns = [
+		'FT0111',
 		'PDT0108_MA_Y',
 		'PDT0119_MA_Y',
 		'PDT0118_MA_Y',
@@ -265,6 +270,8 @@ def getConfigF():
 		'TT0652_MA_Y',
 		'TIC0103_CA_Y',
 		'PIC0104_CA_YX',
+		'TIC0101_CA_Y',
+		'TIC0105_CA_Y',
 	]
 
 	columns = list(columnDescriptions.keys())
@@ -302,10 +309,14 @@ def getConfigF():
 	testtime = ["2017-08-05 00:00:00", "2020-02-01 00:00:00"]
 	validtime = ["2018-01-01 00:00:00", "2018-05-01 00:00:00"]
 	"""
-	traintime = ["2017-08-05 00:00:00", "2018-05-01 00:00:00"]
-	testtime = ["2017-08-05 00:00:00", "2019-02-01 00:00:00"]
-	validtime = ["2018-10-01 00:00:00", "2019-02-01 00:00:00"]
-
+	traintime = ["2017-08-05 00:00:00", "2018-08-01 00:00:00"]
+	testtime = ["2017-08-05 00:00:00", "2019-11-01 00:00:00"]
+	validtime = ["2018-05-01 00:00:00", "2018-07-01 00:00:00"]
+	"""
+	traintime = ["2019-04-15 00:00:00", "2019-06-01 00:00:00"]
+	testtime = ["2019-04-15 00:00:00", "2020-02-01 00:00:00"]
+	validtime = ["2019-05-01 00:00:00", "2019-07-01 00:00:00"]
+	"""
 	timestamps = [traintime, testtime, validtime]
 
 	return [columns, relevantColumns, columnDescriptions, columnUnits, timestamps]

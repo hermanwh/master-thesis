@@ -34,7 +34,7 @@ from keras.callbacks.callbacks import EarlyStopping, ReduceLROnPlateau
 
 import matplotlib.pyplot as plt
 
-EPOCHS = 3000
+EPOCHS = 10000
 BATCH_SIZE = 128
 TEST_SIZE = 0.2
 SHUFFLE = True
@@ -98,14 +98,14 @@ def main(filename, targetColumns):
     
 
     modelsList = [
-        [keras_seq_mod, "MLP normal"],
+        #[keras_seq_mod, "MLP normal"],
         [keras_seq_mod_regl, "MLP regularized"],
         [keras_seq_mod_simple, "MLP simple"],
-        [keras_seq_mod_v_simple, "MLP very simple"],
-        [r1, "1.0 regulariation"],
+        #[keras_seq_mod_v_simple, "MLP very simple"],
+        #[r1, "1.0 regulariation"],
         [r4, "0.001"],
-        [r5, "0.0001"],
-        [sklearnLinear(X_train, y_train), "linear"],
+        #[r5, "0.0001"],
+        #[sklearnLinear(X_train, y_train), "linear"],
         [sklearnRidgeCV(X_train, y_train), "ridge"],
     ]
 

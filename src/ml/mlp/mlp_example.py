@@ -68,8 +68,8 @@ def main(filename, targetColumns):
     X_test = df_test.drop(targetColumns, axis=1).values
     y_test = df_test[targetColumns].values
 
-    scaler = MinMaxScaler(feature_range=(0,1))
-    #scaler = StandardScaler()
+    #scaler = MinMaxScaler(feature_range=(0,1))
+    scaler = StandardScaler()
     scaler.fit(X_train)
     X_train = scaler.transform(X_train)
     X_test = scaler.transform(X_test)
@@ -82,10 +82,13 @@ def main(filename, targetColumns):
             monitor = 'loss', factor = 0.5, patience = 10, verbose = 1, min_lr=5e-4,
         )
     ]
-
+    
+    
     #model = kerasSequentialRegressionModelWithRegularization(X_train, y_train, [[50, ACTIVATION], [20, ACTIVATION] ],  [LOSS, OPTIMIZER, METRICS, EPOCHS, BATCH_SIZE, VERBOSE, callbacks])
+    #model = kerasSequentialRegressionModelWithRegularization(X_train, y_train, [[50, ACTIVATION], [20, ACTIVATION] ],  [LOSS, OPTIMIZER, METRICS, EPOCHS, BATCH_SIZE, VERBOSE, callbacks], l1_rate=0.001, l2_rate=0.001)
+    model = kerasSequentialRegressionModelWithRegularization(X_train, y_train, [[128, ACTIVATION], [128, ACTIVATION] ],  [LOSS, OPTIMIZER, METRICS, EPOCHS, BATCH_SIZE, VERBOSE, callbacks], l1_rate=0.001, l2_rate=0.001)
     #model = kerasSequentialRegressionModel(X_train, y_train, [[50, ACTIVATION], [20, ACTIVATION] ],  [LOSS, OPTIMIZER, METRICS, EPOCHS, BATCH_SIZE, VERBOSE, callbacks])
-    model = sklearnRidgeCV(X_train, y_train)
+    #model = sklearnRidgeCV(X_train, y_train)
 
     model = model.train()
 
@@ -97,7 +100,15 @@ def main(filename, targetColumns):
 
     print(train_metrics)
     print(test_metrics)
-
+    """
+    with open(ROOT_PATH + "/src/ml/trained_models/" + subdir + "/metrics.txt", 'w') as output:
+        output.write("Train metrics: " + str(train_metrics) + "\n")
+        output.write("Test metrics: " + str(test_metrics) + "\n")
+        output.write("Input columns: " + str(list(map((lambda x: labelNames[x]), list(df_train.drop(targetColumns, axis=1).columns)))) + "\n")
+        output.write("Output columns: " + str(list(map((lambda x: labelNames[x]), list(df_train[targetColumns].columns)))) + "\n")
+        
+    model.save(ROOT_PATH + '/src/ml/trained_models/' + subdir + '/model.h5')
+    """
     for i in range(y_train.shape[1]):
         utilities.plotColumns(
             df_test,
@@ -113,7 +124,9 @@ def main(filename, targetColumns):
             ],
             desc="Deviation, ",
             columnDescriptions=labelNames,
+            columnUnits=None,
             trainEndStr=end_train,
+            interpol=False,
         )
         utilities.plotColumns(
             df_test,
@@ -136,7 +149,9 @@ def main(filename, targetColumns):
             ],
             desc="Prediction vs. targets, ",
             columnDescriptions=labelNames,
+            columnUnits=columnUnits,
             trainEndStr=end_train,
+            interpol=False,
         )
     plt.show()
 

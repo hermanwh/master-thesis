@@ -48,6 +48,7 @@ def readDataFile(filename):
     if ext == '.csv':
         df = pd.read_csv(filename)
         if 'Date' in df.columns:
+            print(df['Date'])
             df['Date'] = df['Date'].apply(lambda x: x.split('+')[0])
             df['Date'] = pd.to_datetime(df['Date'], dayfirst=True)
         elif 'time' in df.columns:
@@ -108,17 +109,15 @@ def plotDataColumnSingle(df, plt, column, data, columnDescriptions=None, color='
     ax.legend(bbox_to_anchor=(1.05, 1), loc='upper left', borderaxespad=0.)
     fig.autofmt_xdate()
 
-def plotColumns(df, plt, args, desc="", columnDescriptions=None, trainEndStr=None, interpol=False):
+def plotColumns(df, plt, args, desc="", columnDescriptions=None, trainEndStr=None, columnUnits=None, interpol=False):
     fig,ax = plt.subplots()
     ax.set_xlabel('Date')
     for i, arg in enumerate(args):
         label, column, data, color, alpha = arg
-        if columnDescriptions:
-            ax.set_ylabel(columnDescriptions[column])
-            ax.set_title(desc + columnDescriptions[column])
-        else:
-            ax.set_ylabel(column)
-            ax.set_title(desc + column)
+        
+        ax.set_title((desc + columnDescriptions[column]) if columnDescriptions else (desc + column))
+        ax.set_ylabel(columnUnits[column] if columnUnits is not None else "")
+
         if color is not None:
             ax.plot(df.index, data, color=color, label=label, alpha=alpha)
         else:
