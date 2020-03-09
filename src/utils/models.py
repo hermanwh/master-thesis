@@ -11,7 +11,54 @@ from keras.preprocessing.sequence import TimeseriesGenerator
 from keras.layers.recurrent import GRU, LSTM
 from keras.layers.advanced_activations import LeakyReLU
 
+import numpy as np
 
+class EnsembleModel():
+    def __init__(self, models, X_train, y_train, name=None):
+        maxEnrol = 0
+        for model in models:
+            if model.args is not None:
+                enrol = model.args[7]
+                if enrol is not None and enrol > maxEnrol:
+                    maxEnrol = enrol
+
+        self.maxEnrol = maxEnrol
+        self.models = models
+        self.MLmodel = None
+        self.X_train = X_train
+        self.y_train = y_train
+        self.name = name
+        self.history = None
+
+    def train(self):
+        preds = []
+        for model in self.models:
+            model.train()
+            prediction = model.predict(model.X_train, model.y_train)
+            if model.args is not None and model.args[7] is not None:
+                preds.append(prediction[self.maxEnrol - model.args[7]:])
+            else:
+                preds.append(prediction[self.maxEnrol:])
+
+        train = preds[0]
+        for pred in preds[1:]:
+            train = np.concatenate((train, pred), axis=1)
+        self.MLmodel = sklearnLinear(train, self.y_train[self.maxEnrol:])
+        self.MLmodel.train()
+
+    def predict(self, X_test, y_test):
+        preds = []
+        for model in self.models:
+            prediction = model.predict(X_test, y_test)
+            if model.args is not None and model.args[7] is not None:
+                preds.append(prediction[self.maxEnrol - model.args[7]:])
+            else:
+                preds.append(prediction[self.maxEnrol:])
+
+        test = preds[0]
+        for pred in preds[1:]:
+            test = np.concatenate((test, pred), axis=1)
+        return self.MLmodel.predict(test)
 
 class MachinLearningModel():
     def __init__(self, model, X_train, y_train, args=None, name=None):
@@ -46,7 +93,7 @@ class MachinLearningModel():
             self.history = self.model.fit(self.X_train, self.y_train)
 
     def predict(self, X_test, y_test=None):
-        if y_test is not None:
+        if self.args is not None and self.args[7] is not None:
             test_generator = TimeseriesGenerator(X_test, y_test, length=self.args[7], sampling_rate=1, batch_size=self.args[4])
             return self.model.predict(test_generator)
         else:
@@ -57,6 +104,10 @@ class MachinLearningModel():
             self.model.save_model(path)
         else:
             print("Gotta do something with the weights...")
+
+def ensembleModel(models, X_train, y_train):
+    return EnsembleModel(models, X_train, y_train)
+
 
 def kerasLSTMSingleLayerLeaky(X_train, y_train, args, units=128, dropout=0.1, alpha=0.5):
     loss, optimizer, metrics, epochs, batchSize, verbose, callbacks, enrolWindow = args
@@ -125,6 +176,7 @@ def kerasSequentialRegressionModelWithRegularization(X_train, y_train, layers, a
     return MachinLearningModel(model, X_train, y_train, args)
 
 def sklearnSVM(X, Y):
+    loss, optimizer, metrics, epochs, batchSize, verbose, callbacks, enrolWindow = args
     model = LinearSVR()
     return MachinLearningModel(model, X, Y)
 

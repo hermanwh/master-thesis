@@ -26,6 +26,9 @@ from sklearn.utils import shuffle
 
 import time
 import utilities
+import plots
+import metrics
+import optimizers
 import sys
 import pandas as pd
 import numpy as np

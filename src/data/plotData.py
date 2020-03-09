@@ -11,6 +11,8 @@ import matplotlib.pyplot as plt
 import pandas as pd
 import time
 import utilities
+import plots
+import metrics
 from configs import getConfig
 
 def main(filename, showRelevantColumns):
@@ -32,7 +34,7 @@ def main(filename, showRelevantColumns):
     if 'Index' in df.columns:
         df.drop('Index', axis=1, inplace=True)
 
-    utilities.plotData(df, plt, columnDescriptions=labelNames, columnUnits=columnUnits)
+    plots.plotData(df, plt, columnDescriptions=labelNames, columnUnits=columnUnits)
     plt.show()
 
     try:

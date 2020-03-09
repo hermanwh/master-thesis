@@ -8,6 +8,8 @@ if ROOT_PATH not in sys.path:
 
 
 import utilities
+import plots
+import metrics
 import inspect
 import tensorflow as tf
 import numpy as np
@@ -19,13 +21,6 @@ from models import (kerasSequentialRegressionModel,
                     sklearnLinear,
                     sklearnRidgeCV
                     )
-from utilities import (readDataFile,
-                       getDataWithTimeIndex,
-                       getDataByTimeframe,
-                       printEmptyLine,
-                       plotData,
-                       plotDataColumnSingle
-                       )
 from keras.models import Sequential
 from keras.layers import Dense
 from sklearn.preprocessing import MinMaxScaler, StandardScaler
@@ -51,8 +46,8 @@ def main(filename, targetColumns):
 
     traintime, testtime, validtime = timestamps
 
-    df = readDataFile(filename)
-    df = getDataWithTimeIndex(df)
+    df = utilities.readDataFile(filename)
+    df = utilities.getDataWithTimeIndex(df)
     df = df.dropna()
 
     if relevantColumns is not None:
@@ -218,7 +213,7 @@ def main(filename, targetColumns):
         r2_test.append(test_metrics[0])
         names.append(name)        
     for i in range(y_train.shape[1]):
-        utilities.plotColumns(
+        plots.plotColumns(
             df_test,
             plt,
             deviationsList[i],
@@ -227,7 +222,7 @@ def main(filename, targetColumns):
             trainEndStr=end_train,
             interpol=True,
         )
-        utilities.plotColumns(
+        plots.plotColumns(
             df_test,
             plt,
             columnsList[i],

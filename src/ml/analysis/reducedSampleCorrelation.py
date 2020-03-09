@@ -7,6 +7,8 @@ if ROOT_PATH not in sys.path:
     sys.path.append(ROOT_PATH)
 
 import utilities
+import plots
+import metrics
 import tensorflow as tf
 import numpy as np
 from src.ml.analysis.covmat import (covmat, printCovMat)
@@ -15,13 +17,6 @@ from models import (
                     sklearnLinear,
                     sklearnRidgeCV
                     )
-from utilities import (readDataFile,
-                       getDataWithTimeIndex,
-                       getDataByTimeframe,
-                       printEmptyLine,
-                       plotData,
-                       plotDataColumnSingle
-                       )
 from keras.models import Sequential
 from keras.layers import Dense
 from sklearn.preprocessing import MinMaxScaler, StandardScaler
@@ -33,8 +28,8 @@ def main(filename, targetColumn):
     subdir = filename.split('/')[-2]
     columns, relevantColumns, labelNames, columnUnits, timestamps = getConfig(subdir)
 
-    df = readDataFile(filename)
-    df = getDataWithTimeIndex(df)
+    df = utilities.readDataFile(filename)
+    df = utilities.getDataWithTimeIndex(df)
     df = df.dropna()
 
     traintime, testtime, validtime = timestamps
@@ -84,8 +79,8 @@ def main(filename, targetColumn):
         pred_train = model.predict(X_train)
         pred_test = model.predict(X_test)
 
-        train_metrics = utilities.calculateMetrics(y_train, pred_train)
-        test_metrics = utilities.calculateMetrics(y_test, pred_test)
+        train_metrics = metrics.calculateMetrics(y_train, pred_train)
+        test_metrics = metrics.calculateMetrics(y_test, pred_test)
 
         r2_scores_train.append(train_metrics[0])
         r2_scores_test.append(test_metrics[0])
@@ -95,7 +90,7 @@ def main(filename, targetColumn):
         y_test_transpose = y_test.reshape(-1, 1)
         y_train_transpose = y_train.reshape(-1, 1)
 
-        utilities.plotColumns(
+        plots.plotColumns(
             df_test,
             plt,
             [
@@ -111,7 +106,7 @@ def main(filename, targetColumn):
             columnDescriptions=labelNames,
             trainEndStr=end_train,
         )
-        utilities.plotColumns(
+        plots.plotColumns(
             df_test,
             plt,
             [

@@ -9,6 +9,7 @@ if ROOT_PATH not in sys.path:
 import pandas as pd
 import time
 import utilities
+import plots
 import sys
 import matplotlib.pyplot as plt
 from configs import getConfig
@@ -30,7 +31,7 @@ def main(filename, showRelevantColumns, start, end):
     if 'Index' in df.columns:
         df.drop('Index', axis=1, inplace=True)
 
-    utilities.plotData(df, plt, columnDescriptions=labelNames)
+    plots.plotData(df, plt, columnDescriptions=labelNames)
     plt.show()
 
     try:

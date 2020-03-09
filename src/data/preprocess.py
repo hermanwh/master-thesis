@@ -1,7 +1,8 @@
 from covmat import (covmat, printCovMat)
 from pca import (pca, printExplainedVarianceRatio)
-from utilities import (readDataFile, getDataWithTimeIndex, printEmptyLine, plotData, plotData, dropIrrelevantColumns)
 import utilities
+import plots
+import metrics
 import matplotlib.pyplot as plt
 import sys
 
@@ -9,8 +10,8 @@ from config.dataConfigs import (getConfig)
 
 def main(filename):
     subdir = filename.split('/')[1]
-    df = readDataFile(filename)
-    df = getDataWithTimeIndex(df)
+    df = utilities.readDataFile(filename)
+    df = utilities.getDataWithTimeIndex(df)
     df = df.dropna()
 
     #df = df[df['FT0005'] != 0.0]
@@ -39,13 +40,13 @@ def main(filename):
     cov = covmat(df, None, labelNames)
     printCovMat(cov)
 
-    printEmptyLine()
+    utilities.printEmptyLine()
 
     pca_calc = pca(df, 5, None, labelNames)
     printExplainedVarianceRatio(pca_calc)
 
 
-    plotData(df, plt, labelNames)
+    plots.plotData(df, plt, labelNames)
     plt.show()
 
 # usage: python ml/covmat.py datasets/filename.csv

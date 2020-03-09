@@ -7,6 +7,7 @@ if module_path not in sys.path:
 import time
 import numpy as np
 import utilities
+import plots
 from configs import getConfig
 from sklearn.preprocessing import StandardScaler
 

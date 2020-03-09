@@ -5,6 +5,8 @@ if module_path not in sys.path:
     sys.path.append(module_path)
 
 import utilities
+import plots
+import metrics
 import numpy as np
 import seaborn as sea
 import matplotlib.pyplot as plt

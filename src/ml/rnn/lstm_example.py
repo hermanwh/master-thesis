@@ -36,21 +36,15 @@ from keras.callbacks import EarlyStopping
 
 from configs import (getConfig, getConfigDirs)
 
-from utilities import (readDataFile,
-                       getDataWithTimeIndex,
-                       getDataByTimeframe,
-                       printEmptyLine,
-                       plotData,
-                       plotDataColumnSingle
-                       )
+import utilities
+import plots
+import metrics
 
 from models import (
     kerasLSTMSingleLayer,
     kerasLSTMSingleLayerLeaky,
     kerasLSTMMultiLayer,
 )
-
-import utilities
 
 EPOCHS = 1500
 UNITS = 128
@@ -73,8 +67,8 @@ def main(fileName, targetColumns):
     subdir = filename.split('/')[-2]
     columns, relevantColumns, labelNames, columnUnits, timestamps = getConfig(subdir)
 
-    df = readDataFile(filename)
-    df = getDataWithTimeIndex(df)
+    df = utilities.readDataFile(filename)
+    df = utilities.getDataWithTimeIndex(df)
     df = df.dropna()
 
     traintime, testtime, validtime = timestamps
@@ -148,17 +142,17 @@ def main(fileName, targetColumns):
 
     pred_train = model.predict(train_generator)
     pred_test = model.predict(test_generator)
-    r2_train = r2_score(y_train[ENROL_WINDOW:], pred_train)
-    r2_test = r2_score(y_test[ENROL_WINDOW:], pred_test)
+    r2_train = metrics.r2_score(y_train[ENROL_WINDOW:], pred_train)
+    r2_test = metrics.r2_score(y_test[ENROL_WINDOW:], pred_test)
 
-    train_metrics = utilities.calculateMetrics(y_train[ENROL_WINDOW:], pred_train)
-    test_metrics = utilities.calculateMetrics(y_test[ENROL_WINDOW:], pred_test)
+    train_metrics = metrics.calculateMetrics(y_train[ENROL_WINDOW:], pred_train)
+    test_metrics = metrics.calculateMetrics(y_test[ENROL_WINDOW:], pred_test)
 
     print(train_metrics)
     print(test_metrics)
 
     for i in range(y_train.shape[1]):
-        utilities.plotColumns(
+        plots.plotColumns(
             df_test.iloc[ENROL_WINDOW:],
             plt,
             [
@@ -182,7 +176,7 @@ def main(fileName, targetColumns):
             trainEndStr=end_train,
             interpol=True,
         )
-        utilities.plotColumns(
+        plots.plotColumns(
             df_test.iloc[ENROL_WINDOW:],
             plt,
             [

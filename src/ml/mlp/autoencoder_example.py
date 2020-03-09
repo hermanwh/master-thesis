@@ -7,6 +7,8 @@ if ROOT_PATH not in sys.path:
     sys.path.append(ROOT_PATH)
 
 import utilities
+import plots
+import metrics
 import tensorflow as tf
 import numpy as np
 from src.ml.analysis.covmat import (covmat, printCovMat)
@@ -16,13 +18,7 @@ from models import (kerasSequentialRegressionModel,
                     sklearnLinear,
                     sklearnRidgeCV
                     )
-from utilities import (readDataFile,
-                       getDataWithTimeIndex,
-                       getDataByTimeframe,
-                       printEmptyLine,
-                       plotData,
-                       plotDataColumnSingle
-                       )
+
 from keras.models import Sequential, Model
 from keras.layers import Dense, Input
 from keras import regularizers
@@ -52,8 +48,8 @@ def main(filename):
     subdir = filename.split('/')[-2]
     columns, relevantColumns, labelNames, columnUnits, timestamps = getConfig(subdir)
 
-    df = readDataFile(filename)
-    df = getDataWithTimeIndex(df)
+    df = utilities.readDataFile(filename)
+    df = utilities.getDataWithTimeIndex(df)
     df = df.dropna()
 
     traintime, testtime, validtime = timestamps

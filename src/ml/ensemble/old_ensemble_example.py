@@ -53,22 +53,102 @@ from models import (
     kerasLSTMSingleLayer,
     kerasLSTMSingleLayerLeaky,
     kerasLSTMMultiLayer,
-    ensembleModel,
 )
 
-EPOCHS = 150
-UNITS = 128
-BATCH_SIZE = 128*2
-TEST_SIZE = 0.2
-SHUFFLE = True
-VERBOSE = 1
-
-ACTIVATION = 'relu'
-LOSS = 'mean_squared_error'
-OPTIMIZER = 'adam'
-METRICS = ['mean_squared_error']
-
 ENROL_WINDOW = 1
+
+def lstm(X_train, y_train, X_test, y_test):
+    EPOCHS = 300
+    UNITS = 128
+    BATCH_SIZE = 128
+    TEST_SIZE = 0.2
+    SHUFFLE = False
+    VERBOSE = 2
+    LEARNING_RATE = 0.00144
+
+    ENROL_WINDOW = 1
+
+    sc = MinMaxScaler(feature_range=(0,1))
+
+    ACTIVATION = 'relu'
+    LOSS = 'mean_squared_error'
+    OPTIMIZER = 'adam'
+    METRICS = ['mean_squared_error']
+
+    scaler = StandardScaler()
+    scaler.fit(X_train)
+    X_train = scaler.transform(X_train)
+    X_test = scaler.transform(X_test)
+
+    train_generator = TimeseriesGenerator(X_train, y_train, length=ENROL_WINDOW, sampling_rate=1, batch_size=BATCH_SIZE)
+    test_generator = TimeseriesGenerator(X_test, y_test, length=ENROL_WINDOW, sampling_rate=1, batch_size=BATCH_SIZE)
+
+    train_X, train_y = train_generator[0]
+    test_X, test_y = test_generator[0]
+
+    train_samples = train_X.shape[0]*len(train_generator)
+    test_samples = test_X.shape[0]*len(test_generator)
+
+    # Stop training when a monitored quantity has stopped improving.
+    callbacks = [
+        EarlyStopping(
+            monitor="loss", min_delta = 0.00001, patience = 15, mode = 'auto', restore_best_weights=True
+        ),
+        ReduceLROnPlateau(
+            monitor = 'loss', factor = 0.5, patience = 10, verbose = 1, min_lr=5e-4,
+        )
+    ] 
+
+    model = kerasLSTMSingleLayerLeaky(X_train, y_train, [LOSS, OPTIMIZER, METRICS, EPOCHS, BATCH_SIZE, VERBOSE, callbacks, ENROL_WINDOW], units=UNITS, dropout=0.1, alpha=0.5).model
+
+    # Using regression loss function 'Mean Standard Error' and validation metric 'Mean Absolute Error'
+    model.compile(loss='mse', optimizer='rmsprop', metrics=['mae'])
+
+    # fit network
+    history = model.fit_generator(train_generator, \
+                                    epochs=EPOCHS, \
+                                    validation_data=test_generator, \
+                                    callbacks = callbacks, \
+                                    verbose=VERBOSE, \
+                                    shuffle=SHUFFLE, \
+                                    initial_epoch=0)
+    
+    return [model, train_generator, test_generator]
+
+def mlp(X_train, y_train, X_test, y_test):
+    EPOCHS = 400
+    BATCH_SIZE = 128
+    TEST_SIZE = 0.2
+    SHUFFLE = True
+    VERBOSE = 1
+
+    ACTIVATION = 'relu'
+    LOSS = 'mean_squared_error'
+    OPTIMIZER = 'adam'
+    METRICS = ['mean_squared_error']
+
+    scaler = MinMaxScaler(feature_range=(0,1))
+    #scaler = StandardScaler()
+    scaler.fit(X_train)
+    X_train = scaler.transform(X_train)
+    X_test = scaler.transform(X_test)
+
+    callbacks = [
+        EarlyStopping(
+            monitor="loss", min_delta = 0.00001, patience = 15, mode = 'auto', restore_best_weights=True
+        ),
+        ReduceLROnPlateau(
+            monitor = 'loss', factor = 0.5, patience = 10, verbose = 1, min_lr=5e-4,
+        )
+    ]
+
+    model = kerasSequentialRegressionModelWithRegularization(X_train, y_train, [[50, ACTIVATION], [20, ACTIVATION] ],  [LOSS, OPTIMIZER, METRICS, EPOCHS, BATCH_SIZE, VERBOSE, callbacks, None])
+    #model = kerasSequentialRegressionModel(X_train, y_train, [[50, ACTIVATION], [20, ACTIVATION] ],  [LOSS, OPTIMIZER, METRICS, EPOCHS, BATCH_SIZE, VERBOSE, callbacks])
+    #model = sklearnRidgeCV(X_train, y_train)
+
+    model.train()
+
+    return [model.model, X_test, X_train]
 
 def main(filename, targetColumns):
     subdir = filename.split('/')[-2]
@@ -95,62 +175,48 @@ def main(filename, targetColumns):
     X_test = df_test.drop(targetColumns, axis=1).values
     y_test = df_test[targetColumns].values
 
-    callbacks = [
-        EarlyStopping(
-            monitor="loss", min_delta = 0.00001, patience = 15, mode = 'auto', restore_best_weights=True
-        ),
-        ReduceLROnPlateau(
-            monitor = 'loss', factor = 0.5, patience = 10, verbose = 1, min_lr=5e-4,
-        )
-    ]
-
-    mlpModel = kerasSequentialRegressionModelWithRegularization(X_train, y_train, [[128, ACTIVATION], [128, ACTIVATION] ],  [LOSS, OPTIMIZER, METRICS, EPOCHS, BATCH_SIZE, VERBOSE, callbacks, None], l1_rate=0.001, l2_rate=0.001)
-    lstmModel = kerasLSTMSingleLayerLeaky(X_train, y_train, [LOSS, OPTIMIZER, METRICS, EPOCHS, BATCH_SIZE, VERBOSE, callbacks, ENROL_WINDOW], units=UNITS, dropout=0.1, alpha=0.5)
-    linearModel = sklearnRidgeCV(X_train, y_train)
-
-    maxEnrol = 1
-
-    ensemble = ensembleModel([mlpModel, lstmModel, linearModel], X_train, y_train)
-    ensemble.train()
-
-    pred_train = ensemble.predict(X_train, y_train)
-    pred_test = ensemble.predict(X_test, y_test)
+    [mlpModel, X_test_mlp, X_train_mlp] = mlp(X_train, y_train, X_test, y_test)
+    [lstmModel, trainGen, testGen] = lstm(X_train, y_train, X_test, y_test)
     
-    lstmPredictions = lstmModel.predict(X_train, y_test=y_train)
-    mlpPredictions = mlpModel.predict(X_train)
-    linearPredictions = linearModel.predict(X_train)
+    lstmPredictions = lstmModel.predict(trainGen)
+    mlpPredictions = mlpModel.predict(X_train_mlp[ENROL_WINDOW:])
 
-    lstm_test = lstmModel.predict(X_test, y_test=y_test)
-    mlp_test = mlpModel.predict(X_test)
-    linear_test = linearModel.predict(X_test)
+    predictions = np.concatenate((lstmPredictions, mlpPredictions), axis=1)
 
-    train_metrics_lstm = metrics.calculateMetrics(y_train[1:], lstmPredictions)
-    test_metrics_lstm = metrics.calculateMetrics(y_test[1:], lstm_test)
+    linearModel = sklearnLinear(predictions, y_train[ENROL_WINDOW:])
+    linearModel.train()
+
+    lstm_test = lstmModel.predict(testGen)
+    mlp_test = mlpModel.predict(X_test_mlp[ENROL_WINDOW:])
+
+    train_metrics_lstm = metrics.calculateMetrics(y_train[ENROL_WINDOW:], lstmPredictions)
+    test_metrics_lstm = metrics.calculateMetrics(y_test[ENROL_WINDOW:], lstm_test)
 
     print(train_metrics_lstm)
     print(test_metrics_lstm)
 
-    train_metrics_mlp = metrics.calculateMetrics(y_train, mlpPredictions)
-    test_metrics_mlp = metrics.calculateMetrics(y_test, mlp_test)
+
+    train_metrics_mlp = metrics.calculateMetrics(y_train[ENROL_WINDOW:], mlpPredictions)
+    test_metrics_mlp = metrics.calculateMetrics(y_test[ENROL_WINDOW:], mlp_test)
 
     print(train_metrics_mlp)
     print(test_metrics_mlp)
 
-    train_metrics_linear = metrics.calculateMetrics(y_train, linearPredictions)
-    test_metrics_linear = metrics.calculateMetrics(y_test, linear_test)
 
-    print(train_metrics_linear)
-    print(test_metrics_linear)
+    asd = np.concatenate((lstm_test, mlp_test), axis=1)
 
-    train_metrics = metrics.calculateMetrics(y_train[maxEnrol:], pred_train)
-    test_metrics = metrics.calculateMetrics(y_test[maxEnrol:], pred_test)
+    pred_train = linearModel.predict(predictions)
+    pred_test = linearModel.predict(asd)
+
+    train_metrics = metrics.calculateMetrics(y_train[ENROL_WINDOW:], pred_train)
+    test_metrics = metrics.calculateMetrics(y_test[ENROL_WINDOW:], pred_test)
 
     print(train_metrics)
     print(test_metrics)
 
     for i in range(y_train.shape[1]):
         plots.plotColumns(
-            df_test.iloc[1:],
+            df_test.iloc[ENROL_WINDOW:],
             plt,
             [
                 [
@@ -163,7 +229,7 @@ def main(filename, targetColumns):
                 [
                     'Target',
                     targetColumns[i],
-                    y_test[:, i][1:],
+                    y_test[:, i][ENROL_WINDOW:],
                     'red',
                     0.5,
                 ]
@@ -173,7 +239,7 @@ def main(filename, targetColumns):
             trainEndStr=end_train,
         )
         plots.plotColumns(
-            df_test,
+            df_test.iloc[ENROL_WINDOW:],
             plt,
             [
                 [
@@ -186,7 +252,7 @@ def main(filename, targetColumns):
                 [
                     'Target',
                     targetColumns[i],
-                    y_test[:, i],
+                    y_test[:, i][ENROL_WINDOW:],
                     'red',
                     0.5,
                 ]
@@ -196,30 +262,7 @@ def main(filename, targetColumns):
             trainEndStr=end_train,
         )
         plots.plotColumns(
-            df_test,
-            plt,
-            [
-                [
-                    'Prediction',
-                    targetColumns[i],
-                    linear_test[:, i],
-                    'darkgreen',
-                    0.5,
-                ],
-                [
-                    'Target',
-                    targetColumns[i],
-                    y_test[:, i],
-                    'red',
-                    0.5,
-                ]
-            ],
-            desc="Linear, ",
-            columnDescriptions=labelNames,
-            trainEndStr=end_train,
-        )
-        plots.plotColumns(
-            df_test.iloc[maxEnrol:],
+            df_test.iloc[ENROL_WINDOW:],
             plt,
             [
                 [
@@ -232,7 +275,7 @@ def main(filename, targetColumns):
                 [
                     'Target',
                     targetColumns[i],
-                    y_test[:, i][maxEnrol:],
+                    y_test[:, i][ENROL_WINDOW:],
                     'red',
                     0.5,
                 ]
@@ -243,7 +286,7 @@ def main(filename, targetColumns):
         )
 
     plt.show()
-    
+
 # usage: python ml/covmat.py datasets/filename.csv targetCol
 if __name__ == "__main__":
     filename = sys.argv[1]
