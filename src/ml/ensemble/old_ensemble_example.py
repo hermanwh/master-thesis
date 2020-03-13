@@ -236,7 +236,7 @@ def main(filename, targetColumns):
             ],
             desc="LSTM, ",
             columnDescriptions=labelNames,
-            trainEndStr=end_train,
+            trainEndStr=[end_train],
         )
         plots.plotColumns(
             df_test.iloc[ENROL_WINDOW:],
@@ -259,7 +259,7 @@ def main(filename, targetColumns):
             ],
             desc="MLP, ",
             columnDescriptions=labelNames,
-            trainEndStr=end_train,
+            trainEndStr=[end_train],
         )
         plots.plotColumns(
             df_test.iloc[ENROL_WINDOW:],
@@ -282,7 +282,7 @@ def main(filename, targetColumns):
             ],
             desc="Ensemble, ",
             columnDescriptions=labelNames,
-            trainEndStr=end_train,
+            trainEndStr=[end_train],
         )
 
     plt.show()

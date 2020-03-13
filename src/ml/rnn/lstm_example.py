@@ -46,22 +46,21 @@ from models import (
     kerasLSTMMultiLayer,
 )
 
-EPOCHS = 1500
-UNITS = 128
-BATCH_SIZE = 128*2
-TEST_SIZE = 0.2
-SHUFFLE = False
-VERBOSE = 2
-LEARNING_RATE = 0.00144
+from utilities import Args
 
-ENROL_WINDOW = 1
-
-sc = MinMaxScaler(feature_range=(0,1))
-
-ACTIVATION = 'relu'
-LOSS = 'mean_squared_error'
-OPTIMIZER = 'adam'
-METRICS = ['mean_squared_error']
+args = Args({
+    'activation': 'relu',
+    'loss': 'mean_squared_error',
+    'optimizer': 'adam',
+    'metrics': ['mean_squared_error'],
+    'epochs': 1500,
+    'batchSize': 128*2,
+    'verbose': 2,
+    'callbacks': utilities.getBasicCallbacks(monitor="loss"),
+    'enrolWindow': 1,
+    'validationSize': 0.2,
+    'testSize': 0.2
+})
     
 def main(fileName, targetColumns):
     subdir = filename.split('/')[-2]
@@ -88,38 +87,14 @@ def main(fileName, targetColumns):
     X_test = df_test.drop(targetColumns, axis=1).values
     y_test = df_test[targetColumns].values
 
-    scaler = StandardScaler()
-    scaler.fit(X_train)
-    X_train = scaler.transform(X_train)
-    X_test = scaler.transform(X_test)
-    
-    train_generator = TimeseriesGenerator(X_train, y_train, length=ENROL_WINDOW, sampling_rate=1, batch_size=BATCH_SIZE)
-    test_generator = TimeseriesGenerator(X_test, y_test, length=ENROL_WINDOW, sampling_rate=1, batch_size=BATCH_SIZE)
-
-    train_X, train_y = train_generator[0]
-    test_X, test_y = test_generator[0]
-
-    train_samples = train_X.shape[0]*len(train_generator)
-    test_samples = test_X.shape[0]*len(test_generator)
-    """
-    print("Size of individual batches: {}".format(test_X.shape[1]))
-    print("Number of total samples in training feature set: {}".format(train_samples))
-    print("Number of samples in testing feature set: {}".format(test_samples))
-    """
-    print(train_X.shape)
-    print(X_train.shape)
-
-    # Stop training when a monitored quantity has stopped improving.
-    callbacks = [
-        EarlyStopping(
-            monitor="loss", min_delta = 0.00001, patience = 15, mode = 'auto', restore_best_weights=True
-        ),
-        ReduceLROnPlateau(
-            monitor = 'loss', factor = 0.5, patience = 10, verbose = 1, min_lr=5e-4,
-        )
-    ] 
-
-    model = kerasLSTMSingleLayerLeaky(X_train, y_train, [LOSS, OPTIMIZER, METRICS, EPOCHS, BATCH_SIZE, VERBOSE, callbacks, ENROL_WINDOW], units=UNITS, dropout=0.1, alpha=0.5)
+    model = kerasLSTMSingleLayerLeaky(
+        X_train,
+        y_train,
+        args,
+        units=128,
+        dropout=0.1,
+        alpha=0.5
+    )
     model.train()
 
     """
@@ -135,25 +110,23 @@ def main(fileName, targetColumns):
                                     shuffle=SHUFFLE, \
                                     initial_epoch=0)
     """
-
-    print(model.history)
     
     utilities.printHorizontalLine()
 
-    pred_train = model.predict(train_generator)
-    pred_test = model.predict(test_generator)
-    r2_train = metrics.r2_score(y_train[ENROL_WINDOW:], pred_train)
-    r2_test = metrics.r2_score(y_test[ENROL_WINDOW:], pred_test)
+    pred_train = model.predict(X_train, y=y_train)
+    pred_test = model.predict(X_test, y=y_test)
+    r2_train = metrics.r2_score(y_train[args.enrolWindow:], pred_train)
+    r2_test = metrics.r2_score(y_test[args.enrolWindow:], pred_test)
 
-    train_metrics = metrics.calculateMetrics(y_train[ENROL_WINDOW:], pred_train)
-    test_metrics = metrics.calculateMetrics(y_test[ENROL_WINDOW:], pred_test)
+    train_metrics = metrics.calculateMetrics(y_train[args.enrolWindow:], pred_train)
+    test_metrics = metrics.calculateMetrics(y_test[args.enrolWindow:], pred_test)
 
     print(train_metrics)
     print(test_metrics)
 
     for i in range(y_train.shape[1]):
         plots.plotColumns(
-            df_test.iloc[ENROL_WINDOW:],
+            df_test.iloc[args.enrolWindow:],
             plt,
             [
                 [
@@ -166,31 +139,31 @@ def main(fileName, targetColumns):
                 [
                     'Target',
                     targetColumns[i],
-                    y_test[:, i][ENROL_WINDOW:],
+                    y_test[:, i][args.enrolWindow:],
                     'red',
                     0.5,
                 ]
             ],
             desc="Prediction vs. targets, ",
             columnDescriptions=labelNames,
-            trainEndStr=end_train,
+            trainEndStr=[end_train],
             interpol=True,
         )
         plots.plotColumns(
-            df_test.iloc[ENROL_WINDOW:],
+            df_test.iloc[args.enrolWindow:],
             plt,
             [
                 [
                     'Deviation', 
                     targetColumns[i],
-                    y_test[:, i][ENROL_WINDOW:] - pred_test[:, i],
+                    y_test[:, i][args.enrolWindow:] - pred_test[:, i],
                     'darkgreen',
                     0.5,
                 ]
             ],
             desc="Deviation, ",
             columnDescriptions=labelNames,
-            trainEndStr=end_train,
+            trainEndStr=[end_train],
             interpol=True,
         )
 

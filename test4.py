@@ -11,26 +11,42 @@ import plots
 import metrics
 import tensorflow as tf
 import numpy as np
-from src.ml.analysis.covmat import (covmat, printCovMat)
-from src.ml.analysis.pca import (pca, printExplainedVarianceRatio)
-from models import (kerasSequentialRegressionModel,
-                    kerasSequentialRegressionModelWithRegularization,
-                    sklearnMLP,
-                    sklearnLinear,
-                    sklearnRidgeCV
-                    )
+import matplotlib.pyplot as plt
+
+from src.ml.analysis.covmat import (
+    covmat,
+    printCovMat,
+)
+
+from src.ml.analysis.pca import (
+    pca,
+    printExplainedVarianceRatio,
+)
+
+from models import (
+    kerasSequentialRegressionModel,
+    kerasSequentialRegressionModelWithRegularization,
+    sklearnMLP,
+    sklearnLinear,
+    sklearnRidgeCV
+)
 
 from keras.models import Sequential
 from keras.layers import Dense
-from sklearn.preprocessing import MinMaxScaler, StandardScaler
-from configs import (getConfig, getConfigDirs)
-from keras.callbacks.callbacks import EarlyStopping, ReduceLROnPlateau
+from keras import metrics
+from sklearn.preprocessing import (
+    MinMaxScaler,
+    StandardScaler,
+)
 
-import matplotlib.pyplot as plt
+from configs import (
+    getConfig,
+    getConfigDirs,
+)
 
 from utilities import Args
 
-args = Args({
+params = Args({
     'activation': 'relu',
     'loss': 'mean_squared_error',
     'optimizer': 'adam',
@@ -69,24 +85,22 @@ def main(filename, targetColumns):
     X_test = df_test.drop(targetColumns, axis=1).values
     y_test = df_test[targetColumns].values
 
-    #model = kerasSequentialRegressionModelWithRegularization(X_train, y_train, [[50, ACTIVATION], [20, ACTIVATION] ],  [LOSS, OPTIMIZER, METRICS, EPOCHS, BATCH_SIZE, VERBOSE, callbacks, None])
-    #model = kerasSequentialRegressionModelWithRegularization(X_train, y_train, [[50, ACTIVATION], [20, ACTIVATION] ],  [LOSS, OPTIMIZER, METRICS, EPOCHS, BATCH_SIZE, VERBOSE, callbacks, None], l1_rate=0.001, l2_rate=0.001)
-    model = kerasSequentialRegressionModelWithRegularization(
+    #scaler = MinMaxScaler(feature_range=(0,1))
+    scaler = StandardScaler()
+    scaler.fit(X_train)
+    X_train = scaler.transform(X_train)
+    X_test = scaler.transform(X_test)
+
+    model = kerasSequentialRegressionModel(
         X_train,
         y_train,
-        args,
         [
-            [128, args.activation],
-            [32, args.activation]
+            [128, params.activation],
+            [32, params.activation]
         ],
-        l1_rate=0.001,
-        l2_rate=0.001
-    )
-    #model = sklearnRidgeCV(X_train, y_train)
-
+        params)
+    
     model.train()
-
-    plots.plotTraining(model.history, plt)
 
     pred_train = model.predict(X_train)
     pred_test = model.predict(X_test)

@@ -7,6 +7,7 @@ from keras.models import Sequential
 from keras.layers import Dense, Activation, Dropout
 from keras.regularizers import l2, l1
 from keras.preprocessing.sequence import TimeseriesGenerator
+from sklearn.preprocessing import MinMaxScaler, StandardScaler
 
 from keras.layers.recurrent import GRU, LSTM
 from keras.layers.advanced_activations import LeakyReLU
@@ -18,7 +19,7 @@ class EnsembleModel():
         maxEnrol = 0
         for model in models:
             if model.args is not None:
-                enrol = model.args[7]
+                enrol = model.args.enrolWindow
                 if enrol is not None and enrol > maxEnrol:
                     maxEnrol = enrol
 
@@ -35,8 +36,8 @@ class EnsembleModel():
         for model in self.models:
             model.train()
             prediction = model.predict(model.X_train, model.y_train)
-            if model.args is not None and model.args[7] is not None:
-                preds.append(prediction[self.maxEnrol - model.args[7]:])
+            if model.args is not None and model.args.enrolWindow is not None:
+                preds.append(prediction[self.maxEnrol - model.args.enrolWindow:])
             else:
                 preds.append(prediction[self.maxEnrol:])
 
@@ -46,12 +47,12 @@ class EnsembleModel():
         self.MLmodel = sklearnLinear(train, self.y_train[self.maxEnrol:])
         self.MLmodel.train()
 
-    def predict(self, X_test, y_test):
+    def predict(self, X, y):
         preds = []
         for model in self.models:
-            prediction = model.predict(X_test, y_test)
-            if model.args is not None and model.args[7] is not None:
-                preds.append(prediction[self.maxEnrol - model.args[7]:])
+            prediction = model.predict(X, y)
+            if model.args is not None and model.args.enrolWindow is not None:
+                preds.append(prediction[self.maxEnrol - model.args.enrolWindow:])
             else:
                 preds.append(prediction[self.maxEnrol:])
 
@@ -61,43 +62,86 @@ class EnsembleModel():
         return self.MLmodel.predict(test)
 
 class MachinLearningModel():
-    def __init__(self, model, X_train, y_train, args=None, name=None):
+    def __init__(self, model, X_train, y_train, args=None, scaler="standard", name=None):
+        if scaler == "standard":
+            inputScaler = StandardScaler()
+            outputScaler = StandardScaler()
+        else:
+            inputScaler = MinMaxScaler()
+            outputScaler = MinMaxScaler()
+        
+        inputScaler.fit(X_train)
+        outputScaler.fit(y_train)
+
         self.model = model
         self.X_train = X_train
         self.y_train = y_train
         self.args = args
         self.name = name
         self.history = None
+        self.inputScaler = inputScaler
+        self.outputScaler = outputScaler
 
     def train(self):
         if self.args:
-            loss, optimizer, metrics, epochs, batchSize, verbose, callbacks, enrolWindow = self.args
-            if enrolWindow is not None:
-                train_generator = TimeseriesGenerator(self.X_train, self.y_train, length=enrolWindow, sampling_rate=1, batch_size=batchSize)
-                self.model.compile(loss=loss, optimizer=optimizer, metrics=metrics)
-                self.history = self.model.fit_generator(train_generator,
-                        epochs=epochs,
-                        verbose=verbose,
-                        callbacks = callbacks,
-                        )
+            if self.args.enrolWindow is not None:
+                train_generator = TimeseriesGenerator(
+                    self.inputScaler.transform(self.X_train),
+                    self.outputScaler.transform(self.y_train),
+                    length = self.args.enrolWindow,
+                    sampling_rate = 1,
+                    batch_size = self.args.batchSize
+                )
+                self.model.compile(
+                    loss = self.args.loss,
+                    optimizer = self.args.optimizer,
+                    metrics = self.args.metrics
+                )
+                self.history = self.model.fit_generator(
+                    train_generator,
+                    epochs = self.args.epochs,
+                    verbose = self.args.verbose,
+                    callbacks = self.args.callbacks,
+                )
             else:
-                self.model.compile(loss=loss, optimizer=optimizer, metrics=metrics)
-                self.history = self.model.fit(self.X_train,
-                        self.y_train,
-                        epochs=epochs,
-                        batch_size=batchSize,
-                        verbose=verbose,
-                        callbacks=callbacks,
-                        )
+                self.model.compile(
+                    loss = self.args.loss,
+                    optimizer = self.args.optimizer,
+                    metrics = self.args.metrics
+                )
+                self.history = self.model.fit(
+                    self.inputScaler.transform(self.X_train),
+                    self.outputScaler.transform(self.y_train),
+                    epochs = self.args.epochs,
+                    batch_size = self.args.batchSize,
+                    verbose = self.args.verbose,
+                    callbacks = self.args.callbacks,
+                    validation_split = self.args.validationSize,
+                )
         else:
-            self.history = self.model.fit(self.X_train, self.y_train)
+            self.history = self.model.fit(
+                self.inputScaler.transform(self.X_train),
+                self.outputScaler.transform(self.y_train),
+            )
 
-    def predict(self, X_test, y_test=None):
-        if self.args is not None and self.args[7] is not None:
-            test_generator = TimeseriesGenerator(X_test, y_test, length=self.args[7], sampling_rate=1, batch_size=self.args[4])
-            return self.model.predict(test_generator)
+    def predict(self, X, y=None):
+        if self.args is not None and self.args.enrolWindow is not None:
+            test_generator = TimeseriesGenerator(
+                self.inputScaler.transform(X),
+                self.outputScaler.transform(y),
+                length = self.args.enrolWindow,
+                sampling_rate = 1,
+                batch_size = self.args.batchSize
+            )
+            return self.outputScaler.inverse_transform(
+                self.model.predict(test_generator)
+            )
         else:
-            return self.model.predict(X_test)
+            return self.outputScaler.inverse_transform(
+                self.model.predict(
+                    self.inputScaler.transform(X)
+                )
+            )
 
     def save(self, path):
         if self.args:
@@ -110,26 +154,23 @@ def ensembleModel(models, X_train, y_train):
 
 
 def kerasLSTMSingleLayerLeaky(X_train, y_train, args, units=128, dropout=0.1, alpha=0.5):
-    loss, optimizer, metrics, epochs, batchSize, verbose, callbacks, enrolWindow = args
     model = Sequential()
-    model.add(LSTM(units, input_shape=(enrolWindow, X_train.shape[1])))
+    model.add(LSTM(units, input_shape=(args.enrolWindow, X_train.shape[1])))
     model.add(LeakyReLU(alpha=alpha)) 
     model.add(Dropout(dropout))
     model.add(Dense(y_train.shape[1]))
-    return MachinLearningModel(model, X_train, y_train, args)
+    return MachinLearningModel(model, X_train, y_train, args=args)
 
 def kerasLSTMMultiLayer(X_train, y_train, args, units=[50, 100], dropoutRate=0.2):
-    loss, optimizer, metrics, epochs, batchSize, verbose, callbacks, enrolWindow = args
     model = Sequential()
-    model.add(LSTM(units[0], return_sequences=True, input_shape=(enrolWindow, X_train.shape[1])))
+    model.add(LSTM(units[0], return_sequences=True, input_shape=(args.enrolWindow, X_train.shape[1])))
     model.add(Dropout(dropoutRate))
     model.add(LSTM(units[1], return_sequences=False))
     model.add(Dropout(dropoutRate))
     model.add(Dense(y_train.shape[1]))
-    return MachinLearningModel(model, X_train, y_train, args)
+    return MachinLearningModel(model, X_train, y_train, args=args)
 
-def kerasLSTMSingleLayer(X_train, y_train, args, units=128, dropout=0.3, recurrentDropout=0.3): 
-    loss, optimizer, metrics, epochs, batchSize, verbose, callbacks, enrolWindow = args
+def kerasLSTMSingleLayer(X_train, y_train, args, units=128, dropout=0.3, recurrentDropout=0.3):
     input_layer = Input(shape=(None,X_train.shape[-1]))
     layer_1 = layers.LSTM(units,
                          dropout = dropout,
@@ -139,11 +180,9 @@ def kerasLSTMSingleLayer(X_train, y_train, args, units=128, dropout=0.3, recurre
     output_layer = layers.Dense(y_train.shape[-1])(layer_1)
     
     model = Model(input_layer, output_layer) 
-    return MachinLearningModel(model, X_train, y_train, args)
+    return MachinLearningModel(model, X_train, y_train, args=args)
 
-def kerasSequentialRegressionModel(X_train, y_train, layers, args):
-    loss, optimizer, metrics, epochs, batchSize, verbose, callbacks, enrolWindow = args
-    
+def kerasSequentialRegressionModel(X_train, y_train, args, layers):
     model = Sequential()
 
     firstLayerNeurons, firstLayerActivation = layers[0]
@@ -154,11 +193,9 @@ def kerasSequentialRegressionModel(X_train, y_train, layers, args):
     
     model.add(Dense(y_train.shape[1], activation='linear'))
 
-    return MachinLearningModel(model, X_train, y_train, args)
+    return MachinLearningModel(model, X_train, y_train, args=args)
 
-def kerasSequentialRegressionModelWithRegularization(X_train, y_train, layers, args, l1_rate=0.01, l2_rate=0.01, ):
-    loss, optimizer, metrics, epochs, batchSize, verbose, callbacks, enrolWindow = args
-    
+def kerasSequentialRegressionModelWithRegularization(X_train, y_train, args, layers, l1_rate=0.01, l2_rate=0.01, ):
     model = Sequential()
 
     firstLayerNeurons, firstLayerActivation = layers[0]
@@ -173,10 +210,9 @@ def kerasSequentialRegressionModelWithRegularization(X_train, y_train, layers, a
     
     model.add(Dense(y_train.shape[1], activation='linear'))
 
-    return MachinLearningModel(model, X_train, y_train, args)
+    return MachinLearningModel(model, X_train, y_train, args=args)
 
 def sklearnSVM(X, Y):
-    loss, optimizer, metrics, epochs, batchSize, verbose, callbacks, enrolWindow = args
     model = LinearSVR()
     return MachinLearningModel(model, X, Y)
 

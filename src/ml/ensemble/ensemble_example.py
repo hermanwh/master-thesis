@@ -116,11 +116,11 @@ def main(filename, targetColumns):
     pred_train = ensemble.predict(X_train, y_train)
     pred_test = ensemble.predict(X_test, y_test)
     
-    lstmPredictions = lstmModel.predict(X_train, y_test=y_train)
+    lstmPredictions = lstmModel.predict(X_train, y=y_train)
     mlpPredictions = mlpModel.predict(X_train)
     linearPredictions = linearModel.predict(X_train)
 
-    lstm_test = lstmModel.predict(X_test, y_test=y_test)
+    lstm_test = lstmModel.predict(X_test, y=y_test)
     mlp_test = mlpModel.predict(X_test)
     linear_test = linearModel.predict(X_test)
 
@@ -170,7 +170,7 @@ def main(filename, targetColumns):
             ],
             desc="LSTM, ",
             columnDescriptions=labelNames,
-            trainEndStr=end_train,
+            trainEndStr=[end_train],
         )
         plots.plotColumns(
             df_test,
@@ -193,7 +193,7 @@ def main(filename, targetColumns):
             ],
             desc="MLP, ",
             columnDescriptions=labelNames,
-            trainEndStr=end_train,
+            trainEndStr=[end_train],
         )
         plots.plotColumns(
             df_test,
@@ -216,7 +216,7 @@ def main(filename, targetColumns):
             ],
             desc="Linear, ",
             columnDescriptions=labelNames,
-            trainEndStr=end_train,
+            trainEndStr=[end_train],
         )
         plots.plotColumns(
             df_test.iloc[maxEnrol:],
@@ -239,7 +239,7 @@ def main(filename, targetColumns):
             ],
             desc="Ensemble, ",
             columnDescriptions=labelNames,
-            trainEndStr=end_train,
+            trainEndStr=[end_train],
         )
 
     plt.show()

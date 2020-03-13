@@ -54,7 +54,8 @@ def plotColumns(df, plt, args, desc="", columnDescriptions=None, trainEndStr=Non
                 ax.plot(df.index, func, label="Pol. fit, " + label, alpha=1.0)
 
     if trainEndStr:
-        ax.axvline(x=pd.to_datetime(trainEndStr, dayfirst=True), color='blue')
+        for i, trainEndString in enumerate(trainEndStr):
+            ax.axvline(x=pd.to_datetime(trainEndString, dayfirst=True), color='blue' if i % 2 == 0 else 'red')
     ax.tick_params(axis='y', labelcolor=color)
     ax.grid(1, axis='y')
 
@@ -79,6 +80,16 @@ def duoPlot(y1, y2, x, plt, columnDescriptions=None, relevantColumns=None, colum
     ax2.set_title("Plot", fontsize=22)
     plt.show()
 
+def plotTraining(history, plt):
+    fig, ax = plt.subplots(1, 1, figsize=(8, 6), dpi=100)
+    plt.plot(history.history['mean_squared_error'], color='blue', label="Training loss")
+    plt.plot(history.history['val_mean_squared_error'], color="orange", label="Validation loss")
+    plt.xlabel('Epoch')
+    plt.ylabel('Loss')
+    plt.legend(loc="upper right")
+    plt.title('Training history')
+    plt.show()
+
 def plotData(df, plt, columnDescriptions=None, relevantColumns=None, columnUnits=None, color='darkgreen'):
     if relevantColumns is not None:
         columns = relevantColumns
@@ -86,7 +97,7 @@ def plotData(df, plt, columnDescriptions=None, relevantColumns=None, columnUnits
         columns = df.columns
 
     columnDescKeys = list(columnDescriptions.keys())
-    columnUnitKeys = list(columnUnits.keys())
+    columnUnitKeys = list(columnUnits.keys()) if columnUnits is not None else []
     dfcolumns = df.columns
 
     #duoPlot(df['TT0102_MA_Y'], df['TT0106_MA_Y'], df.index, plt, columnDescriptions=columnDescriptions, relevantColumns=relevantColumns, columnUnits=columnUnits)

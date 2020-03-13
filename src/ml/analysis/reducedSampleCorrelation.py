@@ -104,7 +104,7 @@ def main(filename, targetColumn):
             ],
             desc="Deviation, ",
             columnDescriptions=labelNames,
-            trainEndStr=end_train,
+            trainEndStr=[end_train],
         )
         plots.plotColumns(
             df_test,
@@ -127,7 +127,7 @@ def main(filename, targetColumn):
             ],
             desc="Prediction vs. targets, ",
             columnDescriptions=labelNames,
-            trainEndStr=end_train,
+            trainEndStr=[end_train],
         )
     print(r2_scores_train)
     print(r2_scores_test)

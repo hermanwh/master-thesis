@@ -117,11 +117,11 @@ def main(filename, targetColumns):
     pred_train = ensemble.predict(X_train, y_train)
     pred_test = ensemble.predict(X_test, y_test)
     
-    lstmPredictions = lstmModel.predict(X_train, y_test=y_train)
+    lstmPredictions = lstmModel.predict(X_train, y=y_train)
     mlpPredictions = mlpModel.predict(X_train)
     linearPredictions = linearModel.predict(X_train)
 
-    lstm_test = lstmModel.predict(X_test, y_test=y_test)
+    lstm_test = lstmModel.predict(X_test, y=y_test)
     mlp_test = mlpModel.predict(X_test)
     linear_test = linearModel.predict(X_test)
 
@@ -171,7 +171,7 @@ def main(filename, targetColumns):
             ],
             desc="LSTM, ",
             columnDescriptions=labelNames,
-            trainEndStr=end_train,
+            trainEndStr=[end_train],
         )
         plots.plotColumns(
             df_test,
@@ -194,7 +194,7 @@ def main(filename, targetColumns):
             ],
             desc="MLP, ",
             columnDescriptions=labelNames,
-            trainEndStr=end_train,
+            trainEndStr=[end_train],
         )
         plots.plotColumns(
             df_test,
@@ -217,7 +217,7 @@ def main(filename, targetColumns):
             ],
             desc="Linear, ",
             columnDescriptions=labelNames,
-            trainEndStr=end_train,
+            trainEndStr=[end_train],
         )
         plots.plotColumns(
             df_test.iloc[maxEnrol:],
@@ -240,7 +240,7 @@ def main(filename, targetColumns):
             ],
             desc="Ensemble, ",
             columnDescriptions=labelNames,
-            trainEndStr=end_train,
+            trainEndStr=[end_train],
         )
 
     plt.show()
@@ -251,6 +251,48 @@ if __name__ == "__main__":
     targetCol = sys.argv[2:]
     main(filename, targetCol)
 
+
+ """
+            utilities.plotColumns(
+                df_test,
+                plt,
+                [
+                    [
+                        'Deviation', 
+                        targetColumns[i],
+                        y_test[:, i] - pred_test[:, i],
+                        'darkgreen',
+                        0.5,
+                    ]
+                ],
+                desc="Deviation, ",
+                columnDescriptions=labelNames,
+                trainEndStr=end_train,
+            )
+            utilities.plotColumns(
+                df_test,
+                plt,
+                [
+                    [
+                        'Predictions',
+                        targetColumns[i],
+                        pred_test[:, i],
+                        'darkgreen',
+                        0.5,
+                    ],
+                    [
+                        'Targets',
+                        targetColumns[i],
+                        y_test[:, i],
+                        'red',
+                        0.5,
+                    ]
+                ],
+                desc="Prediction vs. targets, ",
+                columnDescriptions=labelNames,
+                trainEndStr=end_train,
+            )
+            """
 
 """
 
