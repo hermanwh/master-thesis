@@ -15,6 +15,8 @@ from keras.layers.advanced_activations import LeakyReLU
 import numpy as np
 from copy import deepcopy
 
+import os
+
 class EnsembleModel():
     def __init__(self, models, X_train, y_train, modelType="Ensemble", name=None):
         maxEnrol = 0
@@ -38,7 +40,22 @@ class EnsembleModel():
         for model in self.models:
             model.train()
             prediction = model.predict(model.X_train, model.y_train)
-            if model.args is not None and model.args.enrolWindow is not None:
+            if model.modelType == "RNN":
+                preds.append(prediction[self.maxEnrol - model.args.enrolWindow:])
+            else:
+                preds.append(prediction[self.maxEnrol:])
+
+        train = preds[0]
+        for pred in preds[1:]:
+            train = np.concatenate((train, pred), axis=1)
+        self.MLmodel = sklearnLinear(train, self.y_train[self.maxEnrol:])
+        self.MLmodel.train()
+
+    def trainEnsemble(self):
+        preds = []
+        for model in self.models:
+            prediction = model.predict(model.X_train, model.y_train)
+            if model.modelType == "RNN":
                 preds.append(prediction[self.maxEnrol - model.args.enrolWindow:])
             else:
                 preds.append(prediction[self.maxEnrol:])
@@ -53,7 +70,7 @@ class EnsembleModel():
         preds = []
         for model in self.models:
             prediction = model.predict(X, y)
-            if model.args is not None and model.args.enrolWindow is not None:
+            if model.modelType == "RNN":
                 preds.append(prediction[self.maxEnrol - model.args.enrolWindow:])
             else:
                 preds.append(prediction[self.maxEnrol:])
@@ -63,8 +80,13 @@ class EnsembleModel():
             test = np.concatenate((test, pred), axis=1)
         return self.MLmodel.predict(test)
 
-    def save(self, path):
-        print("Cant save ensemble model yet")
+    def save(self, directory, name):
+        for i, model in enumerate(self.models):
+            if model.args:
+                dirr = directory + name + '/'
+                if not os.path.exists(dirr):
+                    os.makedirs(dirr)
+                model.save(dirr, str(i))
 
 class MachinLearningModel():
     def __init__(self, model, X_train, y_train, args=None, modelType=None, scaler="standard", name=None):
@@ -148,14 +170,12 @@ class MachinLearningModel():
                 )
             )
 
-    def save(self, path):
+    def save(self, directory, name):
         if self.args:
-            self.model.save(path)
-        else:
-            print("Gotta do something with the weights...")
+            self.model.save(directory + name + ".h5")
 
 def ensembleModel(models, X_train, y_train):
-    return EnsembleModel(models, X_train, y_train)
+    return EnsembleModel(models, X_train, y_train, )
 
 def kerasLSTMSingleLayerLeaky(X_train, y_train, args, units=128, dropout=0.1, alpha=0.5):
     model = Sequential()

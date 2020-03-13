@@ -55,6 +55,20 @@ lstmArgs = Args({
     'testSize': 0.2
 })
 
+lstmArgs2 = Args({
+    'activation': 'relu',
+    'loss': 'mean_squared_error',
+    'optimizer': 'adam',
+    'metrics': ['mean_squared_error'],
+    'epochs': 50,
+    'batchSize': 32,
+    'verbose': 1,
+    'callbacks': utilities.getBasicCallbacks(monitor="loss"),
+    'enrolWindow': 16,
+    'validationSize': 0.2,
+    'testSize': 0.2
+})
+
 def main(filename, targetColumns):
     subdir = filename.split('/')[-2]
     columns, relevantColumns, labelNames, columnUnits, timestamps = getConfig(subdir)
@@ -105,15 +119,6 @@ def main(filename, targetColumns):
             [20, args.activation]
         ]
     )
-    ensemble = ensembleModel(
-        [
-            keras_seq_mod_regl,
-            #keras_seq_mod_simple,
-            sklearnRidgeCV(X_train, y_train)
-        ],
-        X_train,
-        y_train
-    )
     lstmModel = kerasLSTMSingleLayerLeaky(
         X_train,
         y_train,
@@ -122,10 +127,29 @@ def main(filename, targetColumns):
         dropout=0.1,
         alpha=0.5
     )
+    lstmModel2 = kerasLSTMSingleLayerLeaky(
+        X_train,
+        y_train,
+        lstmArgs2,
+        units=128,
+        dropout=0.1,
+        alpha=0.5
+    )
+    ensemble = ensembleModel(
+        [
+            keras_seq_mod_regl,
+            keras_seq_mod_simple,
+            lstmModel,
+            sklearnRidgeCV(X_train, y_train)
+        ],
+        X_train,
+        y_train
+    )
+    
 
     modelList = [
         [keras_seq_mod, "MLP normal"],
-        #[ensemble, "ensemble"],
+        [ensemble, "ensemble"],
         [lstmModel, 'lstm1'],
         #[keras_seq_mod_regl, "MLP regularized"],
         #[keras_seq_mod_simple, "MLP simple"],
@@ -138,7 +162,6 @@ def main(filename, targetColumns):
     ]
 
     retrain = False
-
     maxEnrolWindow = utilities.findMaxEnrolWindow(modelList)
 
     utilities.trainModels(modelList, filename, targetColumns, retrain)

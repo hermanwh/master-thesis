@@ -328,23 +328,40 @@ def trainModels(modelList, filename, targetColumns, retrain):
             mod.train()
     else:
         for mod, name in modelList:
-            loadedModel = loadModel(name, filename, targetColumns)
-            if loadedModel is not None:
-                mod.model = loadedModel
+            if mod.modelType != "Ensemble":
+                loadedModel = loadModel(name, filename, targetColumns)
+                if loadedModel is not None:
+                    print("Model " + name + " was loaded from file")
+                    mod.model = loadedModel
+                else:
+                    print("Training model " + name)
+                    mod.train()
             else:
-                mod.train()
-            
+                for i, model in enumerate(mod.models):
+                    loadedModel = loadModel(name, filename, targetColumns, ensembleName=name, ensembleCounter=str(i))
+                    if loadedModel is not None:
+                        print("Model " + name + " was loaded from file")
+                        model.model = loadedModel
+                    else:
+                        print("Training model " + name)
+                        model.train()
 
-def loadModel(modelname, filename, targetColumns):
+                mod.trainEnsemble()
+                
+            
+def loadModel(modelname, filename, targetColumns, ensembleName=None, ensembleCounter=None):
     subdir = filename.split('/')[-2]
     datafile = filename.split('/')[-1].split('.')[0]
     joinedColumns = "_".join(targetColumns)
 
     modName = "_".join(modelname.split(' '))
-    directory = ROOT_PATH + '/src/ml/trained_models/' + subdir + '/' + datafile + '/' 
-    modelPath = directory + modName + '_' + joinedColumns + ".h5"
-    if os.path.isfile(modelPath):
-        model = keras.models.load_model(modelPath)
+    if ensembleName is None:
+        directory = ROOT_PATH + '/src/ml/trained_models/' + subdir + '/' + datafile + '/' + modName + '_' + joinedColumns + ".h5"
+    else:
+        directory = ROOT_PATH + '/src/ml/trained_models/' + subdir + '/' + datafile + '/' + ensembleName + '_' + joinedColumns + '/' + ensembleCounter + ".h5"
+    
+    if os.path.isfile(directory):
+        model = keras.models.load_model(directory)
     else:
         model = None
 
@@ -360,9 +377,10 @@ def saveModels(modelList, filename, targetColumns):
         directory = ROOT_PATH + '/src/ml/trained_models/' + subdir + '/' + datafile + '/'
         if not os.path.exists(directory):
             os.makedirs(directory)
-        modelPath = directory + modName + '_' + joinedColumns + ".h5"
+        modelPath = directory
+        modelName = modName + '_' + joinedColumns
         metricsPath = directory + modName + '_' + joinedColumns + ".txt"
-        model.save(modelPath)
+        model.save(modelPath, modelName)
 
     """
     with open(ROOT_PATH + "/src/ml/trained_models/" + subdir + "/metrics.txt", 'w') as output:
