@@ -20,7 +20,8 @@ from models import (
     sklearnLinear,
     sklearnRidgeCV,
     ensembleModel,
-    kerasLSTMSingleLayerLeaky
+    kerasLSTMSingleLayerLeaky,
+    printModelSummary,
 )
 from configs import (getConfig)
 
@@ -31,11 +32,11 @@ args = Args({
     'loss': 'mean_squared_error',
     'optimizer': 'adam',
     'metrics': ['mean_squared_error'],
-    'epochs': 4000,
+    'epochs': 50,
     'batchSize': 32,
     'verbose': 1,
     'callbacks': utilities.getBasicCallbacks(),
-    'enrolWindow': None,
+    'enrolWindow': 16,
     'validationSize': 0.2,
     'testSize': 0.2
 })
@@ -45,7 +46,7 @@ lstmArgs = Args({
     'loss': 'mean_squared_error',
     'optimizer': 'adam',
     'metrics': ['mean_squared_error'],
-    'epochs': 4000,
+    'epochs': 50,
     'batchSize': 32,
     'verbose': 1,
     'callbacks': utilities.getBasicCallbacks(monitor="loss"),
@@ -122,10 +123,10 @@ def main(filename, targetColumns):
         alpha=0.5
     )
 
-    modelsList = [
+    modelList = [
         [keras_seq_mod, "MLP normal"],
         #[ensemble, "ensemble"],
-        [lstmModel, 'lstm'],
+        [lstmModel, 'lstm1'],
         #[keras_seq_mod_regl, "MLP regularized"],
         #[keras_seq_mod_simple, "MLP simple"],
         #[keras_seq_mod_v_simple, "MLP very simple"],
@@ -136,12 +137,21 @@ def main(filename, targetColumns):
         [sklearnRidgeCV(X_train, y_train), "ridge"],
     ]
 
-    names, r2_train, r2_test, deviationsList, columnsList = utilities.predictWithModels(modelsList, X_train, y_train, X_test, y_test, targetColumns)
-    #utilities.printModelPredictions(names, r2_train, r2_test)
-    utilities.plotModelPredictions(plt, deviationsList, columnsList, df_test, labelNames, traintime)
+    retrain = False
 
-    for model, name in modelsList:
-        utilities.printModelSummary(model)
+    maxEnrolWindow = utilities.findMaxEnrolWindow(modelList)
+
+    utilities.trainModels(modelList, filename, targetColumns, retrain)
+    names, r2_train, r2_test, deviationsList, columnsList = utilities.predictWithModels(modelList, X_train, y_train, X_test, y_test, targetColumns)
+    utilities.saveModels(modelList, filename, targetColumns)
+    #utilities.printModelPredictions(names, r2_train, r2_test)
+    utilities.plotModelPredictions(plt, deviationsList, columnsList, df_test.iloc[maxEnrolWindow:].index, labelNames, traintime)
+
+    """
+    for model, name in modelList:
+        printModelSummary(model)
+    
+    """
         
 
 # usage: python ml/covmat.py datasets/filename.csv

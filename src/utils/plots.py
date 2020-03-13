@@ -29,19 +29,19 @@ def plotDataColumnSingle(df, plt, column, data, columnDescriptions=None, color='
     ax.legend(bbox_to_anchor=(1.05, 1), loc='upper left', borderaxespad=0.)
     fig.autofmt_xdate()
 
-def plotColumns(df, plt, args, desc="", columnDescriptions=None, trainEndStr=None, columnUnits=None, interpol=False):
+def plotColumns(dfindex, plt, args, desc="", columnDescriptions=None, trainEndStr=None, columnUnits=None, interpol=False):
     fig,ax = plt.subplots()
     ax.set_xlabel('Date')
     for i, arg in enumerate(args):
         label, column, data, color, alpha = arg
-
+        
         ax.set_title((desc + columnDescriptions[column]) if columnDescriptions else (desc + column))
         ax.set_ylabel(columnUnits[column] if columnUnits is not None else "")
 
         if color is not None:
-            ax.plot(df.index, data, color=color, label=label, alpha=alpha)
+            ax.plot(dfindex, data, color=color, label=label, alpha=alpha)
         else:
-            ax.plot(df.index, data, label=label, alpha=alpha)
+            ax.plot(dfindex, data, label=label, alpha=alpha)
     if interpol:
         for i, arg in enumerate(args):
             label, column, data, color, alpha = arg
@@ -49,9 +49,9 @@ def plotColumns(df, plt, args, desc="", columnDescriptions=None, trainEndStr=Non
             p = np.poly1d(z)
             func = p(range(len(data)))
             if color is not None:
-                ax.plot(df.index, func, color=color, label="Pol. fit, " + label, alpha=1.0)
+                ax.plot(dfindex, func, color=color, label="Pol. fit, " + label, alpha=1.0)
             else:
-                ax.plot(df.index, func, label="Pol. fit, " + label, alpha=1.0)
+                ax.plot(dfindex, func, label="Pol. fit, " + label, alpha=1.0)
 
     if trainEndStr:
         for i, trainEndString in enumerate(trainEndStr):

@@ -1,6 +1,12 @@
+import sys, os
+ROOT_PATH = os.path.abspath(".").split("src")[0]
+if ROOT_PATH not in sys.path:
+    sys.path.append(ROOT_PATH)
+
 import numpy as np
 import pandas as pd
 import tensorflow as tf
+import keras
 import matplotlib.dates as mdates
 import matplotlib.pyplot as plt
 from sklearn.metrics import r2_score, mean_squared_log_error, mean_squared_error, mean_absolute_error, max_error
@@ -74,49 +80,6 @@ def getTestTrainSplit(df, traintime, testtime):
 
     return [df_train, df_test]
 
-def printModelSummary(model):
-    if hasattr(model, "summary"):
-        # Keras Model object
-        print(model.summary())
-    elif hasattr(model, "model"):
-        # MachineLearningModel object
-        if hasattr(model.model, "summary"):
-            # MachineLearningModel.model will be a Keras Model object
-            printModelSummary(model.model)
-    elif hasattr(model, "models"):
-        # EnsembleModel object
-        print("Model is of type Ensemble Model")
-        print("Sub model summaries will follow")
-        print("-------------------------------")
-        for mod in model.models:
-            # EnsembleModel.models will be a list of MachineLearningModels
-            printModelSummary(mod)
-    else:
-        print("Simple models have no summary")
-    
-def printModelWeights(model):
-    if hasattr(model, "summary"):
-        # Keras Model object
-        for layer in model.layers: print(layer.get_config(), layer.get_weights())
-    elif hasattr(model, "model"):
-        # MachineLearningModel object
-        if hasattr(model.model, "summary"):
-            # MachineLearningModel.model will be a Keras Model object
-            printModelSummary(model.model)
-    elif hasattr(model, "models"):
-        # EnsembleModel object
-        print("Model is of type Ensemble Model")
-        print("Sub model summaries will follow")
-        print("-------------------------------")
-        for mod in model.models:
-            # EnsembleModel.models will be a list of MachineLearningModels
-            printModelSummary(mod)
-    else:
-        if hasattr(model, "get_params"):
-            print(model.get_params())
-        else:
-            print("No weights found")
-
 def plotKerasModel(model):
     plot_model(model.model)
 
@@ -129,10 +92,11 @@ def printModelPredictions(names, r2_train, r2_test):
 
     plt.show()
 
-def plotModelPredictions(plt, deviationsList, columnsList, df_test, labelNames, traintime):
+def plotModelPredictions(plt, deviationsList, columnsList, indexList, labelNames, traintime):
+    
     for i in range(len(deviationsList)):
         plots.plotColumns(
-            df_test,
+            indexList,
             plt,
             deviationsList[i],
             desc="Deviation, ",
@@ -141,7 +105,7 @@ def plotModelPredictions(plt, deviationsList, columnsList, df_test, labelNames, 
             interpol=False,
         )
         plots.plotColumns(
-            df_test,
+            indexList,
             plt,
             columnsList[i],
             desc="Prediction vs. targets, ",
@@ -155,9 +119,25 @@ def plotModelPredictions(plt, deviationsList, columnsList, df_test, labelNames, 
 def predictWithModel(model, X_train, y_train, X_test, y_test, targetColumns):
     return predictWithModels([model], X_train, y_train, X_test, y_test, targetColumns)
 
-def predictWithModels(modelsList, X_train, y_train, X_test, y_test, targetColumns):
+def findMaxEnrolWindow(modelList):
+    maxEnrol = 0
+    for model, name in modelList:
+        if model.modelType == "Ensemble":
+            enrol = model.maxEnrol
+        elif model.modelType == "RNN":
+            enrol = model.args.enrolWindow
+        else:
+            enrol = 0
+            
+        if enrol > maxEnrol:
+                maxEnrol = enrol
+
+    return maxEnrol
+
+def predictWithModels(modelList, X_train, y_train, X_test, y_test, targetColumns):
     colors = getPlotColors()
-    
+    maxEnrol = findMaxEnrolWindow(modelList)
+
     names = []
     r2_train = []
     r2_test = []
@@ -165,41 +145,37 @@ def predictWithModels(modelsList, X_train, y_train, X_test, y_test, targetColumn
     deviationsList = []
     columnsList = []
     for i in range(y_train.shape[1]):
+        deviationsList.append([])
         columnsList.append([])
         columnsList[i].append([
                         'Targets',
                         targetColumns[i],
-                        y_test[:, i],
+                        y_test[:, i][maxEnrol:],
                         'red',
-                        0.5,
+                        1.0,
                     ])
 
-        deviationsList.append([])
-
-    for i, modObj in enumerate(modelsList):
+    for i, modObj in enumerate(modelList):
         mod, name = modObj
+        if mod.modelType == "Ensemble":
+            enrol = mod.maxEnrol
+        elif mod.modelType == "RNN":
+            enrol = mod.args.enrolWindow
+        else:
+            enrol = 0
+        enrolDiff = maxEnrol - enrol
         
-        mod.train()
-        if mod.args.enrolWindow is not None:
-            pred_train = mod.predict(X_train, y=y_train)
-            pred_test = mod.predict(X_test, y=y_test)
-        else:
-            pred_train = mod.predict(X_train, y=None)
-            pred_test = mod.predict(X_test, y=None)
-
-        if mod.args.enrolWindow is not None:
-            train_metrics = metrics.calculateMetrics(y_train[mod.args.enrolWindow:], pred_train)
-            test_metrics = metrics.calculateMetrics(y_test[mod.args.enrolWindow:], pred_test)
-        else:
-            train_metrics = metrics.calculateMetrics(y_train, pred_train)
-            test_metrics = metrics.calculateMetrics(y_test, pred_test)
+        pred_train = mod.predict(X_train, y=y_train)
+        pred_test = mod.predict(X_test, y=y_test)
+        train_metrics = metrics.calculateMetrics(y_train[enrol:], pred_train)
+        test_metrics = metrics.calculateMetrics(y_test[enrol:], pred_test)
         
         for j in range(y_train.shape[1]):
             columnsList[j].append(
                 [
                     name,
                     targetColumns[j],
-                    pred_test[:, j],
+                    pred_test[:, j][enrolDiff:],
                     colors[i],
                     1.0,
                 ]
@@ -208,7 +184,7 @@ def predictWithModels(modelsList, X_train, y_train, X_test, y_test, targetColumn
                 [
                     name,
                     targetColumns[j],
-                    y_test[:, j] - pred_test[:, j],
+                    y_test[:, j][maxEnrol:] - pred_test[:, j][enrolDiff:],
                     colors[i],
                     1.0,
                 ]
@@ -344,6 +320,59 @@ def getDataByTimeframe(df, start, end):
     printHorizontalLine()
     df = df.loc[start:end]
     return df
+
+def trainModels(modelList, filename, targetColumns, retrain):
+    if retrain:
+        for mod, name in modelList:
+            print("Training model " + name)
+            mod.train()
+    else:
+        for mod, name in modelList:
+            loadedModel = loadModel(name, filename, targetColumns)
+            if loadedModel is not None:
+                mod.model = loadedModel
+            else:
+                mod.train()
+            
+
+def loadModel(modelname, filename, targetColumns):
+    subdir = filename.split('/')[-2]
+    datafile = filename.split('/')[-1].split('.')[0]
+    joinedColumns = "_".join(targetColumns)
+
+    modName = "_".join(modelname.split(' '))
+    directory = ROOT_PATH + '/src/ml/trained_models/' + subdir + '/' + datafile + '/' 
+    modelPath = directory + modName + '_' + joinedColumns + ".h5"
+    if os.path.isfile(modelPath):
+        model = keras.models.load_model(modelPath)
+    else:
+        model = None
+
+    return model
+
+def saveModels(modelList, filename, targetColumns):
+    subdir = filename.split('/')[-2]
+    datafile = filename.split('/')[-1].split('.')[0]
+    joinedColumns = "_".join(targetColumns)
+    
+    for model, name in modelList:
+        modName = "_".join(name.split(' '))
+        directory = ROOT_PATH + '/src/ml/trained_models/' + subdir + '/' + datafile + '/'
+        if not os.path.exists(directory):
+            os.makedirs(directory)
+        modelPath = directory + modName + '_' + joinedColumns + ".h5"
+        metricsPath = directory + modName + '_' + joinedColumns + ".txt"
+        model.save(modelPath)
+
+    """
+    with open(ROOT_PATH + "/src/ml/trained_models/" + subdir + "/metrics.txt", 'w') as output:
+        output.write("Train metrics: " + str(train_metrics) + "\n")
+        output.write("Test metrics: " + str(test_metrics) + "\n")
+        output.write("Input columns: " + str(list(map((lambda x: labelNames[x]), list(df_train.drop(targetColumns, axis=1).columns)))) + "\n")
+        output.write("Output columns: " + str(list(map((lambda x: labelNames[x]), list(df_train[targetColumns].columns)))) + "\n")
+        
+    model.save(ROOT_PATH + '/src/ml/trained_models/' + subdir + '/model.h5')
+    """
 
 def saveKerasModel(model, loc, name):
     print("Saving model")
