@@ -121,7 +121,7 @@ def predictWithModel(model, X_train, y_train, X_test, y_test, targetColumns):
 
 def findMaxEnrolWindow(modelList):
     maxEnrol = 0
-    for model, name in modelList:
+    for model in modelList:
         if model.modelType == "Ensemble":
             enrol = model.maxEnrol
         elif model.modelType == "RNN":
@@ -156,7 +156,7 @@ def predictWithModels(modelList, X_train, y_train, X_test, y_test, targetColumns
                     ])
 
     for i, modObj in enumerate(modelList):
-        mod, name = modObj
+        mod = modObj
         if mod.modelType == "Ensemble":
             enrol = mod.maxEnrol
         elif mod.modelType == "RNN":
@@ -173,7 +173,7 @@ def predictWithModels(modelList, X_train, y_train, X_test, y_test, targetColumns
         for j in range(y_train.shape[1]):
             columnsList[j].append(
                 [
-                    name,
+                    mod.name,
                     targetColumns[j],
                     pred_test[:, j][enrolDiff:],
                     colors[i],
@@ -182,7 +182,7 @@ def predictWithModels(modelList, X_train, y_train, X_test, y_test, targetColumns
             )
             deviationsList[j].append(
                 [
-                    name,
+                    mod.name,
                     targetColumns[j],
                     y_test[:, j][maxEnrol:] - pred_test[:, j][enrolDiff:],
                     colors[i],
@@ -192,7 +192,7 @@ def predictWithModels(modelList, X_train, y_train, X_test, y_test, targetColumns
 
         r2_train.append(train_metrics[0])
         r2_test.append(test_metrics[0])
-        names.append(name)   
+        names.append(mod.name)   
     
     return [
         names,
@@ -323,48 +323,47 @@ def getDataByTimeframe(df, start, end):
 
 def trainModels(modelList, filename, targetColumns, retrain):
     if retrain:
-        for mod, name in modelList:
-            print("Training model " + name)
+        for mod in modelList:
+            print("Training model " + mod.name)
             mod.train()
     else:
-        for mod, name in modelList:
+        for mod in modelList:
             if mod.modelType != "Ensemble":
-                loadedModel = loadModel(name, filename, targetColumns)
+                loadedModel = loadModel(mod.name, filename, targetColumns)
                 if loadedModel is not None:
-                    print("Model " + name + " was loaded from file")
+                    print("Model " + mod.name + " was loaded from file")
                     mod.model = loadedModel
                 else:
-                    print("Training model " + name)
+                    print("Training model " + mod.name)
                     mod.train()
             else:
-                for i, model in enumerate(mod.models):
-                    loadedModel = loadModel(name, filename, targetColumns, ensembleName=name, ensembleCounter=str(i))
+                for model in mod.models:
+                    loadedModel = loadModel(model.name, filename, targetColumns, ensembleName=mod.name)
                     if loadedModel is not None:
-                        print("Model " + name + " was loaded from file")
+                        print("Model " + mod.name + " was loaded from file")
                         model.model = loadedModel
                     else:
-                        print("Training model " + name)
+                        print("Training submodel " + model.name + " of Ensemble " + mod.name)
                         model.train()
 
                 mod.trainEnsemble()
                 
             
-def loadModel(modelname, filename, targetColumns, ensembleName=None, ensembleCounter=None):
+def loadModel(modelname, filename, targetColumns, ensembleName=None):
     subdir = filename.split('/')[-2]
     datafile = filename.split('/')[-1].split('.')[0]
     joinedColumns = "_".join(targetColumns)
-
+    
     modName = "_".join(modelname.split(' '))
     if ensembleName is None:
         directory = ROOT_PATH + '/src/ml/trained_models/' + subdir + '/' + datafile + '/' + modName + '_' + joinedColumns + ".h5"
-    else:
-        directory = ROOT_PATH + '/src/ml/trained_models/' + subdir + '/' + datafile + '/' + ensembleName + '_' + joinedColumns + '/' + ensembleCounter + ".h5"
-    
+    else:    
+        ensName = "_".join(ensembleName.split(' '))
+        directory = ROOT_PATH + '/src/ml/trained_models/' + subdir + '/' + datafile + '/' + ensName + '_' + joinedColumns + '/' + modName + ".h5"
     if os.path.isfile(directory):
         model = keras.models.load_model(directory)
     else:
         model = None
-
     return model
 
 def saveModels(modelList, filename, targetColumns):
@@ -372,8 +371,8 @@ def saveModels(modelList, filename, targetColumns):
     datafile = filename.split('/')[-1].split('.')[0]
     joinedColumns = "_".join(targetColumns)
     
-    for model, name in modelList:
-        modName = "_".join(name.split(' '))
+    for model in modelList:
+        modName = "_".join(model.name.split(' '))
         directory = ROOT_PATH + '/src/ml/trained_models/' + subdir + '/' + datafile + '/'
         if not os.path.exists(directory):
             os.makedirs(directory)

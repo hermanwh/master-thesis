@@ -34,7 +34,7 @@ args = Args({
     'metrics': ['mean_squared_error'],
     'epochs': 50,
     'batchSize': 32,
-    'verbose': 1,
+    'verbose': 0,
     'callbacks': utilities.getBasicCallbacks(),
     'enrolWindow': 16,
     'validationSize': 0.2,
@@ -48,7 +48,7 @@ lstmArgs = Args({
     'metrics': ['mean_squared_error'],
     'epochs': 50,
     'batchSize': 32,
-    'verbose': 1,
+    'verbose': 0,
     'callbacks': utilities.getBasicCallbacks(monitor="loss"),
     'enrolWindow': 1,
     'validationSize': 0.2,
@@ -62,7 +62,7 @@ lstmArgs2 = Args({
     'metrics': ['mean_squared_error'],
     'epochs': 50,
     'batchSize': 32,
-    'verbose': 1,
+    'verbose': 0,
     'callbacks': utilities.getBasicCallbacks(monitor="loss"),
     'enrolWindow': 16,
     'validationSize': 0.2,
@@ -86,79 +86,101 @@ def main(filename, targetColumns):
     X_train, y_train, X_test, y_test = utilities.getFeatureTargetSplit(df_train, df_test, targetColumns)
 
     keras_seq_mod_regl = kerasSequentialRegressionModelWithRegularization(
-        X_train,
-        y_train,
-        args,
-        [
+        params = {
+            'name': '50 20 regularized',
+            'X_train': X_train,
+            'y_train': y_train,
+            'args': args,
+        },
+        structure = [
             [50, args.activation],
             [20, args.activation]
         ],
     )
     keras_seq_mod_simple = kerasSequentialRegressionModel(
-        X_train,
-        y_train,
-        args,
-        [
+        params = {
+            'name': '20 normal',
+            'X_train': X_train,
+            'y_train': y_train,
+            'args': args,
+        },
+        structure = [
             [20, args.activation]
         ],
     )
     keras_seq_mod_v_simple = kerasSequentialRegressionModel(
-        X_train,
-        y_train,
-        args,
-        [
+        params = {
+            'name': '0 Simple',
+            'X_train': X_train,
+            'y_train': y_train,
+            'args': args,
+        },
+        structure = [
             [X_train.shape[1], args.activation]
         ], 
     )
     keras_seq_mod = kerasSequentialRegressionModel(
-        X_train,
-        y_train,
-        args,
-        [
+        params = {
+            'name': '50 20 normal',
+            'X_train': X_train,
+            'y_train': y_train,
+            'args': args,
+        },
+        structure = [
             [50, args.activation],
             [20, args.activation]
         ]
     )
     lstmModel = kerasLSTMSingleLayerLeaky(
-        X_train,
-        y_train,
-        lstmArgs,
+        params = {
+            'name': 'LSTM 128',
+            'X_train': X_train,
+            'y_train': y_train,
+            'args': lstmArgs,
+        },
         units=128,
         dropout=0.1,
         alpha=0.5
     )
     lstmModel2 = kerasLSTMSingleLayerLeaky(
-        X_train,
-        y_train,
-        lstmArgs2,
+        params = {
+            'name': 'LSTM 2 128',
+            'X_train': X_train,
+            'y_train': y_train,
+            'args': lstmArgs2,
+        },
         units=128,
         dropout=0.1,
         alpha=0.5
     )
+    sklearnLinear = sklearnRidgeCV(
+        params = {
+            'name': 'Linear',
+            'X_train': X_train,
+            'y_train': y_train,
+        },
+    ) 
     ensemble = ensembleModel(
-        [
+        params = {
+            'name': 'ensemble 4 mods',
+            'X_train': X_train,
+            'y_train': y_train,
+        },
+        models = [
             keras_seq_mod_regl,
             keras_seq_mod_simple,
             lstmModel,
-            sklearnRidgeCV(X_train, y_train)
+            sklearnLinear,
         ],
-        X_train,
-        y_train
     )
     
-
+    
     modelList = [
-        [keras_seq_mod, "MLP normal"],
-        [ensemble, "ensemble"],
-        [lstmModel, 'lstm1'],
-        #[keras_seq_mod_regl, "MLP regularized"],
-        #[keras_seq_mod_simple, "MLP simple"],
-        #[keras_seq_mod_v_simple, "MLP very simple"],
-        #[r1, "1.0 regulariation"],
-        #[r4, "0.001"],
-        #[r5, "0.0001"],
-        #[sklearnLinear(X_train, y_train), "linear"],
-        [sklearnRidgeCV(X_train, y_train), "ridge"],
+        keras_seq_mod,
+        keras_seq_mod_simple,
+        ensemble,
+        lstmModel,
+        sklearnLinear,
     ]
 
     retrain = False
@@ -171,7 +193,7 @@ def main(filename, targetColumns):
     utilities.plotModelPredictions(plt, deviationsList, columnsList, df_test.iloc[maxEnrolWindow:].index, labelNames, traintime)
 
     """
-    for model, name in modelList:
+    for model in modelList:
         printModelSummary(model)
     
     """

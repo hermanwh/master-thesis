@@ -48,7 +48,13 @@ class EnsembleModel():
         train = preds[0]
         for pred in preds[1:]:
             train = np.concatenate((train, pred), axis=1)
-        self.MLmodel = sklearnLinear(train, self.y_train[self.maxEnrol:])
+        self.MLmodel = sklearnLinear(
+            params = {
+                'name': 'ML model of ensemble',
+                'X_train': train,
+                'y_train': self.y_train[self.maxEnrol:],
+            },
+        )
         self.MLmodel.train()
 
     def trainEnsemble(self):
@@ -63,7 +69,13 @@ class EnsembleModel():
         train = preds[0]
         for pred in preds[1:]:
             train = np.concatenate((train, pred), axis=1)
-        self.MLmodel = sklearnLinear(train, self.y_train[self.maxEnrol:])
+        self.MLmodel = sklearnLinear(
+            params = {
+                'name': 'ML model of ensemble',
+                'X_train': train,
+                'y_train': self.y_train[self.maxEnrol:],
+            },
+        )
         self.MLmodel.train()
 
     def predict(self, X, y):
@@ -81,12 +93,12 @@ class EnsembleModel():
         return self.MLmodel.predict(test)
 
     def save(self, directory, name):
-        for i, model in enumerate(self.models):
+        for model in self.models:
             if model.args:
                 dirr = directory + name + '/'
                 if not os.path.exists(dirr):
                     os.makedirs(dirr)
-                model.save(dirr, str(i))
+                model.save(dirr, "_".join(model.name.split(' ')))
 
 class MachinLearningModel():
     def __init__(self, model, X_train, y_train, args=None, modelType=None, scaler="standard", name=None):
@@ -174,27 +186,42 @@ class MachinLearningModel():
         if self.args:
             self.model.save(directory + name + ".h5")
 
-def ensembleModel(models, X_train, y_train):
-    return EnsembleModel(models, X_train, y_train, )
+def ensembleModel(params, models):
+    X = params['X_train']
+    Y = params['y_train']
+    name = params['name']
+    return EnsembleModel(models, X, Y, name=name)
 
-def kerasLSTMSingleLayerLeaky(X_train, y_train, args, units=128, dropout=0.1, alpha=0.5):
+def kerasLSTMSingleLayerLeaky(params, units=128, dropout=0.1, alpha=0.5):
+    X_train = params['X_train']
+    y_train = params['y_train']
+    name = params['name']
+    args = params['args']
     model = Sequential()
     model.add(LSTM(units, input_shape=(args.enrolWindow, X_train.shape[1])))
     model.add(LeakyReLU(alpha=alpha)) 
     model.add(Dropout(dropout))
     model.add(Dense(y_train.shape[1]))
-    return MachinLearningModel(model, X_train, y_train, args=args, modelType="RNN")
+    return MachinLearningModel(model, X_train, y_train, args=args, modelType="RNN", name=name)
 
-def kerasLSTMMultiLayer(X_train, y_train, args, units=[50, 100], dropoutRate=0.2):
+def kerasLSTMMultiLayer(params, units=[50, 100], dropoutRate=0.2):
+    X_train = params['X_train']
+    y_train = params['y_train']
+    name = params['name']
+    args = params['args']
     model = Sequential()
     model.add(LSTM(units[0], return_sequences=True, input_shape=(args.enrolWindow, X_train.shape[1])))
     model.add(Dropout(dropoutRate))
     model.add(LSTM(units[1], return_sequences=False))
     model.add(Dropout(dropoutRate))
     model.add(Dense(y_train.shape[1]))
-    return MachinLearningModel(model, X_train, y_train, args=args, modelType="RNN")
+    return MachinLearningModel(model, X_train, y_train, args=args, modelType="RNN", name=name)
 
-def kerasLSTMSingleLayer(X_train, y_train, args, units=128, dropout=0.3, recurrentDropout=0.3):
+def kerasLSTMSingleLayer(params, units=128, dropout=0.3, recurrentDropout=0.3):
+    X_train = params['X_train']
+    y_train = params['y_train']
+    name = params['name']
+    args = params['args']
     input_layer = Input(shape=(None,X_train.shape[-1]))
     layer_1 = layers.LSTM(units,
                          dropout = dropout,
@@ -204,99 +231,154 @@ def kerasLSTMSingleLayer(X_train, y_train, args, units=128, dropout=0.3, recurre
     output_layer = layers.Dense(y_train.shape[-1])(layer_1)
     
     model = Model(input_layer, output_layer) 
-    return MachinLearningModel(model, X_train, y_train, args=args, modelType="RNN")
+    return MachinLearningModel(model, X_train, y_train, args=args, modelType="RNN", name=name)
 
-def kerasSequentialRegressionModel(X_train, y_train, args, layers):
+def kerasSequentialRegressionModel(params, structure):
+    X_train = params['X_train']
+    y_train = params['y_train']
+    name = params['name']
+    args = params['args']
+
     model = Sequential()
 
-    firstLayerNeurons, firstLayerActivation = layers[0]
+    firstLayerNeurons, firstLayerActivation = structure[0]
     model.add(Dense(firstLayerNeurons, input_dim=X_train.shape[1], activation=firstLayerActivation))
     
-    for neurons, activation in layers[1:]:
+    for neurons, activation in structure[1:]:
         model.add(Dense(neurons, activation=activation))
     
     model.add(Dense(y_train.shape[1], activation='linear'))
 
-    return MachinLearningModel(model, X_train, y_train, args=args, modelType="MLP")
+    return MachinLearningModel(model, X_train, y_train, args=args, modelType="MLP", name=name)
 
-def kerasSequentialRegressionModelWithRegularization(X_train, y_train, args, layers, l1_rate=0.01, l2_rate=0.01, ):
+def kerasSequentialRegressionModelWithRegularization(params, structure, l1_rate=0.01, l2_rate=0.01, ):
+    X_train = params['X_train']
+    y_train = params['y_train']
+    name = params['name']
+    args = params['args']
+
     model = Sequential()
 
-    firstLayerNeurons, firstLayerActivation = layers[0]
+    firstLayerNeurons, firstLayerActivation = structure[0]
     model.add(Dense(firstLayerNeurons, input_dim=X_train.shape[1], activation=firstLayerActivation,
                 kernel_regularizer=l2(l2_rate),
                 activity_regularizer=l1(l1_rate)))
     
-    for neurons, activation in layers[1:]:
+    for neurons, activation in structure[1:]:
         model.add(Dense(neurons, activation=activation,
                 kernel_regularizer=l2(l2_rate),
                 activity_regularizer=l1(l1_rate)))
     
     model.add(Dense(y_train.shape[1], activation='linear'))
 
-    return MachinLearningModel(model, X_train, y_train, args=args, modelType="MLP")
+    return MachinLearningModel(model, X_train, y_train, args=args, modelType="MLP", name=name)
 
-def sklearnSVM(X, Y):
+def sklearnSVM(params):
+    X = params['X_train']
+    Y = params['y_train']
+    name = params['name']
     model = LinearSVR()
-    return MachinLearningModel(model, X, Y, modelType="Linear")
+    return MachinLearningModel(model, X, Y, modelType="Linear", name=name)
 
-def sklearnDecisionTree(X, Y):
+def sklearnDecisionTree(params):
+    X = params['X_train']
+    Y = params['y_train']
+    name = params['name']
     model = DecisionTreeRegressor()
-    return MachinLearningModel(model, X, Y, modelType="Linear")
+    return MachinLearningModel(model, X, Y, modelType="Linear", name=name)
 
-def sklearnAdaBoost(X, Y):
+def sklearnAdaBoost(params):
+    X = params['X_train']
+    Y = params['y_train']
+    name = params['name']
     model = AdaBoostRegressor()
-    return MachinLearningModel(model, X, Y, modelType="Linear")
+    return MachinLearningModel(model, X, Y, modelType="Linear", name=name)
 
-def sklearnBagging(X, Y):
+def sklearnBagging(params):
+    X = params['X_train']
+    Y = params['y_train']
+    name = params['name']
     model = BaggingRegressor()
-    return MachinLearningModel(model, X, Y, modelType="Linear")
+    return MachinLearningModel(model, X, Y, modelType="Linear", name=name)
 
-def sklearnGradientBoosting(X, Y):
+def sklearnGradientBoosting(params):
+    X = params['X_train']
+    Y = params['y_train']
+    name = params['name']
     model = GradientBoostingRegressor()
-    return MachinLearningModel(model, X, Y, modelType="Linear")
+    return MachinLearningModel(model, X, Y, modelType="Linear", name=name)
 
-def sklearnRandomForest(X, Y):
+def sklearnRandomForest(params):
+    X = params['X_train']
+    Y = params['y_train']
+    name = params['name']
     model = RandomForestRegressor()
-    return MachinLearningModel(model, X, Y, modelType="Linear")
+    return MachinLearningModel(model, X, Y, modelType="Linear", name=name)
 
-def sklearnMLP(X, Y):
+def sklearnMLP(params):
+    X = params['X_train']
+    Y = params['y_train']
+    name = params['name']
     model = MLPRegressor(early_stopping=True)
-    return MachinLearningModel(model, X, Y, modelType="Linear")
+    return MachinLearningModel(model, X, Y, modelType="Linear", name=name)
 
 # apparently not how RBMs work...
 # look into it :) 
-def sklearnRBM(X, Y):
+def sklearnRBM(params):
+    X = params['X_train']
+    Y = params['y_train']
+    name = params['name']
     model = BernoulliRBM()
-    return MachinLearningModel(model, X, Y, modelType="Linear")
+    return MachinLearningModel(model, X, Y, modelType="Linear", name=name)
 
-def sklearnLinear(X, Y):
+def sklearnLinear(params):
+    X = params['X_train']
+    Y = params['y_train']
+    name = params['name']
     model = LinearRegression()
-    return MachinLearningModel(model, X, Y, modelType="Linear")
+    return MachinLearningModel(model, X, Y, modelType="Linear", name=name)
 
-def sklearnLasso(X, Y, alpha=0.1):
+def sklearnLasso(params, alpha=0.1):
+    X = params['X_train']
+    Y = params['y_train']
+    name = params['name']
     model = Lasso(alpha=alpha)
-    return MachinLearningModel(model, X, Y, modelType="Linear")
+    return MachinLearningModel(model, X, Y, modelType="Linear", name=name)
 
-def sklearnLassoCV(X, Y, alphas=(0.1, 1.0, 10.0)):
+def sklearnLassoCV(params, alphas=(0.1, 1.0, 10.0)):
+    X = params['X_train']
+    Y = params['y_train']
+    name = params['name']
     model = LassoCV(alphas=alphas)
-    return MachinLearningModel(model, X, Y, modelType="Linear")
+    return MachinLearningModel(model, X, Y, modelType="Linear", name=name)
 
-def sklearnRidge(X, Y, alpha=1.0):
+def sklearnRidge(params, alpha=1.0):
+    X = params['X_train']
+    Y = params['y_train']
+    name = params['name']
     model = Ridge(alpha=alpha)
-    return MachinLearningModel(model, X, Y, modelType="Linear")
+    return MachinLearningModel(model, X, Y, modelType="Linear", name=name)
 
-def sklearnRidgeCV(X, Y, alphas=(0.1, 1.0, 10.0)):
+def sklearnRidgeCV(params, alphas=(0.1, 1.0, 10.0)):
+    X = params['X_train']
+    Y = params['y_train']
+    name = params['name']
     model = RidgeCV(alphas=alphas)
-    return MachinLearningModel(model, X, Y, modelType="Linear")
+    return MachinLearningModel(model, X, Y, modelType="Linear", name=name)
 
-def sklearnElasticNet(X, Y, alpha=1.0, l1_ratio=0.5):
+def sklearnElasticNet(params, alpha=1.0, l1_ratio=0.5):
+    X = params['X_train']
+    Y = params['y_train']
+    name = params['name']
     model = ElasticNet(alpha=alpha, l1_ratio=l1_ratio)
-    return MachinLearningModel(model, X, Y, modelType="Linear")
+    return MachinLearningModel(model, X, Y, modelType="Linear", name=name)
 
-def sklearnElasticNetCV(X, Y, alphas=None, l1_ratio=0.5):
+def sklearnElasticNetCV(params, alphas=None, l1_ratio=0.5):
+    X = params['X_train']
+    Y = params['y_train']
+    name = params['name']
     model = ElasticNetCV(alphas=alphas, l1_ratio=l1_ratio)
-    return MachinLearningModel(model, X, Y, modelType="Linear")
+    return MachinLearningModel(model, X, Y, modelType="Linear", name=name)
 
 def printModelSummary(model):
     if hasattr(model, "summary"):
