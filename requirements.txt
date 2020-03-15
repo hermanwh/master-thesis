@@ -6,3 +6,5 @@ sklearn
 tensorflow
 keras
 seaborn
+jupyterlab
+notebook

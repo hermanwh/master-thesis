@@ -1,4 +1,5 @@
-import sys, os
+import sys
+import os
 ROOT_PATH = os.path.abspath(".").split("src")[0]
 module_path = os.path.abspath(os.path.join(ROOT_PATH+"/src/utils/"))
 if module_path not in sys.path:
@@ -40,6 +41,8 @@ args = Args({
     'validationSize': 0.2,
     'testSize': 0.2
 })
+
+print('hei')
 
 lstmArgs = Args({
     'activation': 'relu',

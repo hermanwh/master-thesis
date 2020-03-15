@@ -1,3 +1,12 @@
 {
-    "python.pythonPath": "venv\\Scripts\\python.exe"
+    "python.pythonPath": "venv\\Scripts\\python.exe",
+    "python.linting.pylintPath": "venv\\Scripts\\pylint",
+    "python.linting.pylintEnabled": true,
+    "python.linting.pylintUseMinimalCheckers": false,
+    "python.linting.pylintArgs": [
+        "--enable=W0614",
+        "--disable=C0103",
+        "--disable=C0111",
+    ],
+    "python.linting.enabled": false,
 }

@@ -59,6 +59,16 @@ def getBasicHyperparams():
         'metrics': ['mean_squared_error'],
     }
 
+def initDataframe(filename, relevantColumns, labelNames):
+    df = readDataFile(filename)
+    df = getDataWithTimeIndex(df)
+    df = df.dropna()
+
+    if relevantColumns is not None:
+        df = dropIrrelevantColumns(df, [relevantColumns, labelNames])
+
+    return df
+
 def getFeatureTargetSplit(df_train, df_test, targetColumns):
     X_train = df_train.drop(targetColumns, axis=1).values
     y_train = df_train[targetColumns].values
@@ -128,9 +138,9 @@ def findMaxEnrolWindow(modelList):
             enrol = model.args.enrolWindow
         else:
             enrol = 0
-            
+
         if enrol > maxEnrol:
-                maxEnrol = enrol
+            maxEnrol = enrol
 
     return maxEnrol
 
@@ -147,13 +157,15 @@ def predictWithModels(modelList, X_train, y_train, X_test, y_test, targetColumns
     for i in range(y_train.shape[1]):
         deviationsList.append([])
         columnsList.append([])
-        columnsList[i].append([
-                        'Targets',
-                        targetColumns[i],
-                        y_test[:, i][maxEnrol:],
-                        'red',
-                        1.0,
-                    ])
+        columnsList[i].append(
+            [
+                'Targets',
+                targetColumns[i],
+                y_test[:, i][maxEnrol:],
+                'red',
+                1.0,
+            ]
+        )
 
     for i, modObj in enumerate(modelList):
         mod = modObj
