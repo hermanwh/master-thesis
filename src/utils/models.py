@@ -17,6 +17,20 @@ from copy import deepcopy
 
 import os
 
+class Args():
+    def __init__(self, args):
+        self.activation = args['activation']
+        self.loss = args['loss']
+        self.optimizer = args['optimizer']
+        self.metrics = args['metrics']
+        self.epochs = args['epochs']
+        self.batchSize = args['batchSize']
+        self.verbose = args['verbose']
+        self.callbacks= args['callbacks']
+        self.enrolWindow = args['enrolWindow']
+        self.validationSize = args['validationSize']
+        self.testSize = args['testSize']
+
 class EnsembleModel():
     def __init__(self, models, X_train, y_train, modelType="Ensemble", name=None):
         maxEnrol = 0
@@ -196,7 +210,7 @@ def kerasLSTMSingleLayerLeaky(params, units=128, dropout=0.1, alpha=0.5):
     X_train = params['X_train']
     y_train = params['y_train']
     name = params['name']
-    args = params['args']
+    args = Args(params['args'])
     model = Sequential()
     model.add(LSTM(units, input_shape=(args.enrolWindow, X_train.shape[1])))
     model.add(LeakyReLU(alpha=alpha)) 
@@ -208,7 +222,7 @@ def kerasLSTMMultiLayer(params, units=[50, 100], dropoutRate=0.2):
     X_train = params['X_train']
     y_train = params['y_train']
     name = params['name']
-    args = params['args']
+    args = Args(params['args'])
     model = Sequential()
     model.add(LSTM(units[0], return_sequences=True, input_shape=(args.enrolWindow, X_train.shape[1])))
     model.add(Dropout(dropoutRate))
@@ -221,7 +235,7 @@ def kerasLSTMSingleLayer(params, units=128, dropout=0.3, recurrentDropout=0.3):
     X_train = params['X_train']
     y_train = params['y_train']
     name = params['name']
-    args = params['args']
+    args = Args(params['args'])
     input_layer = Input(shape=(None,X_train.shape[-1]))
     layer_1 = layers.LSTM(units,
                          dropout = dropout,
@@ -237,7 +251,7 @@ def kerasSequentialRegressionModel(params, structure):
     X_train = params['X_train']
     y_train = params['y_train']
     name = params['name']
-    args = params['args']
+    args = Args(params['args'])
 
     model = Sequential()
 
@@ -251,11 +265,31 @@ def kerasSequentialRegressionModel(params, structure):
 
     return MachinLearningModel(model, X_train, y_train, args=args, modelType="MLP", name=name)
 
+def kerasSequentialRegressionModelWithDropout(params, structure, dropoutRate=0.2):
+    X_train = params['X_train']
+    y_train = params['y_train']
+    name = params['name']
+    args = Args(params['args'])
+
+    model = Sequential()
+
+    firstLayerNeurons, firstLayerActivation = structure[0]
+    model.add(Dense(firstLayerNeurons, input_dim=X_train.shape[1], activation=firstLayerActivation))
+    model.add(Dropout(dropoutRate))
+
+    for neurons, activation in structure[1:]:
+        model.add(Dense(neurons, activation=activation))
+        model.add(Dropout(dropoutRate))
+    
+    model.add(Dense(y_train.shape[1], activation='linear'))
+
+    return MachinLearningModel(model, X_train, y_train, args=args, modelType="MLP", name=name)
+
 def kerasSequentialRegressionModelWithRegularization(params, structure, l1_rate=0.01, l2_rate=0.01, ):
     X_train = params['X_train']
     y_train = params['y_train']
     name = params['name']
-    args = params['args']
+    args = Args(params['args'])
 
     model = Sequential()
 

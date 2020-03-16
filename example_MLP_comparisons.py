@@ -1,5 +1,3 @@
-import src.utils.utilities as utilities
-import src.utils.models as models
 from api import Api
 mlApi = Api()
 
@@ -31,7 +29,6 @@ targetColumns = [
     '50TT002',
 ]
 
-
 traintime = [
         ["2020-01-01 00:00:00", "2020-02-01 00:00:00"],
     ]
@@ -41,122 +38,25 @@ testtime = [
     "2020-07-01 00:00:00"
 ]
 
-
-args = utilities.Args({
-    'activation': 'relu',
-    'loss': 'mean_squared_error',
-    'optimizer': 'adam',
-    'metrics': ['mean_squared_error'],
-    'epochs': 2000,
-    'batchSize': 32,
-    'verbose': 0,
-    'callbacks': utilities.getBasicCallbacks(),
-    'enrolWindow': 0,
-    'validationSize': 0.2,
-    'testSize': 0.2,
-})
-
-
-names = list(map(lambda el: el[0], columns))
-descriptions = list(map(lambda el: el[1], columns))
-units = list(map(lambda el: el[2], columns))
-
-relevantColumns = list(filter(lambda col: col not in irrelevantColumns, map(lambda el: el[0], columns)))
-columnUnits = dict(zip(names, units))
-columnDescriptions = dict(zip(names, descriptions))
-
-df = mlApi.initDataframe(filename, relevantColumns, columnDescriptions)
+df = mlApi.initDataframe(filename, columns, irrelevantColumns)
 df_train, df_test = mlApi.getTestTrainSplit(traintime, testtime)
 X_train, y_train, X_test, y_test = mlApi.getFeatureTargetSplit(targetColumns)
 
-mlp_10 = models.kerasSequentialRegressionModel(
-    params={
-        'name': '10 normal',
-        'X_train': X_train,
-        'y_train': y_train,
-        'args': args,
-    },
-    structure=[
-        [10, args.activation]
-    ],
-)
-
-mlp_20 = models.kerasSequentialRegressionModel(
-    params={
-        'name': '20 normal',
-        'X_train': X_train,
-        'y_train': y_train,
-        'args': args,
-    },
-    structure=[
-        [20, args.activation]
-    ],
-)
-
-mlp_128 = models.kerasSequentialRegressionModel(
-    params={
-        'name': '128 normal',
-        'X_train': X_train,
-        'y_train': y_train,
-        'args': args,
-    },
-    structure=[
-        [128, args.activation]
-    ],
-)
-
-mlp_10_reg = models.kerasSequentialRegressionModelWithRegularization(
-    params={
-        'name': '10 reg',
-        'X_train': X_train,
-        'y_train': y_train,
-        'args': args,
-    },
-    structure=[
-        [10, args.activation]
-    ],
-)
-
-mlp_20_reg = models.kerasSequentialRegressionModelWithRegularization(
-    params={
-        'name': '20 reg',
-        'X_train': X_train,
-        'y_train': y_train,
-        'args': args,
-    },
-    structure=[
-        [20, args.activation]
-    ],
-)
-
-mlp_128_reg = models.kerasSequentialRegressionModelWithRegularization(
-    params={
-        'name': '128 reg',
-        'X_train': X_train,
-        'y_train': y_train,
-        'args': args,
-    },
-    structure=[
-        [128, args.activation]
-    ],
-)
-
-sklearnLinearModel = models.sklearnRidgeCV(
-    params={
-        'name': 'Linear',
-        'X_train': X_train,
-        'y_train': y_train,
-    },
-) 
+mlp_10 = mlApi.MLP('MLP 10', layers=[10])
+mlp_20 = mlApi.MLP('MLP 20', layers=[20])
+mlp_128 = mlApi.MLP('MLP 128', layers=[128])
+mlp_10_reg = mlApi.MLP_Regularized('MLPr 10', layers=[10])
+mlp_20_reg = mlApi.MLP_Regularized('MLPr 20', layers=[20])
+mlp_128_reg = mlApi.MLP_Regularized('MLPr 128', layers=[128])
+linear = mlApi.Linear('Linear')
+linear_reg = mlApi.Linear_Regularized('Linear r')
+ensemble = mlApi.Ensemble('Ensemble', [mlp_128_reg, linear_reg])
 
 modelList = [
-    mlp_10,
-    mlp_20,
-    mlp_128,
-    mlp_10_reg,
-    mlp_20_reg,
     mlp_128_reg,
-    sklearnLinearModel,
+    linear,
+    linear_reg,
+    ensemble
 ]
 
 mlApi.initModels(modelList)

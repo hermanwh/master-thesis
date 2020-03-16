@@ -48,7 +48,7 @@ testtime = [
     "2020-07-01 00:00:00"
 ]
 
-args = utilities.Args({
+args = {
     'activation': 'relu',
     'loss': 'mean_squared_error',
     'optimizer': 'adam',
@@ -60,9 +60,9 @@ args = utilities.Args({
     'enrolWindow': 16,
     'validationSize': 0.2,
     'testSize': 0.2,
-})
+}
 
-lstmArgs = utilities.Args({
+lstmArgs = {
     'activation': 'relu',
     'loss': 'mean_squared_error',
     'optimizer': 'adam',
@@ -74,9 +74,9 @@ lstmArgs = utilities.Args({
     'enrolWindow': 1,
     'validationSize': 0.2,
     'testSize': 0.2
-})
+}
 
-lstmArgs2 = utilities.Args({
+lstmArgs2 = {
     'activation': 'relu',
     'loss': 'mean_squared_error',
     'optimizer': 'adam',
@@ -88,7 +88,7 @@ lstmArgs2 = utilities.Args({
     'enrolWindow': 16,
     'validationSize': 0.2,
     'testSize': 0.2
-})
+}
 
 
 df = mlApi.initDataframe(filename, relevantColumns, columnDescriptions)

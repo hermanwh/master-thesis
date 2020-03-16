@@ -18,12 +18,43 @@ from src.ml.analysis.covmat import (covmat, printCovMat)
 from src.ml.analysis.pca import (pca, printExplainedVarianceRatio)
 from src.ml.analysis.pcaPlot import (pcaPlot, printReconstructionRow)
 
-class Api():
+default_MLP_args = {
+    'activation': 'relu',
+    'loss': 'mean_squared_error',
+    'optimizer': 'adam',
+    'metrics': ['mean_squared_error'],
+    'epochs': 1000,
+    'batchSize': 32,
+    'verbose': 0,
+    'callbacks': utilities.getBasicCallbacks(),
+    'enrolWindow': 0,
+    'validationSize': 0.2,
+    'testSize': 0.2,
+}
 
+default_LSTM_args = {
+    'activation': 'relu',
+    'loss': 'mean_squared_error',
+    'optimizer': 'adam',
+    'metrics': ['mean_squared_error'],
+    'epochs': 100,
+    'batchSize': 32*2,
+    'verbose': 0,
+    'callbacks': utilities.getBasicCallbacks(monitor="loss"),
+    'enrolWindow': 16,
+    'validationSize': 0.2,
+    'testSize': 0.2
+}
+
+class Api():
     def __init__(self):
         self.filename = None
+        self.names = None
+        self.descriptions = None
+        self.units = None
         self.relevantColumns = None
         self.columnDescriptions = None
+        self.columnUnits = None
         self.df = None
         self.traintime = None
         self.testtime = None
@@ -38,10 +69,21 @@ class Api():
         self.maxEnrolWindow = None
         self.indexColumn = None
     
-    def initDataframe(self, filename, relevantColumns, columnDescriptions):
+    def initDataframe(self, filename, columns, irrelevantColumns):
+        columnNames = list(map(lambda el: el[0], columns))
+        descriptions = list(map(lambda el: el[1], columns))
+        units = list(map(lambda el: el[2], columns))
+
+        relevantColumns = list(filter(lambda col: col not in irrelevantColumns, map(lambda el: el[0], columns)))
+        columnUnits = dict(zip(columnNames, units))
+        columnDescriptions = dict(zip(columnNames, descriptions))
+
         self.filename = filename
         self.relevantColumns = relevantColumns
         self.columnDescriptions = columnDescriptions
+        self.columnUnits = columnUnits
+        self.columnNames = columnNames
+        
         df = utilities.initDataframe(filename, relevantColumns, columnDescriptions)
         self.df = df
         return df
@@ -98,3 +140,216 @@ class Api():
             )
             utilities.printModelPredictions(modelNames, metrics_train, metrics_test)
         return [modelNames, metrics_train, metrics_test]
+
+    def MLP(
+            self,
+            name,
+            layers=[128],
+            activation=default_MLP_args['activation'],
+            loss=default_MLP_args['loss'],
+            optimizer=default_MLP_args['optimizer'],
+            metrics=default_MLP_args['metrics'],
+            epochs=default_MLP_args['epochs'],
+            batchSize=default_MLP_args['batchSize'],
+            verbose=default_MLP_args['verbose'],
+            validationSize=default_MLP_args['validationSize'],
+            testSize=default_MLP_args['testSize']
+        ):
+
+        mlpLayers = []
+        for layerSize in layers:
+            mlpLayers.append([layerSize, activation])
+
+        model = models.kerasSequentialRegressionModel(
+            params = {
+                'name': name,
+                'X_train': self.X_train,
+                'y_train': self.y_train,
+                'args': {
+                    'activation': activation,
+                    'loss': loss,
+                    'optimizer': optimizer,
+                    'metrics': metrics,
+                    'epochs': epochs,
+                    'batchSize': batchSize,
+                    'verbose': verbose,
+                    'callbacks': default_MLP_args['callbacks'],
+                    'enrolWindow': 0,
+                    'validationSize': validationSize,
+                    'testSize': testSize,
+                },
+            },
+            structure = mlpLayers,
+        )
+
+        return model
+    
+    def MLP_Dropout(
+            self,
+            name,
+            layers=[128],
+            dropoutRate=0.2,
+            activation=default_MLP_args['activation'],
+            loss=default_MLP_args['loss'],
+            optimizer=default_MLP_args['optimizer'],
+            metrics=default_MLP_args['metrics'],
+            epochs=default_MLP_args['epochs'],
+            batchSize=default_MLP_args['batchSize'],
+            verbose=default_MLP_args['verbose'],
+            validationSize=default_MLP_args['validationSize'],
+            testSize=default_MLP_args['testSize']
+        ):
+
+        mlpLayers = []
+        for layerSize in layers:
+            mlpLayers.append([layerSize, activation])
+
+        model = models.kerasSequentialRegressionModelWithDropout(
+            params={
+                'name': name,
+                'X_train': self.X_train,
+                'y_train': self.y_train,
+                'args': {
+                    'activation': activation,
+                    'loss': loss,
+                    'optimizer': optimizer,
+                    'metrics': metrics,
+                    'epochs': epochs,
+                    'batchSize': batchSize,
+                    'verbose': verbose,
+                    'callbacks': default_MLP_args['callbacks'],
+                    'enrolWindow': 0,
+                    'validationSize': validationSize,
+                    'testSize': testSize,
+                },
+            },
+            structure=mlpLayers,
+            dropoutRate=dropoutRate
+        )
+        
+        return model
+
+    def MLP_Regularized(
+            self,
+            name,
+            layers=[128],
+            l1_rate=0.01,
+            l2_rate=0.01,
+            activation=default_MLP_args['activation'],
+            loss=default_MLP_args['loss'],
+            optimizer=default_MLP_args['optimizer'],
+            metrics=default_MLP_args['metrics'],
+            epochs=default_MLP_args['epochs'],
+            batchSize=default_MLP_args['batchSize'],
+            verbose=default_MLP_args['verbose'],
+            validationSize=default_MLP_args['validationSize'],
+            testSize=default_MLP_args['testSize']
+        ):
+
+        mlpLayers = []
+        for layerSize in layers:
+            mlpLayers.append([layerSize, activation])
+
+        model = models.kerasSequentialRegressionModelWithRegularization(
+            params = {
+                'name': name,
+                'X_train': self.X_train,
+                'y_train': self.y_train,
+                'args': {
+                    'activation': activation,
+                    'loss': loss,
+                    'optimizer': optimizer,
+                    'metrics': metrics,
+                    'epochs': epochs,
+                    'batchSize': batchSize,
+                    'verbose': verbose,
+                    'callbacks': default_MLP_args['callbacks'],
+                    'enrolWindow': 0,
+                    'validationSize': validationSize,
+                    'testSize': testSize,
+                },
+            },
+            structure = mlpLayers,
+            l1_rate=l1_rate,
+            l2_rate=l2_rate,
+        )
+        
+        return model
+
+    def LSTM(
+        self,
+        name,
+        units=128,
+        dropout=0.1,
+        alpha=0.5,
+        activation=default_LSTM_args['activation'],
+        loss=default_LSTM_args['loss'],
+        optimizer=default_LSTM_args['optimizer'],
+        metrics=default_LSTM_args['metrics'],
+        epochs=default_LSTM_args['epochs'],
+        batchSize=default_LSTM_args['batchSize'],
+        verbose=default_LSTM_args['verbose'],
+        enrolWindow=default_LSTM_args['enrolWindow'],
+        validationSize=default_LSTM_args['validationSize'],
+        testSize=default_LSTM_args['testSize'],
+        ):
+
+        model = models.kerasLSTMSingleLayerLeaky(
+            params = {
+                'name': name,
+                'X_train': self.X_train,
+                'y_train': self.y_train,
+                'args': {
+                    'activation': activation,
+                    'loss': loss,
+                    'optimizer': optimizer,
+                    'metrics': metrics,
+                    'epochs': epochs,
+                    'batchSize': batchSize,
+                    'verbose': verbose,
+                    'callbacks': default_LSTM_args['callbacks'],
+                    'enrolWindow': enrolWindow,
+                    'validationSize': validationSize,
+                    'testSize': testSize,
+                },
+            },
+            units=units,
+            dropout=dropout,
+            alpha=alpha,
+        )
+        
+        return model
+
+    def Linear(self, name):
+        model = models.sklearnLinear(
+            params={
+                'name': name,
+                'X_train': self.X_train,
+                'y_train': self.y_train,
+            },
+        )
+
+        return model
+
+    def Linear_Regularized(self, name):
+        model = models.sklearnRidgeCV(
+            params={
+                'name': name,
+                'X_train': self.X_train,
+                'y_train': self.y_train,
+            },
+        )
+
+        return model
+
+    def Ensemble(self, name, modelList):
+        model = models.ensembleModel(
+            params={
+                'name': name,
+                'X_train': self.X_train,
+                'y_train': self.y_train,
+            },
+            models=modelList,
+        )
+
+        return model

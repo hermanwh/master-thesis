@@ -30,20 +30,6 @@ class Config():
         self.columnUnits = config['columnUnits']
         self.timestamps = config['timestamps']
 
-class Args():
-    def __init__(self, args):
-        self.activation = args['activation']
-        self.loss = args['loss']
-        self.optimizer = args['optimizer']
-        self.metrics = args['metrics']
-        self.epochs = args['epochs']
-        self.batchSize = args['batchSize']
-        self.verbose = args['verbose']
-        self.callbacks= args['callbacks']
-        self.enrolWindow = args['enrolWindow']
-        self.validationSize = args['validationSize']
-        self.testSize = args['testSize']
-
 def getBasicCallbacks(monitor="val_loss", patience_es=200, patience_rlr=80):
     return [
         EarlyStopping(
@@ -219,7 +205,7 @@ def predictWithModels(modelList, X_train, y_train, X_test, y_test, targetColumns
 
 def getPlotColors():
     #colors = ['#92a8d1','#034f84','#f7cac9','#f7786b','#deeaee','#b1cbbb','#eea29a','#c94c4c']
-    colors = ['#686256','#c1502e','#587e76','#a96e5b','#454140','#bd5734','#7a3b2e']
+    colors = ['#686256','#c1502e','#587e76','#a96e5b','#454140','#bd5734','#7a3b2e', '#92a8d1','#034f84','#f7cac9','#f7786b','#deeaee','#b1cbbb','#eea29a','#c94c4c']
     """
     colors = [
         '#0C0910',

@@ -15,7 +15,7 @@ from src.utils.configs import (getConfig)
 from src.ml.analysis.covmat import (covmat, printCovMat)
 from src.ml.analysis.pca import (pca, printExplainedVarianceRatio)
 
-args = utilities.Args({
+args = {
     'activation': 'relu',
     'loss': 'mean_squared_error',
     'optimizer': 'adam',
@@ -27,9 +27,9 @@ args = utilities.Args({
     'enrolWindow': 16,
     'validationSize': 0.2,
     'testSize': 0.2,
-})
+}
 
-lstmArgs = utilities.Args({
+lstmArgs = {
     'activation': 'relu',
     'loss': 'mean_squared_error',
     'optimizer': 'adam',
@@ -41,9 +41,9 @@ lstmArgs = utilities.Args({
     'enrolWindow': 1,
     'validationSize': 0.2,
     'testSize': 0.2
-})
+}
 
-lstmArgs2 = utilities.Args({
+lstmArgs2 = {
     'activation': 'relu',
     'loss': 'mean_squared_error',
     'optimizer': 'adam',
@@ -55,7 +55,7 @@ lstmArgs2 = utilities.Args({
     'enrolWindow': 16,
     'validationSize': 0.2,
     'testSize': 0.2
-})
+}
 
 def main(filename, targetColumns):
     subdir = filename.split('/')[-2]
