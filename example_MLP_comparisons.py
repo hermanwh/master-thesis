@@ -42,6 +42,7 @@ df = mlApi.initDataframe(filename, columns, irrelevantColumns)
 df_train, df_test = mlApi.getTestTrainSplit(traintime, testtime)
 X_train, y_train, X_test, y_test = mlApi.getFeatureTargetSplit(targetColumns)
 
+"""
 mlp_10 = mlApi.MLP('MLP 10', layers=[10])
 mlp_20 = mlApi.MLP('MLP 20', layers=[20])
 mlp_128 = mlApi.MLP('MLP 128', layers=[128])
@@ -51,13 +52,26 @@ mlp_128_reg = mlApi.MLP_Regularized('MLPr 128', layers=[128])
 linear = mlApi.Linear('Linear')
 linear_reg = mlApi.Linear_Regularized('Linear r')
 ensemble = mlApi.Ensemble('Ensemble', [mlp_128_reg, linear_reg])
+"""
+
+lstm_128 = mlApi.LSTM('lstm  128')
+lstm_128_recurrent = mlApi.LSTM_Recurrent('lstm 128 recurrent')
+lstm_2x_128 = mlApi.LSTM('lstm 2x128', units=[128, 128])
+lstm_2x_128_recurrent = mlApi.LSTM_Recurrent('lstm 2x128 recurrent', units=[128, 128])
 
 modelList = [
-    mlp_128_reg,
-    linear,
-    linear_reg,
-    ensemble
+    lstm_128,
+    lstm_128_recurrent,
+    lstm_2x_128,
+    lstm_2x_128_recurrent
 ]
+
+for modell in modelList:
+    print(" ----------------- ")
+    print(modell.model.summary())
+    print(" ----------------- ")
+    print(" ----------------- ")
+    print(" ----------------- ")
 
 mlApi.initModels(modelList)
 retrain=True

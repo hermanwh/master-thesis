@@ -30,6 +30,7 @@ default_MLP_args = {
     'enrolWindow': 0,
     'validationSize': 0.2,
     'testSize': 0.2,
+    'alpha': 0.5,
 }
 
 default_LSTM_args = {
@@ -43,7 +44,10 @@ default_LSTM_args = {
     'callbacks': utilities.getBasicCallbacks(monitor="loss"),
     'enrolWindow': 16,
     'validationSize': 0.2,
-    'testSize': 0.2
+    'testSize': 0.2,
+    'dropout': 0.2,
+    'recurrentDropout': 0.2,
+    'alpha': 0.5,
 }
 
 class Api():
@@ -279,9 +283,9 @@ class Api():
     def LSTM(
         self,
         name,
-        units=128,
-        dropout=0.1,
-        alpha=0.5,
+        units=[128],
+        dropout=default_LSTM_args['dropout'],
+        alpha=default_LSTM_args['alpha'],
         activation=default_LSTM_args['activation'],
         loss=default_LSTM_args['loss'],
         optimizer=default_LSTM_args['optimizer'],
@@ -294,7 +298,7 @@ class Api():
         testSize=default_LSTM_args['testSize'],
         ):
 
-        model = models.kerasLSTMSingleLayerLeaky(
+        model = models.kerasLSTM(
             params = {
                 'name': name,
                 'X_train': self.X_train,
@@ -316,6 +320,51 @@ class Api():
             units=units,
             dropout=dropout,
             alpha=alpha,
+        )
+        
+        return model
+
+    def LSTM_Recurrent(
+        self,
+        name,
+        units=[128],
+        dropout=default_LSTM_args['dropout'],
+        recurrentDropout=default_LSTM_args['recurrentDropout'],
+        alpha=default_LSTM_args['alpha'],
+        activation=default_LSTM_args['activation'],
+        loss=default_LSTM_args['loss'],
+        optimizer=default_LSTM_args['optimizer'],
+        metrics=default_LSTM_args['metrics'],
+        epochs=default_LSTM_args['epochs'],
+        batchSize=default_LSTM_args['batchSize'],
+        verbose=default_LSTM_args['verbose'],
+        enrolWindow=default_LSTM_args['enrolWindow'],
+        validationSize=default_LSTM_args['validationSize'],
+        testSize=default_LSTM_args['testSize'],
+        ):
+
+        model = models.kerasLSTM_Recurrent(
+            params = {
+                'name': name,
+                'X_train': self.X_train,
+                'y_train': self.y_train,
+                'args': {
+                    'activation': activation,
+                    'loss': loss,
+                    'optimizer': optimizer,
+                    'metrics': metrics,
+                    'epochs': epochs,
+                    'batchSize': batchSize,
+                    'verbose': verbose,
+                    'callbacks': default_LSTM_args['callbacks'],
+                    'enrolWindow': enrolWindow,
+                    'validationSize': validationSize,
+                    'testSize': testSize,
+                },
+            },
+            units=units,
+            dropout=dropout,
+            recurrentDropout=recurrentDropout,
         )
         
         return model

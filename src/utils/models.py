@@ -3,8 +3,9 @@ from sklearn.neural_network import MLPRegressor, BernoulliRBM
 from sklearn.ensemble import RandomForestRegressor, GradientBoostingRegressor, BaggingRegressor, AdaBoostRegressor
 from sklearn.svm import LinearSVR
 from sklearn.tree import DecisionTreeRegressor
-from keras.models import Sequential
+from keras.models import Sequential, Model
 from keras.layers import Dense, Activation, Dropout
+from keras.engine.input_layer import Input
 from keras.regularizers import l2, l1
 from keras.preprocessing.sequence import TimeseriesGenerator
 from sklearn.preprocessing import MinMaxScaler, StandardScaler
@@ -206,45 +207,69 @@ def ensembleModel(params, models):
     name = params['name']
     return EnsembleModel(models, X, Y, name=name)
 
-def kerasLSTMSingleLayerLeaky(params, units=128, dropout=0.1, alpha=0.5):
+def kerasLSTM(params, units=[128], dropout=None, alpha=None):
     X_train = params['X_train']
     y_train = params['y_train']
     name = params['name']
     args = Args(params['args'])
+
     model = Sequential()
-    model.add(LSTM(units, input_shape=(args.enrolWindow, X_train.shape[1])))
-    model.add(LeakyReLU(alpha=alpha)) 
-    model.add(Dropout(dropout))
+
+    if len(units) > 1:
+        firstLayerUnits = units[0]
+        model.add(LSTM(firstLayerUnits, return_sequences=True, input_shape=(args.enrolWindow, X_train.shape[1])))
+        if alpha is not None:
+            model.add(LeakyReLU(alpha=alpha))
+        if dropout is not None:
+            model.add(Dropout(dropout))
+
+        for layerUnits in units[1:]:
+            model.add(LSTM(layerUnits, return_sequences=False))
+            if alpha is not None:
+                model.add(LeakyReLU(alpha=alpha))
+            if dropout is not None:
+                model.add(Dropout(dropout))
+    else:
+        firstLayerUnits = units[0]
+        model.add(LSTM(firstLayerUnits, input_shape=(args.enrolWindow, X_train.shape[1])))
+        if alpha is not None:
+            model.add(LeakyReLU(alpha=alpha))
+        if dropout is not None:
+            model.add(Dropout(dropout))
+
     model.add(Dense(y_train.shape[1]))
+
     return MachinLearningModel(model, X_train, y_train, args=args, modelType="RNN", name=name)
 
-def kerasLSTMMultiLayer(params, units=[50, 100], dropoutRate=0.2):
-    X_train = params['X_train']
-    y_train = params['y_train']
-    name = params['name']
-    args = Args(params['args'])
-    model = Sequential()
-    model.add(LSTM(units[0], return_sequences=True, input_shape=(args.enrolWindow, X_train.shape[1])))
-    model.add(Dropout(dropoutRate))
-    model.add(LSTM(units[1], return_sequences=False))
-    model.add(Dropout(dropoutRate))
-    model.add(Dense(y_train.shape[1]))
-    return MachinLearningModel(model, X_train, y_train, args=args, modelType="RNN", name=name)
-
-def kerasLSTMSingleLayer(params, units=128, dropout=0.3, recurrentDropout=0.3):
+def kerasLSTM_Recurrent(params, units=[128], dropout=0.3, recurrentDropout=0.3):
     X_train = params['X_train']
     y_train = params['y_train']
     name = params['name']
     args = Args(params['args'])
     input_layer = Input(shape=(None,X_train.shape[-1]))
-    layer_1 = layers.LSTM(units,
-                         dropout = dropout,
-                         recurrent_dropout = recurrentDropout,
-                         return_sequences = True)(input_layer, training=True)
 
-    output_layer = layers.Dense(y_train.shape[-1])(layer_1)
+    if len(units) > 1:
+        firstLayerUnits = units[0]
+        layer_1 = LSTM(firstLayerUnits,
+                            dropout = dropout,
+                            recurrent_dropout = recurrentDropout,
+                            return_sequences = True)(input_layer, training=True)
+
+        for layerUnits in units[1:]:
+            layer_1 = LSTM(layerUnits,
+                            dropout = dropout,
+                            recurrent_dropout = recurrentDropout,
+                            return_sequences = False)(layer_1, training=True)
+    else:
+        firstLayerUnits = units[0]
+        layer_1 = LSTM(firstLayerUnits,
+                            dropout = dropout,
+                            recurrent_dropout = recurrentDropout)(input_layer, training=True)
+
+    output_layer = Dense(y_train.shape[-1])(layer_1)
     
-    model = Model(input_layer, output_layer) 
+    model = Model(input_layer, output_layer)
+
     return MachinLearningModel(model, X_train, y_train, args=args, modelType="RNN", name=name)
 
 def kerasSequentialRegressionModel(params, structure):
