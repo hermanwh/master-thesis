@@ -2,6 +2,9 @@ import sys, os
 ROOT_PATH = os.path.abspath(".").split("src")[0]
 if ROOT_PATH not in sys.path:
     sys.path.append(ROOT_PATH)
+module_path = os.path.abspath(os.path.join(ROOT_PATH+"/src/utils/"))
+if module_path not in sys.path:
+    sys.path.append(module_path)
 
 import numpy as np
 import pandas as pd
@@ -297,7 +300,6 @@ def readDataFile(filename):
     if ext == '.csv':
         df = pd.read_csv(filename)
         if 'Date' in df.columns:
-            print(df['Date'])
             df['Date'] = df['Date'].apply(lambda x: x.split('+')[0])
             df['Date'] = pd.to_datetime(df['Date'], dayfirst=True)
         elif 'time' in df.columns:
@@ -333,7 +335,7 @@ def getDataByTimeframe(df, start, end):
     df = df.loc[start:end]
     return df
 
-def trainModels(modelList, filename, targetColumns, retrain):
+def trainModels(modelList, filename, targetColumns, retrain=False, save=True):
     if retrain:
         for mod in modelList:
             print("Training model " + mod.name)
@@ -359,6 +361,10 @@ def trainModels(modelList, filename, targetColumns, retrain):
                         model.train()
 
                 mod.trainEnsemble()
+
+    if save:
+        saveModels(modelList, filename, targetColumns)
+        
                 
             
 def loadModel(modelname, filename, targetColumns, ensembleName=None):
@@ -393,48 +399,8 @@ def saveModels(modelList, filename, targetColumns):
         metricsPath = directory + modName + '_' + joinedColumns + ".txt"
         model.save(modelPath, modelName)
 
-    """
-    with open(ROOT_PATH + "/src/ml/trained_models/" + subdir + "/metrics.txt", 'w') as output:
-        output.write("Train metrics: " + str(train_metrics) + "\n")
-        output.write("Test metrics: " + str(test_metrics) + "\n")
-        output.write("Input columns: " + str(list(map((lambda x: labelNames[x]), list(df_train.drop(targetColumns, axis=1).columns)))) + "\n")
-        output.write("Output columns: " + str(list(map((lambda x: labelNames[x]), list(df_train[targetColumns].columns)))) + "\n")
-        
-    model.save(ROOT_PATH + '/src/ml/trained_models/' + subdir + '/model.h5')
-    """
-
-def saveKerasModel(model, loc, name):
-    print("Saving model")
-    model.save(loc + '/' + name + '.h5')
-    print("Model saved")
-    printHorizontalLine()
-
 def printEmptyLine():
     print("")
 
 def printHorizontalLine():
     print("-------------------------------------------")
-
-def sigmoid(x):
-    return 1/(1 + np.exp(-x))
-
-def tanh(x):
-    return np.tanh(x)
-
-def relu(x):
-    return np.maximum(x, 0)
-
-def relu_vectorized(x):
-    return np.vectorize(relu)
-
-def leaky_relu(x, a):
-    return np.maximum(x, a*x)
-
-def leaky_relu_vectorized(x, a):
-    return np.vectorize(leaky_relu)
-
-def elu(x, a):
-    if x >= 0:
-        return x
-    else:
-        return a*(np.exp(x) - 1)

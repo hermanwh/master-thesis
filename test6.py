@@ -1,24 +1,9 @@
-# external imports, keep as is
-import sys
-import os
-import matplotlib.pyplot as plt
-
-ROOT_PATH = os.path.abspath(".").split("src")[0]
-if ROOT_PATH not in sys.path:
-    sys.path.append(ROOT_PATH)
-module_path = os.path.abspath(os.path.join(ROOT_PATH+"/src/utils/"))
-if module_path not in sys.path:
-    sys.path.append(module_path)
-
 import src.utils.utilities as utilities
 import src.utils.models as models
-
-# specific imports, use as needed
-from src.ml.analysis.covmat import (covmat, printCovMat)
-from src.ml.analysis.pca import (pca, printExplainedVarianceRatio)
+from api import Api
+mlApi = Api()
 
 # define dataset specifics
-
 filename = "../HX-condition-monitoring/datasets/D/data.csv"
 
 columns = [
@@ -55,7 +40,7 @@ columnUnits = dict(zip(names, units))
 columnDescriptions = dict(zip(names, descriptions))
 
 traintime = [
-        ["2020-01-01 00:00:00", "2020-03-01 00:00:00"],
+        ["2020-01-01 00:00:00", "2020-02-01 00:00:00"],
     ]
 
 testtime = [
@@ -106,9 +91,9 @@ lstmArgs2 = utilities.Args({
 })
 
 
-df = utilities.initDataframe(filename, relevantColumns, columnDescriptions)
-df_train, df_test = utilities.getTestTrainSplit(df, traintime, testtime)
-X_train, y_train, X_test, y_test = utilities.getFeatureTargetSplit(df_train, df_test, targetColumns)
+df = mlApi.initDataframe(filename, relevantColumns, columnDescriptions)
+df_train, df_test = mlApi.getTestTrainSplit(traintime, testtime)
+X_train, y_train, X_test, y_test = mlApi.getFeatureTargetSplit(targetColumns)
 
 keras_seq_mod_regl = models.kerasSequentialRegressionModelWithRegularization(
     params={
@@ -208,25 +193,10 @@ modelList = [
     sklearnLinearModel,
 ]
 
-retrain = False
-maxEnrolWindow = utilities.findMaxEnrolWindow(modelList)
+mlApi.initModels(modelList)
 
-utilities.trainModels(modelList, filename, targetColumns, retrain)
-names, r2_train, r2_test, deviationsList, columnsList = utilities.predictWithModels(
-    modelList,
-    X_train,
-    y_train,
-    X_test,
-    y_test,
-    targetColumns
-)
-utilities.saveModels(modelList, filename, targetColumns)
-#utilities.printModelPredictions(names, r2_train, r2_test)
-utilities.plotModelPredictions(
-    plt,
-    deviationsList,
-    columnsList,
-    df_test.iloc[maxEnrolWindow:].index,
-    columnDescriptions,
-    traintime
-)
+retrain = False
+
+mlApi.trainModels(retrain)
+
+modelNames, metrics_train, metrics_test = mlApi.predictWithModels(plot=True)

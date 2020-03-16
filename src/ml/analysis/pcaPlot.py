@@ -14,7 +14,7 @@ from configs import getConfig
 from sklearn import decomposition
 from sklearn.preprocessing import StandardScaler
 
-def main(filename):
+def pcaPlot(filename):
     subdir = filename.split('/')[-2]
     columns, relevantColumns, labelNames, columnUnits, timestamps = getConfig(subdir)
     df = utilities.readDataFile(filename)
@@ -106,7 +106,7 @@ if __name__ == "__main__":
             print(argument)
         sys.exit()
 
-    pca = main(filename)
+    pca = pcaPlot(filename)
 
     printExplainedVarianceRatio(pca)
 

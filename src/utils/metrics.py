@@ -30,3 +30,27 @@ def calculateMetrics(y_true, y_pred):
     else:
         maxerror = max_error(y_true, y_pred)
     return [r2, mse, mae, maxerror]
+
+def sigmoid(x):
+    return 1/(1 + np.exp(-x))
+
+def tanh(x):
+    return np.tanh(x)
+
+def relu(x):
+    return np.maximum(x, 0)
+
+def relu_vectorized(x):
+    return np.vectorize(relu)
+
+def leaky_relu(x, a):
+    return np.maximum(x, a*x)
+
+def leaky_relu_vectorized(x, a):
+    return np.vectorize(leaky_relu)
+
+def elu(x, a):
+    if x >= 0:
+        return x
+    else:
+        return a*(np.exp(x) - 1)
