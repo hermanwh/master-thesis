@@ -322,3 +322,47 @@ def getConfigF():
 	timestamps = [traintime, testtime, validtime]
 
 	return [columns, relevantColumns, columnDescriptions, columnUnits, timestamps]
+
+def getConfigG():
+	columnDescriptions = {
+		'Date':'Date',
+		'PDI0064': 'Gas DP',
+		'TI0066': 'Gas T out',
+		'TZI0012': 'Gas T in',
+		'FI0010': 'Gas rate',
+		'TT0025': 'SW T in',
+		'TT0026': 'SW T out',
+		'FT0027': 'SW rate',
+		'TIC0022U': 'SW valve',
+		'PDT0024': 'SW DP',
+	}
+
+	irrelevantColumns = [
+	]
+
+	columns = list(columnDescriptions.keys())
+	relevantColumns = list(filter((lambda column: column not in irrelevantColumns), columns))
+
+	columnUnits = {
+		'Date':'Date',
+		'PDI0064': 'bar',
+		'TI0066': 'degrees',
+		'TZI0012': 'degrees',
+		'FI0010': 'm3/h',
+		'TT0025': 'degrees',
+		'TT0026': 'degrees',
+		'FT0027': 'm3/h',
+		'TIC0022U': '%',
+		'PDT0024': 'bar',
+	}
+
+	traintime = [
+		["2011-06-01 00:00:00", "2013-06-01 00:00:00"]
+	]
+	testtime = ["2011-06-01 00:00:00", "2020-03-01 00:00:00"]
+	validtime = ["2013-06-01 00:00:00", "2014-06-01 00:00:00"]
+	
+	timestamps = [traintime, testtime, validtime]
+
+	return [columns, relevantColumns, columnDescriptions, columnUnits, timestamps]
+

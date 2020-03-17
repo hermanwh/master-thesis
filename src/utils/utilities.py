@@ -12,6 +12,7 @@ import tensorflow as tf
 import keras
 import matplotlib.dates as mdates
 import matplotlib.pyplot as plt
+from prettytable import PrettyTable
 from sklearn.metrics import r2_score, mean_squared_log_error, mean_squared_error, mean_absolute_error, max_error
 from configs import getConfig
 from keras.callbacks.callbacks import EarlyStopping, ReduceLROnPlateau
@@ -82,9 +83,17 @@ def getTestTrainSplit(df, traintime, testtime):
 def plotKerasModel(model):
     plot_model(model.model)
 
-def printModelPredictions(names, r2_train, r2_test):
-    plt.ylabel('Stuff')
-    plt.title('Things')
+def printModelScores(names, r2_train, r2_test):
+    print("Model prediction scores")
+    t = PrettyTable(['Model', 'Train score', 'Test score'])
+    for i, name in enumerate(names):
+        t.add_row([name, round(r2_train[i], 4), round(r2_test[i], 4)])
+    print(t)
+
+def plotModelScores(names, r2_train, r2_test):
+    plt.ylabel('R2 score')
+    plt.xlabel('Model')
+    plt.title('Model metrics')
 
     plt.plot(names, r2_train)
     plt.plot(names, r2_test)

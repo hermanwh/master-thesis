@@ -142,7 +142,8 @@ class Api():
                 self.columnDescriptions,
                 self.traintime
             )
-            utilities.printModelPredictions(modelNames, metrics_train, metrics_test)
+            utilities.plotModelScores(modelNames, metrics_train, metrics_test)
+            utilities.printModelScores(modelNames, metrics_train, metrics_test)
         return [modelNames, metrics_train, metrics_test]
 
     def MLP(
