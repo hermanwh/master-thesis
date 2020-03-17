@@ -8,6 +8,7 @@ def getConfigs():
 		'D': getConfigD,
 		'E': getConfigE,
 		'F': getConfigF,
+		'G': getConfigG,
 	}
 
 def getConfigDirs():
@@ -361,7 +362,7 @@ def getConfigG():
 	]
 	testtime = ["2011-06-01 00:00:00", "2020-03-01 00:00:00"]
 	validtime = ["2013-06-01 00:00:00", "2014-06-01 00:00:00"]
-	
+
 	timestamps = [traintime, testtime, validtime]
 
 	return [columns, relevantColumns, columnDescriptions, columnUnits, timestamps]
