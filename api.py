@@ -74,6 +74,23 @@ class Api():
         self.indexColumn = None
     
     def initDataframe(self, filename, columns, irrelevantColumns):
+        """
+        FUNCTION:
+            Used to initiate a pandas dataframe from file and provided metadata
+        
+        PARAMS:
+            filename: str
+                location of dataset file on disk in .csv format
+            columns: List of list of column data
+                Provided metadata of column names, column descriptions and column units
+            irrelevantColumns: List of strings
+                columnNames excluded from the dataset
+        
+        RETURNS:
+            df: Pandas dataframe
+                Dataframe generated from file and metadata
+        """
+
         columnNames = list(map(lambda el: el[0], columns))
         descriptions = list(map(lambda el: el[1], columns))
         units = list(map(lambda el: el[2], columns))
@@ -92,10 +109,23 @@ class Api():
         self.df = df
         return df
 
-    def printMaxEnrol(self):
-        print(self.maxEnrolWindow)
-
     def getTestTrainSplit(self, traintime, testtime):
+        """
+        FUNCTION:
+            Used to split training and testing rows into separate data frames
+        
+        PARAMS:
+            traintime: List of list of string pairs
+                start and end times indicating periods used for training
+            testtime: List of string pair
+                start and end time indicating period used for testing
+                preferably the entire period of the dataset
+        
+        RETURNS:
+            List[df_train, df_test]: [Pandas dataframe, Pandas dataframe]
+                Dataframes of training and testing dataset rows
+        """
+
         self.traintime = traintime
         self.testtime = testtime
         df_train, df_test = utilities.getTestTrainSplit(self.df, traintime, testtime)
@@ -104,6 +134,19 @@ class Api():
         return [df_train, df_test]
 
     def getFeatureTargetSplit(self, targetColumns):
+        """
+        FUNCTION:
+            Used to split feature and target columns into separate arrays
+        
+        PARAMS:
+            targetColumns: List of strings
+                names of columns present in the dataset used as output(target) values
+        
+        RETURNS:
+            List[X_train, y_train, X_test, y_test]: [Numpy array, Numpy array, Numpy array, Numpy array]
+                Arrays of feature and target values for training and testing
+        """
+
         self.targetColumns = targetColumns
         X_train, y_train, X_test, y_test =  utilities.getFeatureTargetSplit(self.df_train, self.df_test, targetColumns)
         self.X_train = X_train
@@ -113,18 +156,76 @@ class Api():
         return [X_train, y_train, X_test, y_test]
 
     def prepareDataframe(self, df, traintime, testtime, targetColumns):
+        """
+        FUNCTION:
+            Combination of getTestTrainingSplit and getFeatureTargetSplit
+            Used for even higher level programs where df_train and df_test are not needed
+        
+        PARAMS:
+            df: Pandas dataframe
+                dataframe generated from provided metadata
+            traintime: List of list of string pairs
+                start and end times indicating periods used for training
+            testtime: List of string pair
+                start and end time indicating period used for testing
+                preferably the entire period of the dataset
+            targetColumns: List of strings
+                names of columns present in the dataset used as output(target) values
+        
+        RETURNS:
+            List[X_train, y_train, X_test, y_test]: [Numpy array, Numpy array, Numpy array, Numpy array]
+                Arrays of feature and target values for training and testing
+        """
+
         df_train, df_test = getTestTrainSplit(df, traintime, testtime)
         return getFeatureTargetSplit(df_train, df_test, targetColumns)
 
     def initModels(self, modelList):
+        """
+        FUNCTION:
+            Used to initiate the provided models by calculating required model parameters
+        
+        PARAMS:
+            modelList: list of MachineLearningModel/EnsembleModel objects
+                The models used to make predictions
+        
+        RETURNS:
+            None
+        """
+
         self.maxEnrolWindow = utilities.findMaxEnrolWindow(modelList)
         self.indexColumn = self.df_test.iloc[self.maxEnrolWindow:].index
         self.modelList = modelList
 
     def trainModels(self, retrain=False):
+        """
+        FUNCTION:
+            Used to train the models previously provided in the initModels method
+        
+        PARAMS:
+            retrain: boolean
+                Indicates if the program should prefer to load existing models where possible
+        
+        RETURNS:
+            None
+        """
+
         utilities.trainModels(self.modelList, self.filename, self.targetColumns, retrain)
 
     def predictWithModels(self, plot=True):
+        """
+        FUNCTION:
+            Used to create a Neural Network model using multilayer perceptron
+        
+        PARAMS:
+            plot: boolean
+                Indicates if plots of the calculated predictions are desired
+        
+        RETURNS:
+            List[modelNames, metrics_train, metrics_test]: [list(Str), list(float), list(float)]
+                Lists containing the names and train/test scores of the provided models
+        """
+
         modelNames, metrics_train, metrics_test, deviationsList, columnsList = utilities.predictWithModels(
             self.modelList,
             self.X_train,
@@ -134,6 +235,7 @@ class Api():
             self.targetColumns 
         )
         if plot:
+            utilities.printModelScores(modelNames, metrics_train, metrics_test)
             utilities.plotModelPredictions(
                 plt,
                 deviationsList,
@@ -143,7 +245,6 @@ class Api():
                 self.traintime
             )
             utilities.plotModelScores(modelNames, metrics_train, metrics_test)
-            utilities.printModelScores(modelNames, metrics_train, metrics_test)
         return [modelNames, metrics_train, metrics_test]
 
     def MLP(
@@ -160,6 +261,20 @@ class Api():
             validationSize=default_MLP_args['validationSize'],
             testSize=default_MLP_args['testSize']
         ):
+        """
+        FUNCTION:
+            Used to create a Neural Network model using multilayer perceptron
+        
+        PARAMS:
+            name: str
+                A name/alias given to the model by the user
+            layers: list of integers
+                List of neuron size for each layer
+        
+        RETURNS:
+            model: MachineLearningModel
+                Object with typical machine learning methods like train, predict etc.
+        """
 
         mlpLayers = []
         for layerSize in layers:
@@ -204,6 +319,23 @@ class Api():
             validationSize=default_MLP_args['validationSize'],
             testSize=default_MLP_args['testSize']
         ):
+        """
+        FUNCTION:
+            Used to create a Neural Network model using multilayer perceptron
+            and reguarlization by dropout
+        
+        PARAMS:
+            name: str
+                A name/alias given to the model by the user
+            layers: list of integers
+                List of neuron size for each layer
+            dropoutRate: float
+                Level of dropout
+        
+        RETURNS:
+            model: MachineLearningModel
+                Object with typical machine learning methods like train, predict etc.
+        """
 
         mlpLayers = []
         for layerSize in layers:
@@ -250,6 +382,25 @@ class Api():
             validationSize=default_MLP_args['validationSize'],
             testSize=default_MLP_args['testSize']
         ):
+        """
+        FUNCTION:
+            Used to create a Neural Network model using multilayer perceptron
+            and reguarlization by Ridge and Lasso regluarization
+        
+        PARAMS:
+            name: str
+                A name/alias given to the model by the user
+            layers: list of integers
+                List of neuron size for each layer
+            l1_rate: float
+                Level of L1 regularization
+            l2_rate: float
+                Level of L2 regularization
+        
+        RETURNS:
+            model: MachineLearningModel
+                Object with typical machine learning methods like train, predict etc.
+        """
 
         mlpLayers = []
         for layerSize in layers:
@@ -298,6 +449,26 @@ class Api():
         validationSize=default_LSTM_args['validationSize'],
         testSize=default_LSTM_args['testSize'],
         ):
+        """
+        FUNCTION:
+            Used to create a Recurrent Neural Network model using
+            Long-Short Term Memory neurons (LSTM). Uses 
+            traditional dropout as regularization method
+        
+        PARAMS:
+            name: str
+                A name/alias given to the model by the user
+            units: list of integers
+                List of neuron size for each layer
+            dropout: float
+                Level of dropout
+            alpha: float
+                Alpha of the leaky relu function
+        
+        RETURNS:
+            model: MachineLearningModel
+                Object with typical machine learning methods like train, predict etc.
+        """
 
         model = models.kerasLSTM(
             params = {
@@ -343,6 +514,29 @@ class Api():
         validationSize=default_LSTM_args['validationSize'],
         testSize=default_LSTM_args['testSize'],
         ):
+        """
+        FUNCTION:
+            Used to create a Recurrent Neural Network model using
+            Long-Short Term Memory neurons (LSTM). Uses both
+            traditional dropout and recurrent dropout for regularization,
+            hence the subname _Recurrent
+        
+        PARAMS:
+            name: str
+                A name/alias given to the model by the user
+            units: list of integers
+                List of neuron size for each layer
+            dropout: float
+                Level of dropout
+            recurrentDropout: float
+                Level of recurrent dropout
+            alpha: float
+                Alpha of the leaky relu function
+        
+        RETURNS:
+            model: MachineLearningModel
+                Object with typical machine learning methods like train, predict etc.
+        """
 
         model = models.kerasLSTM_Recurrent(
             params = {
@@ -371,6 +565,19 @@ class Api():
         return model
 
     def Linear(self, name):
+        """
+        FUNCTION:
+            Used to create a Linear Machine Learning model
+        
+        PARAMS:
+            name: str
+                A name/alias given to the model by the user
+        
+        RETURNS:
+            model: MachineLearningModel
+                Object with typical machine learning methods like train, predict etc.
+        """
+
         model = models.sklearnLinear(
             params={
                 'name': name,
@@ -382,6 +589,20 @@ class Api():
         return model
 
     def Linear_Regularized(self, name):
+        """
+        FUNCTION:
+            Used to create a Linear Machine Learning model with built-in
+            regularization and cross validation
+        
+        PARAMS:
+            name: str
+                A name/alias given to the model by the user
+        
+        RETURNS:
+            model: MachineLearningModel
+                Object with typical machine learning methods like train, predict etc.
+        """
+
         model = models.sklearnRidgeCV(
             params={
                 'name': name,
@@ -393,6 +614,22 @@ class Api():
         return model
 
     def Ensemble(self, name, modelList):
+        """
+        FUNCTION:
+            Used to create an Ensemble model, combining the prediction
+            of n>1 machine learning methods using a linear regressor
+        
+        PARAMS:
+            name: str
+                A name/alias given to the model by the user
+            modelList: list of MachineLearningModel objects
+                A list of machine learning models used to construct the Ensemble model
+        
+        RETURNS:
+            model: EnsembleModel
+                Ensemble model object which behaves the same as any other MachineLearningModel
+        """
+
         model = models.ensembleModel(
             params={
                 'name': name,
