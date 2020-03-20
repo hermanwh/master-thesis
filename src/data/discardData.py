@@ -1,10 +1,17 @@
-import pandas as pd
-import sys
+import sys, os
+ROOT_PATH = os.path.abspath(".").split("src")[0]
+module_path = os.path.abspath(os.path.join(ROOT_PATH+"/src/utils/"))
+if module_path not in sys.path:
+    sys.path.append(module_path)
+
 import time
+import utilities
+import prints
+import plots
+import pandas as pd
+from configs import getConfig
 
 def main(filename, targetfilename, start, end):
-    start_time = time.time()
-
     print("Loading file {}".format(filename))
     df = pd.read_csv(filename)
     df_copy = df.copy()
@@ -15,21 +22,37 @@ def main(filename, targetfilename, start, end):
     print("Writing file {}".format(targetfilename))
     df_copy.to_csv(targetfilename, index=False)
 
-    print("Running of discardData.py finished in", time.time() - start_time, "seconds")
+pyName = "discardData.py"
+arguments = [
+    "- filename (string)",
+    "- target filename (string)",
+    "- start time (string)",
+    "- end time (string)",
+]
 
 # usage: python discardData.py file targetfile start end
 if __name__ == "__main__":
+    start_time = time.time()
+    prints.printEmptyLine()
+    
+    print("Running", pyName)
+    print("Prints dataframe")
+    prints.printEmptyLine()
+    
     try:
         filename = sys.argv[1]
         targetfilename = sys.argv[2]
         start = sys.argv[3]
         end = sys.argv[4]
-    except:
-        print("discardData.py was called with inappropriate arguments")
+    except IndexError:
+        print(pyName, "was called with inappropriate arguments")
         print("Please provide the following arguments:")
-        print("- file name (string)")
-        print("- target file name (string)")
-        print("- start (string)")
-        print("- end (string)")
+        for argument in arguments:
+            print(argument)
         sys.exit()
+
     main(filename, targetfilename, start, end)
+
+    prints.printEmptyLine()
+    print("Running of", pyName, "finished in", time.time() - start_time, "seconds")
+    prints.printEmptyLine()

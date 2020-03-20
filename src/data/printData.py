@@ -1,45 +1,52 @@
-import pandas as pd
+import sys, os
+ROOT_PATH = os.path.abspath(".").split("src")[0]
+module_path = os.path.abspath(os.path.join(ROOT_PATH+"/src/utils/"))
+if module_path not in sys.path:
+    sys.path.append(module_path)
+
 import time
 import utilities
-import sys
+import prints
+from configs import getConfig
 
-def main(filename, relevantColumns):
-    start_time = time.time()
-    prints.printEmptyLine()
-
-    print("Running", pyName)
-    print("Prints the pandas dataframe")
-    prints.printHorizontalLine()
-
-    df = utilities.readFile(filename)
+def main(filename):
+    df = utilities.readDataFile(filename)
     df = utilities.getDataWithTimeIndex(df)
+    df = df.dropna()
+    
+    subdir = filename.split('/')[-2]
+    columns, relevantColumns, labelNames, columnUnits, timestamps = getConfig(subdir)
 
-    if relevantColumns:
-        df = utilities.dropIrrelevantColumns(df)
+    if relevantColumns is not None:
+        df = utilities.dropIrrelevantColumns(df, [relevantColumns, labelNames])
 
     prints.printDataframe(df)
-
-    try:
-        print("Running of", pyName, "finished in", time.time() - start_time, "seconds")
-    except NameError:
-        print("Program finished, but took too long to count")
-    prints.printEmptyLine()
 
 pyName = "printData.py"
 arguments = [
     "- file name (string)",
-    "- relevantColumns (boolean)",
 ]
 
-# usage: python ml/printData.py datasets/filename.csv relevantColumns(bool)
+# usage: python ml/printDataByTimeframe.py datasets/filename.csv relevantColumns(bool) start end
 if __name__ == "__main__":
+    start_time = time.time()
+    prints.printEmptyLine()
+    
+    print("Running", pyName)
+    print("Prints dataframe")
+    prints.printEmptyLine()
+    
     try:
         filename = sys.argv[1]
-        relevantColumns = int(sys.argv[2])
-    except:
+    except IndexError:
         print(pyName, "was called with inappropriate arguments")
         print("Please provide the following arguments:")
         for argument in arguments:
             print(argument)
         sys.exit()
-    main(filename, relevantColumns)
+    
+    main(filename)
+
+    prints.printEmptyLine()
+    print("Running of", pyName, "finished in", time.time() - start_time, "seconds")
+    prints.printEmptyLine()

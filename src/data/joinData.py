@@ -1,10 +1,17 @@
-import pandas as pd
-import sys
+import sys, os
+ROOT_PATH = os.path.abspath(".").split("src")[0]
+module_path = os.path.abspath(os.path.join(ROOT_PATH+"/src/utils/"))
+if module_path not in sys.path:
+    sys.path.append(module_path)
+
 import time
+import utilities
+import prints
+import plots
+import pandas as pd
+from configs import getConfig
 
 def main(targetfile, files):
-    start_time = time.time()
-
     file1 = files[0]
     print("Loading file {}".format(file1))
     df = pd.read_csv(file1)
@@ -19,24 +26,39 @@ def main(targetfile, files):
 
     print("Total file shape:", df.shape)
 
-    print("Writing file {}".format(target_file))
-    df.to_csv(target_file, index=False)
+    print("Writing file {}".format(targetfile))
+    df.to_csv(targetfile, index=False)
 
-    print("Running of joinData.py finished in", time.time() - start_time, "seconds")
-
+pyName = "joinData.py"
+arguments = [
+    "- target file name (string)",
+    "- filename 1",
+    "- filename 2",
+    "- ...",
+]
 
 # usage: python joinData.py targetfile.csv file1.csv file2.csv ...
 if __name__ == "__main__":
+    start_time = time.time()
+    prints.printEmptyLine()
+
+    print("Running", pyName)
+    print("Prints dataframe")
+    prints.printEmptyLine()
+
     try:
         targetfile = sys.argv[1]
         testing = sys.argv[3]
         files = sys.argv[2:]
-    except:
-        print("joinData.py was called with inappropriate arguments")
+    except IndexError:
+        print(pyName, "was called with inappropriate arguments")
         print("Please provide the following arguments:")
-        print("- target file name (string)")
-        print("- file_nr_1 (string)")
-        print("- file_nr_2 (string)")
-        print("- ...")
+        for argument in arguments:
+            print(argument)
         sys.exit()
+
     main(targetfile, files)
+
+    prints.printEmptyLine()
+    print("Running of", pyName, "finished in", time.time() - start_time, "seconds")
+    prints.printEmptyLine()

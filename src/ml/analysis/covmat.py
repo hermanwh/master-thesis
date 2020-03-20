@@ -24,7 +24,7 @@ def main(filename):
         df = utilities.dropIrrelevantColumns(df, [relevantColumns, labelNames])
 
     prints.printEmptyLine()
-    
+
     covMat = analysis.correlationMatrix(df)
     prints.printCorrelationMatrix(covMat, df, labelNames)
 
@@ -44,7 +44,7 @@ if __name__ == "__main__":
 
     try:
         filename = sys.argv[1]
-    except:
+    except IndexError:
         print(pyName, "was called with inappropriate arguments")
         print("Please provide the following arguments:")
         for argument in arguments:
