@@ -215,7 +215,7 @@ def main(filename, targetColumns):
     #names, r2_train, r2_test, deviationsList, columnsList = utilities.predictWithModels(modelList, X_train, y_train, X_test, y_test, targetColumns)
     #modelFuncs.saveModels(modelList, filename, targetColumns)
     #utilities.printModelPredictions(names, r2_train, r2_test)
-    #utilities.plotModelPredictions(plt, deviationsList, columnsList, df_test.iloc[maxEnrolWindow:].index, labelNames, traintime)
+    #plots.plotModelPredictions(plt, deviationsList, columnsList, df_test.iloc[maxEnrolWindow:].index, labelNames, traintime)
 
     """
     for model in modelList:

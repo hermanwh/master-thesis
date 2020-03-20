@@ -178,10 +178,6 @@ def getConfigD():
 	}
 
 	irrelevantColumns = [
-		'50FT001',
-		'50PDT001',
-		'20PDT001',
-		'50TV001',
 	]
 
 	columns = list(columnDescriptions.keys())
@@ -277,12 +273,8 @@ def getConfigF():
 		'PDT0118_MA_Y',
 		'TT0104_MA_Y',
 		'TIC0103_CA_YX',
-		'TI0115_MA_Y',
 		'TT0652_MA_Y',
 		'TIC0103_CA_Y',
-		'PIC0104_CA_YX',
-		'TIC0101_CA_Y',
-		'TIC0105_CA_Y',
 	]
 
 	columns = list(columnDescriptions.keys())

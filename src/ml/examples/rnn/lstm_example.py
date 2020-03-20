@@ -112,8 +112,6 @@ def main(fileName, targetColumns):
                                     initial_epoch=0)
     """
     
-    prints.printHorizontalLine()
-
     pred_train = model.predict(X_train, y=y_train)
     pred_test = model.predict(X_test, y=y_test)
     r2_train = metrics.r2_score(y_train[args.enrolWindow:], pred_train)

@@ -20,11 +20,11 @@ def main(filename, showRelevantColumns):
     columns, relevantColumns, labelNames, columnUnits, timestamps = getConfig(subdir)
 
     start_time = time.time()
-    utilities.printEmptyLine()
+    prints.printEmptyLine()
 
     print("Running", pyName)
     print("Plots the pandas dataframe")
-    utilities.printHorizontalLine()
+    prints.printHorizontalLine()
 
     df = utilities.readDataFile(filename)
     df = utilities.getDataWithTimeIndex(df)
@@ -41,7 +41,7 @@ def main(filename, showRelevantColumns):
         print("Running of", pyName, "finished in", time.time() - start_time, "seconds")
     except NameError:
         print("Program finished, but took too long to count")
-    utilities.printEmptyLine()
+    prints.printEmptyLine()
 
 pyName = "plotData.py"
 arguments = [

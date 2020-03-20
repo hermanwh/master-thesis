@@ -7,6 +7,8 @@ if module_path not in sys.path:
 import time
 import numpy as np
 import utilities
+import prints
+import analysis
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
@@ -64,24 +66,18 @@ def pcaPlot(filename):
 
     return pca
 
-def printReconstructionRow(pca, x, standardScaler):
-    transformed = pca.transform(x)
-    inv_transformed = pca.inverse_transform(transformed)
-    inv_standardized = standardScaler.inverse_transform(inv_transformed)
+def main(filename):
+    df = utilities.readDataFile(filename)
+    df = utilities.getDataWithTimeIndex(df)
+    df = df.dropna()
 
-    print("Top row before standardization and PCA")
-    print(np.array_str(x[:1,:], precision=2, suppress_small=True))
-    prints.printHorizontalLine()
+    subdir = filename.split('/')[-2]
+    columns, relevantColumns, labelNames, columnUnits, timestamps = getConfig(subdir)
 
-    print("Top row after reconstruction")
-    print(np.array_str(inv_standardized[:1,:], precision=2, suppress_small=True))
-    prints.printHorizontalLine()
+    if relevantColumns is not None:
+        df = utilities.dropIrrelevantColumns(df, [relevantColumns, labelNames])
 
-def printExplainedVarianceRatio(pca):
-    prints.printHorizontalLine()
-    print("Variance ratio explained by each principal component")
-    utilities.prettyPrint(pca.explained_variance_ratio_, 2, True)
-    prints.printHorizontalLine()
+    analysis.pcaPlot(df, timestamps)
 
 pyName = "pcaPlot.py"
 arguments = [
@@ -95,7 +91,7 @@ if __name__ == "__main__":
     
     print("Running", pyName)
     print("Performs Principal Component Analysis on relevant dataset columns")
-    prints.printHorizontalLine()
+    prints.printEmptyLine()
 
     try:
         filename = sys.argv[1]
@@ -106,12 +102,8 @@ if __name__ == "__main__":
             print(argument)
         sys.exit()
 
-    pca = pcaPlot(filename)
+    main(filename)
 
-    printExplainedVarianceRatio(pca)
-
-    try:
-        print("Running of", pyName, "finished in", time.time() - start_time, "seconds")
-    except NameError:
-        print("Program finished, but took too long to count")
+    prints.printEmptyLine()
+    print("Running of", pyName, "finished in", time.time() - start_time, "seconds")
     prints.printEmptyLine()

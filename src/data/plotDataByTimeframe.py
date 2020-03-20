@@ -20,7 +20,7 @@ def main(filename, showRelevantColumns, start, end):
 
     print("Running", pyName)
     print("Plots the pandas dataframe")
-    utilities.printHorizontalLine()
+    prints.printHorizontalLine()
 
     df = utilities.readDataFile(filename)
     df = utilities.getDataWithTimeIndex(df)
@@ -38,7 +38,7 @@ def main(filename, showRelevantColumns, start, end):
         print("Running of", pyName, "finished in", time.time() - start_time, "seconds")
     except NameError:
         print("Program finished, but took too long to count")
-    utilities.printEmptyLine()
+    prints.printEmptyLine()
 
 pyName = "plotDataByTimeframe.py"
 arguments = [

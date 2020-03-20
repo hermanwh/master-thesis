@@ -12,6 +12,8 @@ import seaborn as sea
 import matplotlib.pyplot as plt
 import pandas as pd
 import covmat
+import analysis
+import prints
 from configs import getConfig
 from sklearn.preprocessing import MinMaxScaler, StandardScaler
 
@@ -76,7 +78,7 @@ def correlationPlot(df, title="Correlation plot"):
     mask[np.triu_indices_from(mask)] = True
 
     # Set up the matplotlib figure
-    f, ax = plt.subplots(figsize=(15,20), dpi=100)
+    f, ax = plt.subplots(figsize=(8,6), dpi=100)
 
     # Generate a custom diverging colormap
     cmap = sea.diverging_palette(220, 10, as_cmap=True)
@@ -104,7 +106,7 @@ def main(filename):
     if relevantColumns is not None:
         df = utilities.dropIrrelevantColumns(df, [relevantColumns, labelNames])
 
-    start_train, end_train = traintime
+    start_train, end_train = traintime[0]
     start_test, end_test = testtime
 
     scaled = scaler.fit_transform(df.values)
@@ -117,25 +119,28 @@ def main(filename):
     df_test = utilities.getDataByTimeframe(scaled_df, start_test, end_test)
 
     columnsPlot(df_train, df_test)
-    #targetsPlot(df_train, df_test)
-    
-    cov = covmat.covmat(df_train)
-    covmat.printCovMat(cov)
+    targetsPlot(df_train, df_test)
 
-    correlationPlot(df_train)
+    analysis.correlationPlot(df_train)
     #scatterPlot(df_train)
 
 
     df_train = df_train.loc[:,~df_train.columns.duplicated()]
     #print(df_train)
 
-    pd.plotting.scatter_matrix(df_train, alpha=0.2, figsize=(6, 6), diagonal='kde')
-    plt.show()
+    analysis.scatterplot(df_train)
+    ##pd.plotting.scatter_matrix(df_train, alpha=0.2, figsize=(6, 6), diagonal='kde')
+    ##plt.show()
 
-    #asd = df_train.copy().resample('H').mean()
-    #print(asd)
-    #sea.pairplot(asd, vars=df_train.columns)
+    analysis.pairplot(df_train)
+
+    """
+    asd = df_train.copy()
+    print(asd)
+    sea.pairplot(asd, vars=df_train.columns, height=1)
+    plt.show()
     input("Press any key to close")
+    """
 
 # usage: python ml/covmat.py datasets/filename.csv
 if __name__ == "__main__":

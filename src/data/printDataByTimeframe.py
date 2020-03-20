@@ -5,11 +5,11 @@ import sys
 
 def main(filename, relevantColumns, start, end):
     start_time = time.time()
-    utilities.printEmptyLine()
+    prints.printEmptyLine()
 
     print("Running", pyName)
     print("Prints the pandas dataframe")
-    utilities.printHorizontalLine()
+    prints.printHorizontalLine()
 
     df = utilities.readFile(filename)
     df = utilities.getDataWithTimeIndex(df)
@@ -18,13 +18,13 @@ def main(filename, relevantColumns, start, end):
     if relevantColumns:
         df = utilities.dropIrrelevantColumns(df)
 
-    utilities.printDataframe(df)
+    prints.printDataframe(df)
 
     try:
         print("Running of", pyName, "finished in", time.time() - start_time, "seconds")
     except NameError:
         print("Program finished, but took too long to count")
-    utilities.printEmptyLine()
+    prints.printEmptyLine()
 
 pyName = "printDataByTimeframe.py"
 arguments = [

@@ -8,40 +8,23 @@ import time
 import numpy as np
 import utilities
 import plots
+import prints
+import analysis
 from configs import getConfig
-from sklearn.preprocessing import StandardScaler
 
-
-def covmat(df, relevantColumns=None, columnDescriptions=None):
-    if relevantColumns:
-        df = utilities.dropIrrelevantColumns(df, [relevantColumns, columnDescriptions])
-
-    if 'Date' in df.columns:
-        df = df.drop('Date', axis=1, inplace=False)
-
-    utilities.printColumns(df, columnDescriptions)
-    
-    x = df.values
-    standardScaler = StandardScaler()
-    x = standardScaler.fit_transform(x)
-    covMat = np.cov(x.T)
-
-    return covMat
-
-def printCovMat(covMat):
-    utilities.printHorizontalLine()
-    print("Covariance matrix")
-    utilities.prettyPrint(covMat, 2, True)
-    utilities.printHorizontalLine()
-
-def preCovmat(filename, colDescs):
+def main(filename):
     df = utilities.readDataFile(filename)
     df = utilities.getDataWithTimeIndex(df)
-    
-    if 'Index' in df.columns:
-        df.drop('Index', axis=1, inplace=True)
+    df = df.dropna()
 
-    return covmat(df, columnDescriptions=colDescs)
+    subdir = filename.split('/')[-2]
+    columns, relevantColumns, labelNames, columnUnits, timestamps = getConfig(subdir)
+
+    if relevantColumns is not None:
+        df = utilities.dropIrrelevantColumns(df, [relevantColumns, labelNames])
+
+    covMat = analysis.correlationMatrix(df)
+    prints.printCorrelationMatrix(covMat, df, labelNames)
 
 pyName = "covmat.py"
 arguments = [
@@ -51,11 +34,11 @@ arguments = [
 # usage: python src/ml/analysis/covmat.py ../datasets/subdir/filename.csv
 if __name__ == "__main__":
     start_time = time.time()
-    utilities.printEmptyLine()
+    prints.printEmptyLine()
     
     print("Running", pyName)
     print("Calculates the correlation matrix of relevant dataset columns")
-    utilities.printHorizontalLine()
+    prints.printEmptyLine()
 
     try:
         filename = sys.argv[1]
@@ -66,16 +49,8 @@ if __name__ == "__main__":
             print(argument)
         sys.exit()
 
-    subdir = filename.split('/')[1]
-    columns, labelNames, units, relevantColumns, timestamps = getConfig(subdir)
+    main(filename)
 
-    cov = preCovmat(filename, labelNames)
-
-    printCovMat(cov)
-    
-    try:
-        print("Running of", pyName, "finished in", time.time() - start_time, "seconds")
-    except NameError:
-        print("Program finished, but took too long to count")
-    utilities.printEmptyLine()
-
+    prints.printEmptyLine()
+    print("Running of", pyName, "finished in", time.time() - start_time, "seconds")
+    prints.printEmptyLine()

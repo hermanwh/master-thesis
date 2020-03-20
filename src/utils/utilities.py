@@ -52,34 +52,30 @@ def readDataFile(filename):
             df['Date'] = pd.to_datetime(df['Date'], dayfirst=True)
             df = df.drop('time', axis=1)
     else:
-        print("Could not load data from file")
-        print("Use .csv or .xls format")
-        df = False
+        raise ValueError("Could not load data from file. Filename must be .csv or .xls format")
     return df
 
 def getDataWithTimeIndex(df, dateColumn='Date'):
     if dateColumn in df.columns:
-        print("Date index set")
         df = df.set_index(dateColumn, inplace=False)
     else:
-        print("No date column")
+        raise ValueError('No date column named ' + dateColumn + '.')
     return df
 
 def dropIrrelevantColumns(df, args):
     relevantColumns, columnDescriptions = args
 
-    print("Columns before removal")
+    print("Columns before removal: ")
     prints.printColumns(df, columnDescriptions)
-    prints.printHorizontalLine()
 
     dfcolumns = df.columns
     for column in dfcolumns:
         if column not in relevantColumns:
             df = df.drop(column, axis=1)
 
-    print("Columns after removal")
+    prints.printEmptyLine()
+    print("Columns after removal: ")
     prints.printColumns(df, columnDescriptions)
-    prints.printHorizontalLine()
     
     return df
 
@@ -96,9 +92,10 @@ def getTestTrainSplit(df, traintime, testtime):
     return [df_train, df_test]
 
 def getDataByTimeframe(df, start, end):
+    prints.printEmptyLine()
     print("Finding data between", start, "and", end)
-    prints.printHorizontalLine()
     df = df.loc[start:end]
+    print("Found " + str(df.shape[0]) + " rows")
     return df
 
 def getFeatureTargetSplit(df_train, df_test, targetColumns):

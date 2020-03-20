@@ -40,7 +40,7 @@ def main(filename):
     cov = covmat(df, None, labelNames)
     printCovMat(cov)
 
-    utilities.printEmptyLine()
+    prints.printEmptyLine()
 
     pca_calc = pca(df, 5, None, labelNames)
     printExplainedVarianceRatio(pca_calc)
