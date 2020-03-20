@@ -25,6 +25,7 @@ def main(filename, numberOfComponents):
     if relevantColumns is not None:
         df = utilities.dropIrrelevantColumns(df, [relevantColumns, labelNames])
 
+    prints.printEmptyLine()
     pca = analysis.pca(df, numberOfComponents, relevantColumns, labelNames)
     prints.printExplainedVarianceRatio(pca)
 

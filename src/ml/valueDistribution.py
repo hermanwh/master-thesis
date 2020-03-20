@@ -7,10 +7,12 @@ if module_path not in sys.path:
 import time
 import numpy as np
 import utilities
-import plots
 import prints
 import analysis
+import pandas as pd
+import matplotlib.pyplot as plt
 from configs import getConfig
+from sklearn import decomposition
 
 def main(filename):
     df = utilities.readDataFile(filename)
@@ -20,31 +22,32 @@ def main(filename):
     subdir = filename.split('/')[-2]
     columns, relevantColumns, labelNames, columnUnits, timestamps = getConfig(subdir)
 
+    traintime, testtime, validtime = timestamps
+
     if relevantColumns is not None:
         df = utilities.dropIrrelevantColumns(df, [relevantColumns, labelNames])
 
-    prints.printEmptyLine()
+    df_train, df_test = utilities.getTestTrainSplit(df, traintime, testtime)
     
-    covMat = analysis.correlationMatrix(df)
-    prints.printCorrelationMatrix(covMat, df, labelNames)
+    analysis.valueDistribution(df_train, df_test)
 
-pyName = "covmat.py"
+pyName = "valueDistribution.py"
 arguments = [
     "- file name (string)",
 ]
 
-# usage: python src/ml/analysis/covmat.py ../datasets/subdir/filename.csv
+# usage: python src/ml/analysis/pca.py datasets/subdir/filename.csv nrOfComponents
 if __name__ == "__main__":
     start_time = time.time()
     prints.printEmptyLine()
     
     print("Running", pyName)
-    print("Calculates the correlation matrix of relevant dataset columns")
+    print("Plots dataset columns as time series data with distributions")
     prints.printEmptyLine()
 
     try:
         filename = sys.argv[1]
-    except:
+    except IndexError:
         print(pyName, "was called with inappropriate arguments")
         print("Please provide the following arguments:")
         for argument in arguments:

@@ -7,10 +7,12 @@ if module_path not in sys.path:
 import time
 import numpy as np
 import utilities
-import plots
 import prints
 import analysis
+import pandas as pd
+import matplotlib.pyplot as plt
 from configs import getConfig
+from sklearn import decomposition
 
 def main(filename):
     df = utilities.readDataFile(filename)
@@ -23,28 +25,25 @@ def main(filename):
     if relevantColumns is not None:
         df = utilities.dropIrrelevantColumns(df, [relevantColumns, labelNames])
 
-    prints.printEmptyLine()
-    
-    covMat = analysis.correlationMatrix(df)
-    prints.printCorrelationMatrix(covMat, df, labelNames)
+    analysis.pairplot(df)
 
-pyName = "covmat.py"
+pyName = "pairplot.py"
 arguments = [
     "- file name (string)",
 ]
 
-# usage: python src/ml/analysis/covmat.py ../datasets/subdir/filename.csv
+# usage: python src/ml/analysis/pca.py datasets/subdir/filename.csv nrOfComponents
 if __name__ == "__main__":
     start_time = time.time()
     prints.printEmptyLine()
     
     print("Running", pyName)
-    print("Calculates the correlation matrix of relevant dataset columns")
+    print("Plots 2D pair plots of dataset columns")
     prints.printEmptyLine()
 
     try:
         filename = sys.argv[1]
-    except:
+    except IndexError:
         print(pyName, "was called with inappropriate arguments")
         print("Please provide the following arguments:")
         for argument in arguments:
