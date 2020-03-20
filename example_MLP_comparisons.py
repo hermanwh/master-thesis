@@ -73,26 +73,26 @@ antoenc_1 = mlApi.Autoencoder_Dropout('autoenc dropout')
 autoenc_2 = mlApi.Autoencoder_Regularized('autoenc regularized')
 
 modelList = [
-    #antoenc_1,
-    #autoenc_2,
+    antoenc_1,
+    autoenc_2,
     #mlp_10,
     #mlp_20,
-    mlp_128,
-    mlp_2x_128,
+    #mlp_128,
+    #mlp_2x_128,
     #mlp_128_reg_1,
     #mlp_128_reg_2,
     #mlp_128_reg_3,
-    mlp_128_reg_4,
+    #mlp_128_reg_4,
     #mlp_128_reg_5,
     #mlp_128_reg_6,
     #mlp_10x_128,
     #mlp_2x_128_reg,
     #mlp_10x_128_reg,
-    linear_reg,
+    #linear_reg,
 ]
 
 mlApi.initModels(modelList)
 retrain=True
 mlApi.trainModels(retrain)
-#mlApi.predictWithAutoencoderModels()
-modelNames, metrics_train, metrics_test = mlApi.predictWithModels(plot=True)
+mlApi.predictWithAutoencoderModels()
+#modelNames, metrics_train, metrics_test = mlApi.predictWithModels(plot=True)

@@ -20,7 +20,7 @@ def pca(df, numberOfComponents, relevantColumns=None, columnDescriptions=None):
     if 'Date' in df.columns:
         df = df.drop('Date', axis=1)
 
-    utilities.printColumns(df, columnDescriptions)
+    prints.printColumns(df, columnDescriptions)
 
     x = df.values
     standardScaler = StandardScaler()
@@ -41,17 +41,17 @@ def printReconstructionRow(pca, x, standardScaler):
 
     print("Top row before standardization and PCA")
     print(np.array_str(x[:1,:], precision=2, suppress_small=True))
-    utilities.printHorizontalLine()
+    prints.printHorizontalLine()
 
     print("Top row after reconstruction")
     print(np.array_str(inv_standardized[:1,:], precision=2, suppress_small=True))
-    utilities.printHorizontalLine()
+    prints.printHorizontalLine()
 
 def printExplainedVarianceRatio(pca):
-    utilities.printHorizontalLine()
+    prints.printHorizontalLine()
     print("Variance ratio explained by each principal component")
     utilities.prettyPrint(pca.explained_variance_ratio_, 2, True)
-    utilities.printHorizontalLine()
+    prints.printHorizontalLine()
     
 def prePCA(filename, numberOfComponents):
     subdir = filename.split('/')[-2]
@@ -72,11 +72,11 @@ arguments = [
 # usage: python src/ml/analysis/pca.py datasets/subdir/filename.csv nrOfComponents
 if __name__ == "__main__":
     start_time = time.time()
-    utilities.printEmptyLine()
+    prints.printEmptyLine()
     
     print("Running", pyName)
     print("Performs Principal Component Analysis on relevant dataset columns")
-    utilities.printHorizontalLine()
+    prints.printHorizontalLine()
 
     try:
         filename = sys.argv[1]
@@ -98,4 +98,4 @@ if __name__ == "__main__":
         print("Running of", pyName, "finished in", time.time() - start_time, "seconds")
     except NameError:
         print("Program finished, but took too long to count")
-    utilities.printEmptyLine()
+    prints.printEmptyLine()

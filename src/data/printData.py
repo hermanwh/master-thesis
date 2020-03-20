@@ -3,10 +3,6 @@ import time
 import utilities
 import sys
 
-def printData(df):
-    print(df)
-    utilities.printHorizontalLine()
-
 def main(filename, relevantColumns):
     start_time = time.time()
     utilities.printEmptyLine()
@@ -21,7 +17,7 @@ def main(filename, relevantColumns):
     if relevantColumns:
         df = utilities.dropIrrelevantColumns(df)
 
-    printData(df)
+    utilities.printDataframe(df)
 
     try:
         print("Running of", pyName, "finished in", time.time() - start_time, "seconds")

@@ -13,6 +13,9 @@ import matplotlib.pyplot as plt
 import utilities
 import metrics
 import models
+import modelFuncs
+import plots
+import prints
 
 from src.ml.analysis.covmat import (covmat, printCovMat)
 from src.ml.analysis.pca import (pca, printExplainedVarianceRatio)
@@ -26,7 +29,7 @@ default_MLP_args = {
     'epochs': 1000,
     'batchSize': 32,
     'verbose': 0,
-    'callbacks': utilities.getBasicCallbacks(),
+    'callbacks': modelFuncs.getBasicCallbacks(),
     'enrolWindow': 0,
     'validationSize': 0.2,
     'testSize': 0.2,
@@ -41,7 +44,7 @@ default_LSTM_args = {
     'epochs': 500,
     'batchSize': 32*2,
     'verbose': 1,
-    'callbacks': utilities.getBasicCallbacks(),
+    'callbacks': modelFuncs.getBasicCallbacks(),
     'enrolWindow': 1,
     'validationSize': 0.2,
     'testSize': 0.2,
@@ -210,7 +213,7 @@ class Api():
             None
         """
 
-        utilities.trainModels(self.modelList, self.filename, self.targetColumns, retrain)
+        modelFuncs.trainModels(self.modelList, self.filename, self.targetColumns, retrain)
 
     def predictWithModels(self, plot=True, interpol=False):
         """
@@ -237,8 +240,8 @@ class Api():
             self.targetColumns 
         )
         if plot:
-            utilities.printModelScores(modelNames, metrics_train, metrics_test)
-            utilities.plotModelPredictions(
+            prints.printModelScores(modelNames, metrics_train, metrics_test)
+            plots.plotModelPredictions(
                 plt,
                 deviationsList,
                 columnsList,
@@ -247,7 +250,7 @@ class Api():
                 self.traintime,
                 interpol=interpol,
             )
-            utilities.plotModelScores(modelNames, metrics_train, metrics_test)
+            plots.plotModelScores(plt, modelNames, metrics_train, metrics_test)
         return [modelNames, metrics_train, metrics_test]
 
     def predictWithAutoencoderModels(self):

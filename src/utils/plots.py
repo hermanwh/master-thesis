@@ -3,9 +3,30 @@ import pandas as pd
 import tensorflow as tf
 import matplotlib.dates as mdates
 
-INTERPOLDEG = 3
+def getPlotColors():
+    #colors = ['#92a8d1','#034f84','#f7cac9','#f7786b','#deeaee','#b1cbbb','#eea29a','#c94c4c']
+    colors = ['#686256','#c1502e','#587e76','#a96e5b','#454140','#bd5734','#7a3b2e', '#92a8d1','#034f84','#f7cac9','#f7786b','#deeaee','#b1cbbb','#eea29a','#c94c4c']
+    """
+    colors = [
+        '#0C0910',
+        '#453750',
+        '#73648A',
+        '#9882AC',
+        '#A393BF',
+        '#8AAA79',
+        '#657153',
+        '#837569',
+        '#B7B6C2',
+        '#D1D5DE',
+        '#D58936',
+        '#A44200',
+        '#69140E',
+        '#3C1518'
+    ]
+    """
+    return colors
 
-def plotDataColumnSingle(df, plt, column, data, columnDescriptions=None, color='darkgreen'):
+def plotDataColumnSingle(df, plt, column, data, columnDescriptions=None, color='darkgreen', interpoldeg=3):
     fig, ax = plt.subplots()
     ax.set_xlabel('Date')
     if columnDescriptions:
@@ -19,7 +40,7 @@ def plotDataColumnSingle(df, plt, column, data, columnDescriptions=None, color='
     ax.tick_params(axis='y', labelcolor=color)
     ax.grid(1, axis='y')
 
-    z = np.polyfit(range(len(data)), data, INTERPOLDEG)
+    z = np.polyfit(range(len(data)), data, interpoldeg)
     p = np.poly1d(z)
     func = p(range(len(data)))
     ax.plot(df.index, func, color='black', label="Pol.fit")
@@ -29,7 +50,7 @@ def plotDataColumnSingle(df, plt, column, data, columnDescriptions=None, color='
     ax.legend(bbox_to_anchor=(1.05, 1), loc='upper left', borderaxespad=0.)
     fig.autofmt_xdate()
 
-def plotColumns(dfindex, plt, args, desc="", columnDescriptions=None, trainEndStr=None, columnUnits=None, interpol=False):
+def plotColumns(dfindex, plt, args, desc="", columnDescriptions=None, trainEndStr=None, columnUnits=None, interpol=False, interpoldeg=3):
     fig,ax = plt.subplots()
     ax.set_xlabel('Date')
     for i, arg in enumerate(args):
@@ -45,7 +66,7 @@ def plotColumns(dfindex, plt, args, desc="", columnDescriptions=None, trainEndSt
     if interpol:
         for i, arg in enumerate(args):
             label, column, data, color, alpha = arg
-            z = np.polyfit(range(len(data)), data, INTERPOLDEG)
+            z = np.polyfit(range(len(data)), data, interpoldeg)
             p = np.poly1d(z)
             func = p(range(len(data)))
             if color is not None:
@@ -127,8 +148,41 @@ def plotData(df, plt, columnDescriptions=None, relevantColumns=None, columnUnits
             else:
                 print("Column " + column + "not in dataset")
 
-    
-
 def plotDataByTimeframe(df, plt, start, end, columnDescriptions=None, relevantColumns=None):
     df = getDataByTimeframe(df, start, end)
     plotData(df, plt, columnDescriptions=columnDescriptions, relevantColumns=relevantColumns)
+
+def plotModelScores(plt, names, r2_train, r2_test):
+    plt.ylabel('R2 score')
+    plt.xlabel('Model')
+    plt.title('Model metrics')
+
+    plt.plot(names, r2_train)
+    plt.plot(names, r2_test)
+
+    plt.show()
+
+def plotModelPredictions(plt, deviationsList, columnsList, indexList, labelNames, traintime, interpol=False, interpoldeg=3):
+    for i in range(len(deviationsList)):
+        plotColumns(
+            indexList,
+            plt,
+            deviationsList[i],
+            desc="Deviation, ",
+            columnDescriptions=labelNames,
+            trainEndStr=[item for sublist in traintime for item in sublist],
+            interpol=interpol,
+            interpoldeg=interpoldeg,
+        )
+        plotColumns(
+            indexList,
+            plt,
+            columnsList[i],
+            desc="Prediction vs. targets, ",
+            columnDescriptions=labelNames,
+            trainEndStr=[item for sublist in traintime for item in sublist],
+            interpol=interpol,
+            interpoldeg=interpoldeg,
+        )
+
+    plt.show()

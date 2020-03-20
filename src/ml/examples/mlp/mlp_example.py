@@ -9,6 +9,7 @@ if ROOT_PATH not in sys.path:
 import utilities
 import plots
 import metrics
+import modelFuncs
 import tensorflow as tf
 import numpy as np
 from src.ml.analysis.covmat import (covmat, printCovMat)
@@ -38,7 +39,7 @@ args = Args({
     'epochs': 4000,
     'batchSize': 128,
     'verbose': 1,
-    'callbacks': utilities.getBasicCallbacks(),
+    'callbacks': modelFuncs.getBasicCallbacks(),
     'enrolWindow': None,
     'validationSize': 0.2,
     'testSize': 0.2
@@ -123,6 +124,7 @@ def main(filename, targetColumns):
             columnUnits=None,
             trainEndStr=[end_train],
             interpol=False,
+            interpoldeg=3,
         )
         plots.plotColumns(
             df_test,
@@ -148,6 +150,7 @@ def main(filename, targetColumns):
             columnUnits=columnUnits,
             trainEndStr=[end_train],
             interpol=False,
+            interpoldeg=3
         )
     plt.show()
 

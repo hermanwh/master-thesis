@@ -39,6 +39,7 @@ from configs import (getConfig, getConfigDirs)
 import utilities
 import plots
 import metrics
+import modelFuncs
 
 from models import (
     kerasLSTMSingleLayer,
@@ -56,7 +57,7 @@ args = Args({
     'epochs': 1500,
     'batchSize': 128*2,
     'verbose': 2,
-    'callbacks': utilities.getBasicCallbacks(monitor="loss"),
+    'callbacks': modelFuncs.getBasicCallbacks(monitor="loss"),
     'enrolWindow': 1,
     'validationSize': 0.2,
     'testSize': 0.2
@@ -111,7 +112,7 @@ def main(fileName, targetColumns):
                                     initial_epoch=0)
     """
     
-    utilities.printHorizontalLine()
+    prints.printHorizontalLine()
 
     pred_train = model.predict(X_train, y=y_train)
     pred_test = model.predict(X_test, y=y_test)
@@ -123,6 +124,8 @@ def main(fileName, targetColumns):
 
     print(train_metrics)
     print(test_metrics)
+
+    INTERPOLDEG = 3
 
     for i in range(y_train.shape[1]):
         plots.plotColumns(
@@ -148,6 +151,7 @@ def main(fileName, targetColumns):
             columnDescriptions=labelNames,
             trainEndStr=[end_train],
             interpol=True,
+            interpoldeg=INTERPOLDEG,
         )
         plots.plotColumns(
             df_test.iloc[args.enrolWindow:],
@@ -165,6 +169,7 @@ def main(fileName, targetColumns):
             columnDescriptions=labelNames,
             trainEndStr=[end_train],
             interpol=True,
+            interpoldeg=INTERPOLDEG,
         )
 
     plt.show()

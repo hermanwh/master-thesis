@@ -11,6 +11,7 @@ import utilities
 import plots
 import metrics
 import inspect
+import modelFuncs
 from src.ml.analysis.covmat import (covmat, printCovMat)
 from src.ml.analysis.pca import (pca, printExplainedVarianceRatio)
 from models import Args
@@ -37,7 +38,7 @@ args = {
     'epochs': 500,
     'batchSize': 32,
     'verbose': 1,
-    'callbacks': utilities.getBasicCallbacks(),
+    'callbacks': modelFuncs.getBasicCallbacks(),
     'enrolWindow': 16,
     'validationSize': 0.2,
     'testSize': 0.2
@@ -51,7 +52,7 @@ lstmArgs = {
     'epochs': 50,
     'batchSize': 32,
     'verbose': 0,
-    'callbacks': utilities.getBasicCallbacks(),
+    'callbacks': modelFuncs.getBasicCallbacks(),
     'enrolWindow': 1,
     'validationSize': 0.2,
     'testSize': 0.2
@@ -65,7 +66,7 @@ lstmArgs2 = {
     'epochs': 50,
     'batchSize': 32,
     'verbose': 0,
-    'callbacks': utilities.getBasicCallbacks(),
+    'callbacks': modelFuncs.getBasicCallbacks(),
     'enrolWindow': 16,
     'validationSize': 0.2,
     'testSize': 0.2
@@ -206,13 +207,13 @@ def main(filename, targetColumns):
     retrain = False
     maxEnrolWindow = utilities.findMaxEnrolWindow(modelList)
 
-    utilities.trainModels(modelList, filename, ['all'], retrain)
+    modelFuncs.trainModels(modelList, filename, ['all'], retrain)
     
     utilities.predictWithAutoencoderModels(modelList, df_test, X_test)
 
-    #utilities.trainModels(modelList, filename, targetColumns, retrain)
+    #modelFuncs.trainModels(modelList, filename, targetColumns, retrain)
     #names, r2_train, r2_test, deviationsList, columnsList = utilities.predictWithModels(modelList, X_train, y_train, X_test, y_test, targetColumns)
-    #utilities.saveModels(modelList, filename, targetColumns)
+    #modelFuncs.saveModels(modelList, filename, targetColumns)
     #utilities.printModelPredictions(names, r2_train, r2_test)
     #utilities.plotModelPredictions(plt, deviationsList, columnsList, df_test.iloc[maxEnrolWindow:].index, labelNames, traintime)
 

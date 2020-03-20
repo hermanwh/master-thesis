@@ -1,5 +1,13 @@
 import ast
 
+class Config():
+    def __init__(self, config):
+        self.columns = config['columns']
+        self.relevantColumns = config['relevantColumns']
+        self.labelNames = config['labelNames']
+        self.columnUnits = config['columnUnits']
+        self.timestamps = config['timestamps']
+
 def getConfigs():
 	return {
 		'A': getConfigA,

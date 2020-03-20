@@ -17,37 +17,9 @@ from sklearn.metrics import r2_score, mean_squared_log_error, mean_squared_error
 from configs import getConfig
 from keras.callbacks.callbacks import EarlyStopping, ReduceLROnPlateau
 import metrics
-from keras.utils import plot_model
 import plots
+import prints
 import ast
-
-INTERPOLDEG = 3
-
-class Config():
-    def __init__(self, config):
-        self.columns = config['columns']
-        self.relevantColumns = config['relevantColumns']
-        self.labelNames = config['labelNames']
-        self.columnUnits = config['columnUnits']
-        self.timestamps = config['timestamps']
-
-def getBasicCallbacks(monitor="val_loss", patience_es=200, patience_rlr=80):
-    return [
-        EarlyStopping(
-            monitor = monitor, min_delta = 0.00001, patience = patience_es, mode = 'auto', restore_best_weights=True
-        ),
-        ReduceLROnPlateau(
-            monitor = monitor, factor = 0.5, patience = patience_rlr, verbose = 1, min_lr=5e-4,
-        )
-    ]
-
-def getBasicHyperparams():
-    return {
-        'activation': 'relu',
-        'loss': 'mean_squared_error',
-        'optimizer': 'adam',
-        'metrics': ['mean_squared_error'],
-    }
 
 def initDataframe(filename, relevantColumns, labelNames):
     df = readDataFile(filename)
@@ -59,14 +31,57 @@ def initDataframe(filename, relevantColumns, labelNames):
 
     return df
 
-def getFeatureTargetSplit(df_train, df_test, targetColumns):
-    X_train = df_train.drop(targetColumns, axis=1).values
-    y_train = df_train[targetColumns].values
+def readDataFile(filename):
+    ext = filename[-4:]
+    if ext == '.csv':
+        df = pd.read_csv(filename)
+        if 'Date' in df.columns:
+            df['Date'] = df['Date'].apply(lambda x: x.split('+')[0])
+            df['Date'] = pd.to_datetime(df['Date'], dayfirst=True)
+        elif 'time' in df.columns:
+            df['Date'] = df['time'].apply(lambda x: x.split('+')[0])
+            df['Date'] = pd.to_datetime(df['Date'], dayfirst=True)
+            df = df.drop('time', axis=1)
+    elif ext == '.xls':
+        df = pd.read_excel(filename)
+        if 'Date' in df.columns:
+            df['Date'] = df['Date'].apply(lambda x: x.split('+')[0])
+            df['Date'] = pd.to_datetime(df['Date'], dayfirst=True)
+        elif 'time' in df.columns:
+            df['Date'] = df['time'].apply(lambda x: x.split('+')[0])
+            df['Date'] = pd.to_datetime(df['Date'], dayfirst=True)
+            df = df.drop('time', axis=1)
+    else:
+        print("Could not load data from file")
+        print("Use .csv or .xls format")
+        df = False
+    return df
 
-    X_test = df_test.drop(targetColumns, axis=1).values
-    y_test = df_test[targetColumns].values
+def getDataWithTimeIndex(df, dateColumn='Date'):
+    if dateColumn in df.columns:
+        print("Date index set")
+        df = df.set_index(dateColumn, inplace=False)
+    else:
+        print("No date column")
+    return df
 
-    return [X_train, y_train, X_test, y_test]
+def dropIrrelevantColumns(df, args):
+    relevantColumns, columnDescriptions = args
+
+    print("Columns before removal")
+    prints.printColumns(df, columnDescriptions)
+    prints.printHorizontalLine()
+
+    dfcolumns = df.columns
+    for column in dfcolumns:
+        if column not in relevantColumns:
+            df = df.drop(column, axis=1)
+
+    print("Columns after removal")
+    prints.printColumns(df, columnDescriptions)
+    prints.printHorizontalLine()
+    
+    return df
 
 def getTestTrainSplit(df, traintime, testtime):
     start_train, end_train = traintime[0]
@@ -80,70 +95,26 @@ def getTestTrainSplit(df, traintime, testtime):
 
     return [df_train, df_test]
 
-def plotKerasModel(model):
-    plot_model(model.model)
+def getDataByTimeframe(df, start, end):
+    print("Finding data between", start, "and", end)
+    prints.printHorizontalLine()
+    df = df.loc[start:end]
+    return df
 
-def printModelScores(names, r2_train, r2_test):
-    print("Model prediction scores")
-    t = PrettyTable(['Model', 'Train score', 'Test score'])
-    for i, name in enumerate(names):
-        t.add_row([name, round(r2_train[i], 4), round(r2_test[i], 4)])
-    print(t)
+def getFeatureTargetSplit(df_train, df_test, targetColumns):
+    X_train = df_train.drop(targetColumns, axis=1).values
+    y_train = df_train[targetColumns].values
 
-def plotModelScores(names, r2_train, r2_test):
-    plt.ylabel('R2 score')
-    plt.xlabel('Model')
-    plt.title('Model metrics')
+    X_test = df_test.drop(targetColumns, axis=1).values
+    y_test = df_test[targetColumns].values
 
-    plt.plot(names, r2_train)
-    plt.plot(names, r2_test)
-
-    plt.show()
-
-def plotModelPredictions(plt, deviationsList, columnsList, indexList, labelNames, traintime, interpol=False):
-    
-    for i in range(len(deviationsList)):
-        plots.plotColumns(
-            indexList,
-            plt,
-            deviationsList[i],
-            desc="Deviation, ",
-            columnDescriptions=labelNames,
-            trainEndStr=[item for sublist in traintime for item in sublist],
-            interpol=interpol,
-        )
-        plots.plotColumns(
-            indexList,
-            plt,
-            columnsList[i],
-            desc="Prediction vs. targets, ",
-            columnDescriptions=labelNames,
-            trainEndStr=[item for sublist in traintime for item in sublist],
-            interpol=interpol,
-        )
-
-    plt.show()
+    return [X_train, y_train, X_test, y_test]
 
 def predictWithModel(model, X_train, y_train, X_test, y_test, targetColumns):
     return predictWithModels([model], X_train, y_train, X_test, y_test, targetColumns)
 
-def findMaxEnrolWindow(modelList):
-    maxEnrol = 0
-    for model in modelList:
-        if model.modelType == "Ensemble":
-            enrol = model.maxEnrol
-        elif model.modelType == "RNN":
-            enrol = model.args.enrolWindow
-        else:
-            enrol = 0
-
-        if enrol > maxEnrol:
-            maxEnrol = enrol
-
-    return maxEnrol
-
 def predictWithModels(modelList, X_train, y_train, X_test, y_test, targetColumns):
-    colors = getPlotColors()
+    colors = plots.getPlotColors()
     maxEnrol = findMaxEnrolWindow(modelList)
 
     names = []
@@ -212,194 +183,6 @@ def predictWithModels(modelList, X_train, y_train, X_test, y_test, targetColumns
         columnsList,
     ]
 
-def getPlotColors():
-    #colors = ['#92a8d1','#034f84','#f7cac9','#f7786b','#deeaee','#b1cbbb','#eea29a','#c94c4c']
-    colors = ['#686256','#c1502e','#587e76','#a96e5b','#454140','#bd5734','#7a3b2e', '#92a8d1','#034f84','#f7cac9','#f7786b','#deeaee','#b1cbbb','#eea29a','#c94c4c']
-    """
-    colors = [
-        '#0C0910',
-        '#453750',
-        '#73648A',
-        '#9882AC',
-        '#A393BF',
-        '#8AAA79',
-        '#657153',
-        '#837569',
-        '#B7B6C2',
-        '#D1D5DE',
-        '#D58936',
-        '#A44200',
-        '#69140E',
-        '#3C1518'
-    ]
-    """
-    return colors
-
-def getColorScheme():
-    return {
-        'b1':"#0051FF",
-        'b2':"#007CFF",
-        'b3':"#4DA3FE",
-        'r1':"#FF0101",
-        'r2':"#FF3B3B",
-        'r3':"#EB7D00",
-        'r4':"#EBCF00",
-    }
-
-def testForGPU():
-    if tf.test.gpu_device_name():
-        print('Default GPU Device: {}'.format(tf.test.gpu_device_name()))
-    else:
-        print("Please install GPU version of TF")
-
-def dropIrrelevantColumns(df, args):
-    relevantColumns, columnDescriptions = args
-
-    print("Columns before removal")
-    printColumns(df, columnDescriptions)
-    printHorizontalLine()
-
-    dfcolumns = df.columns
-    for column in dfcolumns:
-        if column not in relevantColumns:
-            df = df.drop(column, axis=1)
-
-    print("Columns after removal")
-    printColumns(df, columnDescriptions)
-    printHorizontalLine()
-    
-    return df
-
-def printData(df):
-    print(df)
-    printHorizontalLine()
-
-def printDataByTimeframe(df, start, end):
-    df = getDataByTimeframe(df, start, end)
-    printData(df)
-
-def printColumns(df, columnDescriptions):
-    printHorizontalLine()
-    print("Dataset columns:")
-    for i, column in enumerate(df.columns):
-        if columnDescriptions is not None and column in columnDescriptions:
-            print("Col.", i, ":", column, "-", columnDescriptions[column])
-        else:
-            print("Col.", i, ":", column)
-
-def prettyPrint(data, precision, suppress):
-    print(np.array_str(data, precision=precision, suppress_small=suppress))
-
-def readDataFile(filename):
-    ext = filename[-4:]
-    if ext == '.csv':
-        df = pd.read_csv(filename)
-        if 'Date' in df.columns:
-            df['Date'] = df['Date'].apply(lambda x: x.split('+')[0])
-            df['Date'] = pd.to_datetime(df['Date'], dayfirst=True)
-        elif 'time' in df.columns:
-            df['Date'] = df['time'].apply(lambda x: x.split('+')[0])
-            df['Date'] = pd.to_datetime(df['Date'], dayfirst=True)
-            df = df.drop('time', axis=1)
-    elif ext == '.xls':
-        df = pd.read_excel(filename)
-        if 'Date' in df.columns:
-            df['Date'] = df['Date'].apply(lambda x: x.split('+')[0])
-            df['Date'] = pd.to_datetime(df['Date'], dayfirst=True)
-        elif 'time' in df.columns:
-            df['Date'] = df['time'].apply(lambda x: x.split('+')[0])
-            df['Date'] = pd.to_datetime(df['Date'], dayfirst=True)
-            df = df.drop('time', axis=1)
-    else:
-        print("Could not load data from file")
-        print("Use .csv or .xls format")
-        df = False
-    return df
-
-def getDataWithTimeIndex(df, dateColumn='Date'):
-    if dateColumn in df.columns:
-        print("Date index set")
-        df = df.set_index(dateColumn, inplace=False)
-    else:
-        print("No date column")
-    return df
-
-def getDataByTimeframe(df, start, end):
-    print("Finding data between", start, "and", end)
-    printHorizontalLine()
-    df = df.loc[start:end]
-    return df
-
-def trainModels(modelList, filename, targetColumns, retrain=False, save=True):
-    if retrain:
-        for mod in modelList:
-            print("Training model " + mod.name)
-            mod.train()
-    else:
-        for mod in modelList:
-            if mod.modelType != "Ensemble":
-                loadedModel = loadModel(mod.name, filename, targetColumns)
-                if loadedModel is not None:
-                    print("Model " + mod.name + " was loaded from file")
-                    mod.model = loadedModel
-                else:
-                    print("Training model " + mod.name)
-                    mod.train()
-            else:
-                for model in mod.models:
-                    loadedModel = loadModel(model.name, filename, targetColumns, ensembleName=mod.name)
-                    if loadedModel is not None:
-                        print("Model " + mod.name + " was loaded from file")
-                        model.model = loadedModel
-                    else:
-                        print("Training submodel " + model.name + " of Ensemble " + mod.name)
-                        model.train()
-
-                mod.trainEnsemble()
-
-    if save:
-        saveModels(modelList, filename, targetColumns)
-        
-                
-            
-def loadModel(modelname, filename, targetColumns, ensembleName=None):
-    subdir = filename.split('/')[-2]
-    datafile = filename.split('/')[-1].split('.')[0]
-    joinedColumns = "_".join(targetColumns)
-    
-    modName = "_".join(modelname.split(' '))
-    if ensembleName is None:
-        directory = ROOT_PATH + '/src/ml/trained_models/' + subdir + '/' + datafile + '/' + modName + '_' + joinedColumns + ".h5"
-    else:    
-        ensName = "_".join(ensembleName.split(' '))
-        directory = ROOT_PATH + '/src/ml/trained_models/' + subdir + '/' + datafile + '/' + ensName + '_' + joinedColumns + '/' + modName + ".h5"
-    if os.path.isfile(directory):
-        model = keras.models.load_model(directory)
-    else:
-        model = None
-    return model
-
-def saveModels(modelList, filename, targetColumns):
-    subdir = filename.split('/')[-2]
-    datafile = filename.split('/')[-1].split('.')[0]
-    joinedColumns = "_".join(targetColumns)
-    
-    for model in modelList:
-        modName = "_".join(model.name.split(' '))
-        directory = ROOT_PATH + '/src/ml/trained_models/' + subdir + '/' + datafile + '/'
-        if not os.path.exists(directory):
-            os.makedirs(directory)
-        modelPath = directory
-        modelName = modName + '_' + joinedColumns
-        metricsPath = directory + modName + '_' + joinedColumns + ".txt"
-        model.save(modelPath, modelName)
-
-def printEmptyLine():
-    print("")
-
-def printHorizontalLine():
-    print("-------------------------------------------")
-
 def predictWithAutoencoderModels(modelList, df_test, X_test):
     indexx = df_test.index
 
@@ -440,3 +223,35 @@ def predictWithAutoencoderModels(modelList, df_test, X_test):
         ax.set_title('Reconstruction error', fontsize=16)
 
         plt.show()
+
+def findMaxEnrolWindow(modelList):
+    maxEnrol = 0
+    for model in modelList:
+        if model.modelType == "Ensemble":
+            enrol = model.maxEnrol
+        elif model.modelType == "RNN":
+            enrol = model.args.enrolWindow
+        else:
+            enrol = 0
+
+        if enrol > maxEnrol:
+            maxEnrol = enrol
+
+    return maxEnrol
+
+def getColorScheme():
+    return {
+        'b1':"#0051FF",
+        'b2':"#007CFF",
+        'b3':"#4DA3FE",
+        'r1':"#FF0101",
+        'r2':"#FF3B3B",
+        'r3':"#EB7D00",
+        'r4':"#EBCF00",
+    }
+
+def testForGPU():
+    if tf.test.gpu_device_name():
+        print('Default GPU Device: {}'.format(tf.test.gpu_device_name()))
+    else:
+        print("Please install GPU version of TF")
