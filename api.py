@@ -16,10 +16,7 @@ import models
 import modelFuncs
 import plots
 import prints
-
-from src.ml.analysis.covmat import (covmat, printCovMat)
-from src.ml.analysis.pca import (pca, printExplainedVarianceRatio)
-from src.ml.analysis.pcaPlot import (pcaPlot, printReconstructionRow)
+import analysis
 
 default_MLP_args = {
     'activation': 'relu',
