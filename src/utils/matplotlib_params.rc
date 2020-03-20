@@ -1,6 +1,6 @@
 # -- figure --
-figure.figsize : 12,4
-figure.dpi : 200
+#figure.figsize : 12,4
+#figure.dpi : 200
 
 
 # -- axes --

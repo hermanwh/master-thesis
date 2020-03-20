@@ -38,11 +38,11 @@ default_LSTM_args = {
     'loss': 'mean_squared_error',
     'optimizer': 'adam',
     'metrics': ['mean_squared_error'],
-    'epochs': 100,
+    'epochs': 500,
     'batchSize': 32*2,
-    'verbose': 0,
-    'callbacks': utilities.getBasicCallbacks(monitor="loss"),
-    'enrolWindow': 16,
+    'verbose': 1,
+    'callbacks': utilities.getBasicCallbacks(),
+    'enrolWindow': 1,
     'validationSize': 0.2,
     'testSize': 0.2,
     'dropout': 0.2,
@@ -212,7 +212,7 @@ class Api():
 
         utilities.trainModels(self.modelList, self.filename, self.targetColumns, retrain)
 
-    def predictWithModels(self, plot=True):
+    def predictWithModels(self, plot=True, interpol=False):
         """
         FUNCTION:
             Used to create a Neural Network model using multilayer perceptron
@@ -220,6 +220,8 @@ class Api():
         PARAMS:
             plot: boolean
                 Indicates if plots of the calculated predictions are desired
+            interpol: boolean
+                Indicates if interpolated functions for predictions should be plotted
         
         RETURNS:
             List[modelNames, metrics_train, metrics_test]: [list(Str), list(float), list(float)]
@@ -242,10 +244,14 @@ class Api():
                 columnsList,
                 self.indexColumn,
                 self.columnDescriptions,
-                self.traintime
+                self.traintime,
+                interpol=interpol,
             )
             utilities.plotModelScores(modelNames, metrics_train, metrics_test)
         return [modelNames, metrics_train, metrics_test]
+
+    def predictWithAutoencoderModels(self):
+        utilities.predictWithAutoencoderModels(self.modelList, self.df_test, self.X_test)
 
     def MLP(
             self,
@@ -639,4 +645,124 @@ class Api():
             models=modelList,
         )
 
+        return model
+
+    def Autoencoder_Regularized(
+            self,
+            name,
+            l1_rate=10e-4,
+            encodingDim=3,
+            activation=default_MLP_args['activation'],
+            loss=default_MLP_args['loss'],
+            optimizer=default_MLP_args['optimizer'],
+            metrics=default_MLP_args['metrics'],
+            epochs=default_MLP_args['epochs'],
+            batchSize=default_MLP_args['batchSize'],
+            verbose=default_MLP_args['verbose'],
+            validationSize=default_MLP_args['validationSize'],
+            testSize=default_MLP_args['testSize']
+        ):
+        """
+        FUNCTION:
+            Used to create an Autoencoder model using multilayer perceptron
+            and reguarlization by Lasso regluarization
+            NB: Autoencoder models SHOULD NOT and CAN NOT
+                be used together with other models, or
+                as submodels to Ensemble models
+        
+        PARAMS:
+            name: str
+                A name/alias given to the model by the user
+            l1_rate: float
+                Level of L1 regularization
+            encodingDim: int
+                Size of autoencoder middle layer
+        
+        RETURNS:
+            model: AutoencoderModel
+                Object with typical machine learning methods like train, predict etc.
+        """
+
+        model = models.autoencoder_Regularized(
+            params = {
+                'name': name,
+                'X_train': self.X_train,
+                'args': {
+                    'activation': activation,
+                    'loss': loss,
+                    'optimizer': optimizer,
+                    'metrics': metrics,
+                    'epochs': epochs,
+                    'batchSize': batchSize,
+                    'verbose': verbose,
+                    'callbacks': default_MLP_args['callbacks'],
+                    'enrolWindow': 0,
+                    'validationSize': validationSize,
+                    'testSize': testSize,
+                },
+            },
+            l1_rate=l1_rate,
+            encodingDim=encodingDim,
+        )
+        
+        return model
+
+    def Autoencoder_Dropout(
+            self,
+            name,
+            dropoutRate=0.2,
+            encodingDim=3,
+            activation=default_MLP_args['activation'],
+            loss=default_MLP_args['loss'],
+            optimizer=default_MLP_args['optimizer'],
+            metrics=default_MLP_args['metrics'],
+            epochs=default_MLP_args['epochs'],
+            batchSize=default_MLP_args['batchSize'],
+            verbose=default_MLP_args['verbose'],
+            validationSize=default_MLP_args['validationSize'],
+            testSize=default_MLP_args['testSize']
+        ):
+        """
+        FUNCTION:
+            Used to create an Autoencoder model using multilayer perceptron
+            and reguarlization by Lasso regluarization
+            NB: Autoencoder models SHOULD NOT and CAN NOT
+                be used together with other models, or
+                as submodels to Ensemble models
+        
+        PARAMS:
+            name: str
+                A name/alias given to the model by the user
+            dropoutRate: float
+                Level of dropout
+            encodingDim: int
+                Size of autoencoder middle layer
+        
+        RETURNS:
+            model: AutoencoderModel
+                Object with typical machine learning methods like train, predict etc.
+        """
+
+        model = models.autoencoder_Dropout(
+            params = {
+                'name': name,
+                'X_train': self.X_train,
+                'args': {
+                    'activation': activation,
+                    'loss': loss,
+                    'optimizer': optimizer,
+                    'metrics': metrics,
+                    'epochs': epochs,
+                    'batchSize': batchSize,
+                    'verbose': verbose,
+                    'callbacks': default_MLP_args['callbacks'],
+                    'enrolWindow': 0,
+                    'validationSize': validationSize,
+                    'testSize': testSize,
+                },
+            },
+            dropoutRate=dropoutRate,
+            encodingDim=encodingDim,
+        )
+        
         return model

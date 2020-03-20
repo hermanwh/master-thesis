@@ -100,7 +100,7 @@ def plotModelScores(names, r2_train, r2_test):
 
     plt.show()
 
-def plotModelPredictions(plt, deviationsList, columnsList, indexList, labelNames, traintime):
+def plotModelPredictions(plt, deviationsList, columnsList, indexList, labelNames, traintime, interpol=False):
     
     for i in range(len(deviationsList)):
         plots.plotColumns(
@@ -110,7 +110,7 @@ def plotModelPredictions(plt, deviationsList, columnsList, indexList, labelNames
             desc="Deviation, ",
             columnDescriptions=labelNames,
             trainEndStr=[item for sublist in traintime for item in sublist],
-            interpol=False,
+            interpol=interpol,
         )
         plots.plotColumns(
             indexList,
@@ -119,7 +119,7 @@ def plotModelPredictions(plt, deviationsList, columnsList, indexList, labelNames
             desc="Prediction vs. targets, ",
             columnDescriptions=labelNames,
             trainEndStr=[item for sublist in traintime for item in sublist],
-            interpol=False,
+            interpol=interpol,
         )
 
     plt.show()
@@ -187,7 +187,7 @@ def predictWithModels(modelList, X_train, y_train, X_test, y_test, targetColumns
                     targetColumns[j],
                     pred_test[:, j][enrolDiff:],
                     colors[i],
-                    1.0,
+                    0.9,
                 ]
             )
             deviationsList[j].append(
@@ -196,7 +196,7 @@ def predictWithModels(modelList, X_train, y_train, X_test, y_test, targetColumns
                     targetColumns[j],
                     y_test[:, j][maxEnrol:] - pred_test[:, j][enrolDiff:],
                     colors[i],
-                    1.0,
+                    0.9,
                 ]
             )
 
@@ -399,3 +399,44 @@ def printEmptyLine():
 
 def printHorizontalLine():
     print("-------------------------------------------")
+
+def predictWithAutoencoderModels(modelList, df_test, X_test):
+    indexx = df_test.index
+
+    for modell in modelList:
+        pred_test = modell.predict(X_test)
+
+        for i in range(X_test.shape[1]):
+            fig, ax = plt.subplots(1, 1, figsize=(8, 6), dpi=100)
+            ax.plot(indexx, pred_test[:, i], color='red')
+            ax.plot(indexx, X_test[:, i], color='blue')
+            
+            ax.set_xlabel('Date', fontsize=12)
+            ax.tick_params(axis='x', rotation=45, labelsize=8)
+            ax.set_ylabel('Value', fontsize=12)
+
+            ax.set_title(df_test.columns[i], fontsize=16)
+
+        plt.show()
+
+        for i in range(X_test.shape[1]):
+            fig, ax = plt.subplots(1, 1, figsize=(8, 6), dpi=100)
+            ax.plot(indexx, X_test[:, i] - pred_test[:, i], color='red')
+            
+            ax.set_xlabel('Date', fontsize=12)
+            ax.tick_params(axis='x', rotation=45, labelsize=8)
+            ax.set_ylabel('Deviation', fontsize=12)
+
+            ax.set_title(df_test.columns[i], fontsize=16)
+
+        plt.show()
+
+        fig, ax = plt.subplots(1, 1, figsize=(8, 6), dpi=100)
+        ax.plot(indexx, np.average((X_test - pred_test)**2,axis=1), color='red')
+        ax.set_xlabel('Date', fontsize=12)
+        ax.tick_params(axis='x', rotation=45, labelsize=8)
+        ax.set_ylabel('Error', fontsize=12)
+
+        ax.set_title('Reconstruction error', fontsize=16)
+
+        plt.show()

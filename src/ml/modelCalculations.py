@@ -13,7 +13,7 @@ import metrics
 import inspect
 from src.ml.analysis.covmat import (covmat, printCovMat)
 from src.ml.analysis.pca import (pca, printExplainedVarianceRatio)
-from utilities import Args
+from models import Args
 from models import (
     kerasSequentialRegressionModel,
     kerasSequentialRegressionModelWithRegularization,
@@ -21,14 +21,43 @@ from models import (
     sklearnLinear,
     sklearnRidgeCV,
     ensembleModel,
-    kerasLSTMSingleLayerLeaky,
-    printModelSummary,
+    kerasLSTM,
+    autoencoder_Dropout,
+    autoencoder_Regularized,
 )
 from configs import (getConfig)
 
 import matplotlib.pyplot as plt
 
-args = Args({
+args = {
+    'activation': 'relu',
+    'loss': 'mean_squared_error',
+    'optimizer': 'adam',
+    'metrics': ['mean_squared_error'],
+    'epochs': 500,
+    'batchSize': 32,
+    'verbose': 1,
+    'callbacks': utilities.getBasicCallbacks(),
+    'enrolWindow': 16,
+    'validationSize': 0.2,
+    'testSize': 0.2
+}
+
+lstmArgs = {
+    'activation': 'relu',
+    'loss': 'mean_squared_error',
+    'optimizer': 'adam',
+    'metrics': ['mean_squared_error'],
+    'epochs': 50,
+    'batchSize': 32,
+    'verbose': 0,
+    'callbacks': utilities.getBasicCallbacks(),
+    'enrolWindow': 1,
+    'validationSize': 0.2,
+    'testSize': 0.2
+}
+
+lstmArgs2 = {
     'activation': 'relu',
     'loss': 'mean_squared_error',
     'optimizer': 'adam',
@@ -40,37 +69,7 @@ args = Args({
     'enrolWindow': 16,
     'validationSize': 0.2,
     'testSize': 0.2
-})
-
-print('hei')
-
-lstmArgs = Args({
-    'activation': 'relu',
-    'loss': 'mean_squared_error',
-    'optimizer': 'adam',
-    'metrics': ['mean_squared_error'],
-    'epochs': 50,
-    'batchSize': 32,
-    'verbose': 0,
-    'callbacks': utilities.getBasicCallbacks(monitor="loss"),
-    'enrolWindow': 1,
-    'validationSize': 0.2,
-    'testSize': 0.2
-})
-
-lstmArgs2 = Args({
-    'activation': 'relu',
-    'loss': 'mean_squared_error',
-    'optimizer': 'adam',
-    'metrics': ['mean_squared_error'],
-    'epochs': 50,
-    'batchSize': 32,
-    'verbose': 0,
-    'callbacks': utilities.getBasicCallbacks(monitor="loss"),
-    'enrolWindow': 16,
-    'validationSize': 0.2,
-    'testSize': 0.2
-})
+}
 
 def main(filename, targetColumns):
     subdir = filename.split('/')[-2]
@@ -96,8 +95,8 @@ def main(filename, targetColumns):
             'args': args,
         },
         structure = [
-            [50, args.activation],
-            [20, args.activation]
+            [50, args['activation']],
+            [20, args['activation']]
         ],
     )
     keras_seq_mod_simple = kerasSequentialRegressionModel(
@@ -108,7 +107,7 @@ def main(filename, targetColumns):
             'args': args,
         },
         structure = [
-            [20, args.activation]
+            [20, args['activation']]
         ],
     )
     keras_seq_mod_v_simple = kerasSequentialRegressionModel(
@@ -119,7 +118,7 @@ def main(filename, targetColumns):
             'args': args,
         },
         structure = [
-            [X_train.shape[1], args.activation]
+            [X_train.shape[1], args['activation']]
         ], 
     )
     keras_seq_mod = kerasSequentialRegressionModel(
@@ -130,29 +129,29 @@ def main(filename, targetColumns):
             'args': args,
         },
         structure = [
-            [50, args.activation],
-            [20, args.activation]
+            [50, args['activation']],
+            [20, args['activation']]
         ]
     )
-    lstmModel = kerasLSTMSingleLayerLeaky(
+    lstmModel = kerasLSTM(
         params = {
             'name': 'LSTM 128',
             'X_train': X_train,
             'y_train': y_train,
             'args': lstmArgs,
         },
-        units=128,
+        units=[128],
         dropout=0.1,
         alpha=0.5
     )
-    lstmModel2 = kerasLSTMSingleLayerLeaky(
+    lstmModel2 = kerasLSTM(
         params = {
             'name': 'LSTM 2 128',
             'X_train': X_train,
             'y_train': y_train,
             'args': lstmArgs2,
         },
-        units=128,
+        units=[128],
         dropout=0.1,
         alpha=0.5
     )
@@ -176,24 +175,46 @@ def main(filename, targetColumns):
             sklearnLinear,
         ],
     )
+
+    autoenc1 = autoencoder_Dropout(
+        params = {
+            'name':'autoencoder 1',
+            'X_train': X_train,
+            'args': args,
+        },
+    )
+
+    autoenc2 = autoencoder_Regularized(
+        params = {
+            'name':'autoencoder 2',
+            'X_train': X_train,
+            'args': args,
+        },
+    )
     
     
     modelList = [
-        keras_seq_mod,
-        keras_seq_mod_simple,
-        ensemble,
-        lstmModel,
-        sklearnLinear,
+        autoenc1,
+        autoenc2,
+        #keras_seq_mod,
+        #keras_seq_mod_simple,
+        #ensemble,
+        #lstmModel,
+        #sklearnLinear,
     ]
 
     retrain = False
     maxEnrolWindow = utilities.findMaxEnrolWindow(modelList)
 
-    utilities.trainModels(modelList, filename, targetColumns, retrain)
-    names, r2_train, r2_test, deviationsList, columnsList = utilities.predictWithModels(modelList, X_train, y_train, X_test, y_test, targetColumns)
-    utilities.saveModels(modelList, filename, targetColumns)
+    utilities.trainModels(modelList, filename, ['all'], retrain)
+    
+    utilities.predictWithAutoencoderModels(modelList, df_test, X_test)
+
+    #utilities.trainModels(modelList, filename, targetColumns, retrain)
+    #names, r2_train, r2_test, deviationsList, columnsList = utilities.predictWithModels(modelList, X_train, y_train, X_test, y_test, targetColumns)
+    #utilities.saveModels(modelList, filename, targetColumns)
     #utilities.printModelPredictions(names, r2_train, r2_test)
-    utilities.plotModelPredictions(plt, deviationsList, columnsList, df_test.iloc[maxEnrolWindow:].index, labelNames, traintime)
+    #utilities.plotModelPredictions(plt, deviationsList, columnsList, df_test.iloc[maxEnrolWindow:].index, labelNames, traintime)
 
     """
     for model in modelList:

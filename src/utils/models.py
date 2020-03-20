@@ -9,6 +9,7 @@ from keras.engine.input_layer import Input
 from keras.regularizers import l2, l1
 from keras.preprocessing.sequence import TimeseriesGenerator
 from sklearn.preprocessing import MinMaxScaler, StandardScaler
+from sklearn.model_selection import train_test_split
 
 from keras.layers.recurrent import GRU, LSTM
 from keras.layers.advanced_activations import LeakyReLU
@@ -139,9 +140,17 @@ class MachinLearningModel():
 
     def train(self):
         if self.modelType == "RNN":
+            X_t, X_v, y_t, y_v = train_test_split(self.X_train, self.y_train, test_size=0.2, shuffle=False)
+            validation_generator = TimeseriesGenerator(
+                self.inputScaler.transform(X_v),
+                self.outputScaler.transform(y_v),
+                length = self.args.enrolWindow,
+                sampling_rate = 1,
+                batch_size = self.args.batchSize
+            )
             train_generator = TimeseriesGenerator(
-                self.inputScaler.transform(self.X_train),
-                self.outputScaler.transform(self.y_train),
+                self.inputScaler.transform(X_t),
+                self.outputScaler.transform(y_t),
                 length = self.args.enrolWindow,
                 sampling_rate = 1,
                 batch_size = self.args.batchSize
@@ -156,6 +165,7 @@ class MachinLearningModel():
                 epochs = self.args.epochs,
                 verbose = self.args.verbose,
                 callbacks = self.args.callbacks,
+                validation_data = validation_generator,
             )
         elif self.modelType == "MLP":
             self.model.compile(
@@ -196,6 +206,50 @@ class MachinLearningModel():
                     self.inputScaler.transform(X)
                 )
             )
+
+    def save(self, directory, name):
+        if self.args:
+            self.model.save(directory + name + ".h5")
+
+class AutoencoderModel():
+    def __init__(self, model, X_train, args=None, modelType="AUTOENCODER", scaler="standard", name=None):
+        if scaler == "standard":
+            inputScaler = StandardScaler()
+        else:
+            inputScaler = MinMaxScaler()
+        
+        inputScaler.fit(X_train)
+
+        self.model = model
+        self.X_train = X_train
+        self.args = args
+        self.name = name
+        self.history = None
+        self.inputScaler = inputScaler
+        self.modelType = modelType
+
+    def train(self):
+        self.model.compile(
+            loss = self.args.loss,
+            optimizer = self.args.optimizer,
+            metrics = self.args.metrics
+        )
+        self.history = self.model.fit(
+            self.inputScaler.transform(self.X_train),
+            self.inputScaler.transform(self.X_train),
+            epochs = self.args.epochs,
+            batch_size = self.args.batchSize,
+            verbose = self.args.verbose,
+            callbacks = self.args.callbacks,
+            validation_split = self.args.validationSize,
+        )
+
+    def predict(self, X, y=None):
+        return self.inputScaler.inverse_transform(
+            self.model.predict(
+                self.inputScaler.transform(X)
+            )
+        )
 
     def save(self, directory, name):
         if self.args:
@@ -438,3 +492,50 @@ def sklearnElasticNetCV(params, alphas=None, l1_ratio=0.5):
     name = params['name']
     model = ElasticNetCV(alphas=alphas, l1_ratio=l1_ratio)
     return MachinLearningModel(model, X, Y, modelType="Linear", name=name)
+
+def autoencoder_Dropout(params, dropoutRate=0.2, encodingDim=3):
+    X = params['X_train']
+    name = params['name']
+    args = Args(params['args'])
+
+    if encodingDim > 3:
+        encodingDim = 3
+
+    input_d = Input(shape=(X.shape[1],))
+    encoded = Dense(6, activation='tanh')(input_d)
+    encoded = Dropout(dropoutRate)(encoded)
+    encoded = Dense(5, activation='tanh')(encoded)
+    encoded = Dropout(dropoutRate)(encoded)
+    encoded = Dense(4, activation='tanh')(encoded)
+    encoded = Dropout(dropoutRate)(encoded)
+    encoded = Dense(encodingDim, activation='tanh')(encoded)
+    #encoded = Dropout(dropoutRate)(encoded)
+    decoded = Dense(4, activation='tanh')(encoded)
+    #decoded = Dropout(dropoutRate)(decoded)
+    decoded = Dense(5, activation='tanh')(decoded)
+    #decoded = Dropout(dropoutRate)(decoded)
+    decoded = Dense(6, activation='tanh')(decoded)
+    #decoded = Dropout(dropoutRate)(decoded)
+    decoded = Dense(X.shape[1], activation='linear')(decoded)
+    model = Model(input_d, decoded)
+    return AutoencoderModel(model, X, args, modelType="AUTOENCODER", name=name)
+
+def autoencoder_Regularized(params, l1_rate=10e-4, encodingDim=3):
+    X = params['X_train']
+    name = params['name']
+    args = Args(params['args'])
+
+    if encodingDim > 3:
+        encodingDim = 3
+
+    model = Sequential()
+    model.add(Dense(X.shape[1]))
+    model.add(Dense(6, activation='tanh', activity_regularizer=l1(l1_rate)))
+    model.add(Dense(5, activation='tanh', activity_regularizer=l1(l1_rate)))
+    model.add(Dense(4, activation='tanh', activity_regularizer=l1(l1_rate)))
+    model.add(Dense(encodingDim, activation='tanh', activity_regularizer=l1(l1_rate)))
+    model.add(Dense(4, activation='tanh'))
+    model.add(Dense(5, activation='tanh'))
+    model.add(Dense(6, activation='tanh'))
+    model.add(Dense(X.shape[1], activation='linear'))
+    return AutoencoderModel(model, X, args, modelType="AUTOENCODER", name=name)
