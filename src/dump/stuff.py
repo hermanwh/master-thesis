@@ -11,7 +11,6 @@ import numpy as np
 import seaborn as sea
 import matplotlib.pyplot as plt
 import pandas as pd
-import covmat
 import analysis
 import prints
 from configs import getConfig

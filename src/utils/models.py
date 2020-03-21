@@ -14,6 +14,7 @@ from sklearn.model_selection import train_test_split
 from keras.layers.recurrent import GRU, LSTM
 from keras.layers.advanced_activations import LeakyReLU
 
+import pickle
 import numpy as np
 from copy import deepcopy
 
@@ -160,20 +161,21 @@ class MachinLearningModel():
                 optimizer = self.args.optimizer,
                 metrics = self.args.metrics
             )
-            self.history = self.model.fit_generator(
+            history = self.model.fit_generator(
                 train_generator,
                 epochs = self.args.epochs,
                 verbose = self.args.verbose,
                 callbacks = self.args.callbacks,
                 validation_data = validation_generator,
             )
+            self.history = history.history
         elif self.modelType == "MLP":
             self.model.compile(
                 loss = self.args.loss,
                 optimizer = self.args.optimizer,
                 metrics = self.args.metrics
             )
-            self.history = self.model.fit(
+            history = self.model.fit(
                 self.inputScaler.transform(self.X_train),
                 self.outputScaler.transform(self.y_train),
                 epochs = self.args.epochs,
@@ -182,11 +184,13 @@ class MachinLearningModel():
                 callbacks = self.args.callbacks,
                 validation_split = self.args.validationSize,
             )
+            self.history = history.history
         else:
-            self.history = self.model.fit(
+            history = self.model.fit(
                 self.inputScaler.transform(self.X_train),
                 self.outputScaler.transform(self.y_train),
             )
+            self.history = None
 
     def predict(self, X, y=None):
         if self.modelType == "RNN":
@@ -210,6 +214,9 @@ class MachinLearningModel():
     def save(self, directory, name):
         if self.args:
             self.model.save(directory + name + ".h5")
+            with open(directory + name + ".pickle", 'wb') as file_pi:
+                pickle.dump(self.history, file_pi)
+
 
 class AutoencoderModel():
     def __init__(self, model, X_train, args=None, modelType="AUTOENCODER", scaler="standard", name=None):
@@ -234,7 +241,7 @@ class AutoencoderModel():
             optimizer = self.args.optimizer,
             metrics = self.args.metrics
         )
-        self.history = self.model.fit(
+        history = self.model.fit(
             self.inputScaler.transform(self.X_train),
             self.inputScaler.transform(self.X_train),
             epochs = self.args.epochs,
@@ -243,6 +250,7 @@ class AutoencoderModel():
             callbacks = self.args.callbacks,
             validation_split = self.args.validationSize,
         )
+        self.history = history.history
 
     def predict(self, X, y=None):
         return self.inputScaler.inverse_transform(
@@ -254,6 +262,8 @@ class AutoencoderModel():
     def save(self, directory, name):
         if self.args:
             self.model.save(directory + name + ".h5")
+            with open(directory + name + ".pickle", 'wb') as file_pi:
+                pickle.dump(self.history, file_pi)
 
 def ensembleModel(params, models):
     X = params['X_train']

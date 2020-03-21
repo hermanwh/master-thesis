@@ -2,6 +2,7 @@ import numpy as np
 import pandas as pd
 import tensorflow as tf
 import matplotlib.dates as mdates
+import matplotlib.pyplot as pltt
 
 def getPlotColors():
     #colors = ['#92a8d1','#034f84','#f7cac9','#f7786b','#deeaee','#b1cbbb','#eea29a','#c94c4c']
@@ -186,3 +187,30 @@ def plotModelPredictions(plt, deviationsList, columnsList, indexList, labelNames
         )
 
     plt.show()
+
+def plotTrainingSummary(trainingSummary):
+    colors = getPlotColors()
+
+    fig,axs = pltt.subplots(nrows=1, ncols=2, figsize=(10, 4), dpi=100)
+    fig.tight_layout(w_pad=3.0)
+
+    ax1, ax2 = axs
+
+    ax1.set_title('Loss')
+    ax1.set_ylabel('Loss')
+    ax1.set_xlabel('Epoch')
+    ax2.set_title('Validation loss')
+    ax2.set_ylabel('Loss')
+    ax2.set_xlabel('Epoch')
+
+    i = 0
+    for name, summary in trainingSummary.items():
+        ax1.plot(summary['loss'], color=colors[i], label=name)
+        ax1.text(summary['length'], summary['loss_final'], name)
+        ax2.plot(summary['val_loss'], color=colors[i], label=name)
+        ax2.text(summary['length'], summary['val_loss_final'], name)
+        i = i + 1
+
+    ax1.legend(loc='upper right')
+    ax2.legend(loc='upper right')
+    pltt.show()

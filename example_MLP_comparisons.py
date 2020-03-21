@@ -50,6 +50,7 @@ mlp_10x_128 = mlApi.MLP('MLP 10x128', layers=[128, 128, 128, 128, 128, 128, 128,
 mlp_10_reg = mlApi.MLP_Regularized('MLPr 10', layers=[10])
 mlp_20_reg = mlApi.MLP_Regularized('MLPr 20', layers=[20])
 mlp_128_reg = mlApi.MLP_Regularized('MLPr 128', layers=[128])
+mlp_128_dropout = mlApi.MLP_Dropout('MLPd 128', layers=[128])
 linear = mlApi.Linear('Linear')
 linear_reg = mlApi.Linear_Regularized('Linear r')
 ensemble = mlApi.Ensemble('Ensemble', [mlp_128_reg, linear_reg])
@@ -73,10 +74,11 @@ antoenc_1 = mlApi.Autoencoder_Dropout('autoenc dropout')
 autoenc_2 = mlApi.Autoencoder_Regularized('autoenc regularized')
 
 modelList = [
-    antoenc_1,
-    autoenc_2,
+    #antoenc_1,
+    #autoenc_2,
     #mlp_10,
-    #mlp_20,
+    mlp_20,
+    mlp_128_dropout,
     #mlp_128,
     #mlp_2x_128,
     #mlp_128_reg_1,
@@ -88,11 +90,14 @@ modelList = [
     #mlp_10x_128,
     #mlp_2x_128_reg,
     #mlp_10x_128_reg,
-    #linear_reg,
+    lstm_128,
+    #lstm_128_recurrent,
+    linear_reg,
+    ensemble,
 ]
 
 mlApi.initModels(modelList)
-retrain=True
+retrain=False
 mlApi.trainModels(retrain)
-mlApi.predictWithAutoencoderModels()
+#mlApi.predictWithAutoencoderModels()
 #modelNames, metrics_train, metrics_test = mlApi.predictWithModels(plot=True)

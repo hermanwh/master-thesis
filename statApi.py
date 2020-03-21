@@ -36,5 +36,11 @@ def scatterplot(df):
 def correlationPlot(df, title="Correlation plot"):
     return analysis.correlationPlot(df, title)
 
-def valueDistribution(df_train, df_test):
-    return analysis.valueDistribution(df_train, df_test)
+def valueDistribution(df, traintime, testtime):
+    return analysis.valueDistribution(df, traintime, testtime)
+
+def printCorrelationMatrix(covmat, df, columnNames=None):
+    return prints.printCorrelationMatrix(covmat, df, columnNames)
+
+def printExplainedVarianceRatio(pca):
+    return prints.printExplainedVarianceRatio(pca)

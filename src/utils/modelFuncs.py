@@ -10,6 +10,9 @@ from keras.models import load_model
 from keras.callbacks.callbacks import EarlyStopping, ReduceLROnPlateau
 from keras.utils import plot_model
 
+import plots
+import prints
+import pickle
 
 def printModelSummary(model):
     if hasattr(model, "summary"):
@@ -83,19 +86,21 @@ def trainModels(modelList, filename, targetColumns, retrain=False, save=True):
     else:
         for mod in modelList:
             if mod.modelType != "Ensemble":
-                loadedModel = loadModel(mod.name, filename, targetColumns)
+                loadedModel, loadedHistory = loadModel(mod.name, filename, targetColumns)
                 if loadedModel is not None:
                     print("Model " + mod.name + " was loaded from file")
                     mod.model = loadedModel
+                    mod.history = loadedHistory
                 else:
                     print("Training model " + mod.name)
                     mod.train()
             else:
                 for model in mod.models:
-                    loadedModel = loadModel(model.name, filename, targetColumns, ensembleName=mod.name)
+                    loadedModel, loadedHistory = loadModel(model.name, filename, targetColumns, ensembleName=mod.name)
                     if loadedModel is not None:
                         print("Model " + mod.name + " was loaded from file")
                         model.model = loadedModel
+                        model.history = loadedHistory
                     else:
                         print("Training submodel " + model.name + " of Ensemble " + mod.name)
                         model.train()
@@ -104,6 +109,10 @@ def trainModels(modelList, filename, targetColumns, retrain=False, save=True):
 
     if save:
         saveModels(modelList, filename, targetColumns)
+
+    trainingSummary = getTrainingSummary(modelList)
+    prints.printTrainingSummary(trainingSummary)
+    plots.plotTrainingSummary(trainingSummary)
               
 def loadModel(modelname, filename, targetColumns, ensembleName=None):
     subdir = filename.split('/')[-2]
@@ -112,15 +121,17 @@ def loadModel(modelname, filename, targetColumns, ensembleName=None):
     
     modName = "_".join(modelname.split(' '))
     if ensembleName is None:
-        directory = ROOT_PATH + '/src/ml/trained_models/' + subdir + '/' + datafile + '/' + modName + '_' + joinedColumns + ".h5"
+        directory = ROOT_PATH + '/src/ml/trained_models/' + subdir + '/' + datafile + '/' + modName + '_' + joinedColumns
     else:    
         ensName = "_".join(ensembleName.split(' '))
-        directory = ROOT_PATH + '/src/ml/trained_models/' + subdir + '/' + datafile + '/' + ensName + '_' + joinedColumns + '/' + modName + ".h5"
-    if os.path.isfile(directory):
-        model = load_model(directory)
+        directory = ROOT_PATH + '/src/ml/trained_models/' + subdir + '/' + datafile + '/' + ensName + '_' + joinedColumns + '/' + modName
+    if os.path.isfile((directory + ".h5")) and os.path.isfile((directory + ".h5")):
+        model = load_model(directory + ".h5")
+        history = pickle.load(open(directory + ".pickle", "rb"))
     else:
         model = None
-    return model
+        history = None
+    return [model, history]
 
 def saveModels(modelList, filename, targetColumns):
     subdir = filename.split('/')[-2]
@@ -136,3 +147,31 @@ def saveModels(modelList, filename, targetColumns):
         modelName = modName + '_' + joinedColumns
         metricsPath = directory + modName + '_' + joinedColumns + ".txt"
         model.save(modelPath, modelName)
+
+def getTrainingSummary(modelList):
+    loss_dict = {}
+    for model in modelList:
+        if model.modelType != "Ensemble":
+            if model.history is not None:
+                loss = model.history['loss']
+                val_loss = model.history['val_loss']
+                loss_dict[model.name] = {
+                    'loss': loss,
+                    'val_loss': val_loss,
+                    'loss_final': loss[-1],
+                    'val_loss_final': val_loss[-1],
+                    'length': len(loss)
+                }
+        else:
+            for submodel in model.models:
+                if submodel.history is not None:
+                    loss = submodel.history['loss']
+                    val_loss = submodel.history['val_loss']
+                    loss_dict[model.name + " " + submodel.name] = {
+                        'loss': loss,
+                        'val_loss': val_loss,
+                        'loss_final': loss[-1],
+                        'val_loss_final': val_loss[-1],
+                        'length': len(loss)
+                    }
+    return loss_dict

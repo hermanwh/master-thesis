@@ -1,3 +1,4 @@
+import statApi
 from api import Api
 mlApi = Api()
 
@@ -60,6 +61,24 @@ df = mlApi.initDataframe(filename, columns, irrelevantColumns)
 df_train, df_test = mlApi.getTestTrainSplit(traintime, testtime)
 X_train, y_train, X_test, y_test = mlApi.getFeatureTargetSplit(targetColumns)
 
+covmat = statApi.correlationMatrix(df_train)
+statApi.printCorrelationMatrix(covmat, df_train, mlApi.columnDescriptions)
+
+pca = statApi.pca(df_train, -1, mlApi.relevantColumns, mlApi.columnDescriptions)
+statApi.printExplainedVarianceRatio(pca)
+"""
+statApi.pcaPlot(df, [traintime, testtime, []])
+
+statApi.pairplot(df)
+
+statApi.scatterplot(df)
+
+statApi.correlationPlot(df_train)
+
+statApi.valueDistribution(df, traintime, testtime)
+
+"""
+
 mlp_10 = mlApi.MLP('MLP 10', layers=[10], verbose=0, batchSize=128)
 mlp_20 = mlApi.MLP('MLP 20', layers=[20], verbose=0, batchSize=128)
 mlp_128 = mlApi.MLP('MLP 128', layers=[128], verbose=0, batchSize=128)
@@ -81,13 +100,13 @@ autoenc_2 = mlApi.Autoencoder_Regularized('autoenc regularized')
 modelList = [
 	#autoenc_1,
 	#autoenc_2,
-    #mlp_10,
-    #mlp_20,
+    mlp_10,
+    mlp_20,
     mlp_128,
     #mlp_10_reg,
     #mlp_20_reg,
-    mlp_128_reg,
-    linear_reg,
+    #mlp_128_reg,
+    #linear_reg,
 ]
 
 mlApi.initModels(modelList)
@@ -95,3 +114,4 @@ retrain=True
 mlApi.trainModels(retrain)
 #mlApi.predictWithAutoencoderModels()
 modelNames, metrics_train, metrics_test = mlApi.predictWithModels(plot=True, interpol=True)
+

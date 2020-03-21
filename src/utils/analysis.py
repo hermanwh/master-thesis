@@ -43,7 +43,7 @@ def pca(df, numberOfComponents, relevantColumns=None, columnDescriptions=None):
     standardScaler = StandardScaler()
     X = standardScaler.fit_transform(X)
 
-    if numberOfComponents == 0:
+    if numberOfComponents < 1 or numberOfComponents > df.shape[1]:
         numberOfComponents = df.shape[1]
 
     pca = PCA(n_components=numberOfComponents)
@@ -91,9 +91,13 @@ def pcaPlot(df, timestamps=None):
     plt.show()
 
 def pairplot(df):
-    if df.shape[0] > 1000:
-        df = df.resample('H').mean()
-    sns.pairplot(df, vars=df.columns, height=1.1)
+    scaler = StandardScaler()
+    scaled = scaler.fit_transform(df.values)
+    scaled_df = pd.DataFrame(scaled, index=df.index, columns=df.columns)
+    
+    if scaled_df.shape[0] > 1000:
+        scaled_df = scaled_df.resample('H').mean()
+    sns.pairplot(scaled_df, vars=scaled_df.columns, height=1.1)
     plt.show()
 
 def scatterplot(df):
@@ -101,7 +105,11 @@ def scatterplot(df):
     plt.show()
 
 def correlationPlot(df, title="Correlation plot"):
-    corr = df.corr()
+    scaler = StandardScaler()
+    scaled = scaler.fit_transform(df.values)
+    scaled_df = pd.DataFrame(scaled, index=df.index, columns=df.columns)
+
+    corr = scaled_df.corr()
 
     mask = np.zeros_like(corr, dtype=np.bool)
     mask[np.triu_indices_from(mask)] = True
@@ -120,7 +128,13 @@ def correlationPlot(df, title="Correlation plot"):
     
     plt.show()
 
-def valueDistribution(df_train, df_test):
+def valueDistribution(df, traintime, testtime):
+    scaler = StandardScaler()
+    scaled = scaler.fit_transform(df.values)
+    scaled_df = pd.DataFrame(scaled, index=df.index, columns=df.columns)
+
+    df_train, df_test = utilities.getTestTrainSplit(scaled_df, traintime, testtime)    
+
     fig, axs = plt.subplots(nrows=df_train.shape[-1], ncols=2, figsize=(15,20), dpi=100)
     #fig.tight_layout()
     
@@ -135,10 +149,10 @@ def valueDistribution(df_train, df_test):
         ax1.set_xticks(ax1.get_xticks()[3::3])
         ax1.set_ylabel(df_train.columns[k])
         
-        sea.distplot(df_train.iloc[:,k], ax=ax2, label="train", kde=True, kde_kws={"lw":2.5})
-        sea.distplot(df_test.iloc[:,k], ax=ax2, label="test", kde=True, kde_kws={"lw":2.5})
+        sns.distplot(df_train.iloc[:,k], ax=ax2, label="train", kde=True, kde_kws={"lw":2.5})
+        sns.distplot(df_test.iloc[:,k], ax=ax2, label="test", kde=True, kde_kws={"lw":2.5})
         
         ax2.set_xlim((-3,3))
         ax2.legend(loc="upper right")
 
-    fig.show()
+    plt.show()
