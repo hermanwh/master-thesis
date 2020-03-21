@@ -1,3 +1,11 @@
+import sys, os
+ROOT_PATH = os.path.abspath(".").split("src")[0]
+if ROOT_PATH not in sys.path:
+    sys.path.append(ROOT_PATH)
+module_path = os.path.abspath(os.path.join(ROOT_PATH+"/src/utils/"))
+if module_path not in sys.path:
+    sys.path.append(module_path)
+
 from sklearn.linear_model import (ElasticNet, ElasticNetCV, LinearRegression, Lasso, LassoCV, Ridge, RidgeCV)
 from sklearn.neural_network import MLPRegressor, BernoulliRBM
 from sklearn.ensemble import RandomForestRegressor, GradientBoostingRegressor, BaggingRegressor, AdaBoostRegressor
@@ -10,6 +18,7 @@ from keras.regularizers import l2, l1
 from keras.preprocessing.sequence import TimeseriesGenerator
 from sklearn.preprocessing import MinMaxScaler, StandardScaler
 from sklearn.model_selection import train_test_split
+from keras.callbacks.callbacks import ModelCheckpoint
 
 from keras.layers.recurrent import GRU, LSTM
 from keras.layers.advanced_activations import LeakyReLU
@@ -19,6 +28,8 @@ import numpy as np
 from copy import deepcopy
 
 import os
+
+CURRENT_MODEL_WEIGHTS_FILEPATH = ROOT_PATH + '/src/ml/trained_models/'
 
 class Args():
     def __init__(self, args):
@@ -140,6 +151,18 @@ class MachinLearningModel():
         self.modelType = modelType
 
     def train(self):
+        checkpoint_path = CURRENT_MODEL_WEIGHTS_FILEPATH + "_".join(self.name.split(" "))
+        if not os.path.exists(checkpoint_path):
+            os.makedirs(checkpoint_path)
+        weights_path = checkpoint_path + "/current_weights.h5"
+        checkpoint = ModelCheckpoint(
+            filepath=weights_path,
+            monitor='val_loss',
+            verbose=1,
+            save_weights_only=True,
+            save_best_only=True,
+        ),
+
         if self.modelType == "RNN":
             X_t, X_v, y_t, y_v = train_test_split(self.X_train, self.y_train, test_size=0.2, shuffle=False)
             validation_generator = TimeseriesGenerator(
@@ -165,10 +188,11 @@ class MachinLearningModel():
                 train_generator,
                 epochs = self.args.epochs,
                 verbose = self.args.verbose,
-                callbacks = self.args.callbacks,
+                callbacks = [*self.args.callbacks, *checkpoint],
                 validation_data = validation_generator,
             )
             self.history = history.history
+            self.model.load_weights(weights_path)
         elif self.modelType == "MLP":
             self.model.compile(
                 loss = self.args.loss,
@@ -181,10 +205,11 @@ class MachinLearningModel():
                 epochs = self.args.epochs,
                 batch_size = self.args.batchSize,
                 verbose = self.args.verbose,
-                callbacks = self.args.callbacks,
+                callbacks = [*self.args.callbacks, *checkpoint],
                 validation_split = self.args.validationSize,
             )
             self.history = history.history
+            self.model.load_weights(weights_path)
         else:
             history = self.model.fit(
                 self.inputScaler.transform(self.X_train),
@@ -210,6 +235,19 @@ class MachinLearningModel():
                     self.inputScaler.transform(X)
                 )
             )
+
+    def predictMultiple(self, X, y, numberOfPredictions=20):
+        if self.modelType == "RNN":
+            predictions = np.zeros((numberOfPredictions, (y.shape[0] - self.args.enrolWindow), y.shape[1]))
+            for i in range(numberOfPredictions):
+                predictions[i] = self.predict(X, y)
+
+            mean = np.array([np.mean(predictions[:,:,i], axis=0) for i in range(y.shape[1])]).T
+            standarddev = np.array([np.std(predictions[:,:,i], axis=0) for i in range(y.shape[1])]).T
+        
+            return [predictions, mean, standarddev]
+        else:
+            return None
 
     def save(self, directory, name):
         if self.args:

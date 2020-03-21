@@ -38,7 +38,7 @@ default_LSTM_args = {
     'loss': 'mean_squared_error',
     'optimizer': 'adam',
     'metrics': ['mean_squared_error'],
-    'epochs': 500,
+    'epochs': 50,
     'batchSize': 32*2,
     'verbose': 1,
     'callbacks': modelFuncs.getBasicCallbacks(),
