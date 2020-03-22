@@ -101,12 +101,19 @@ gru_128_recurrent = mlApi.LSTM_Recurrent('gru 128 recurrent', verbose=1, dropout
 antoenc_1 = mlApi.Autoencoder_Dropout('autoenc dropout')
 autoenc_2 = mlApi.Autoencoder_Regularized('autoenc regularized')
 
+mlp_128_dropout = mlApi.MLP_Dropout('mlp 128 dropout', layers=[128], dropout=0.2, )
+
+mlp_3x_128 = mlApi.MLP_Dropout('mlp 3x', layers=[128, 128, 128], dropout=0.2)
+lstm_3x_128 = mlApi.LSTM_Recurrent('lstm 3x', units=[128, 128, 128], dropout=0.2, recurrentDropout=0.2, training=False)
+
 modelList = [
+	mlp_3x_128,
+	lstm_3x_128,
 	#lstm_128,
-	lstm_128_leaky,
-	gru_128_leaky,
-	lstm_128_recurrent,
-	gru_128_recurrent,
+	#lstm_128_leaky,
+	#gru_128_leaky,
+	#lstm_128_recurrent,
+	#gru_128_recurrent,
 	#autoenc_1,
 	#autoenc_2,
     #mlp_10,
@@ -115,6 +122,7 @@ modelList = [
     #mlp_10_reg,
     #mlp_20_reg,
     #mlp_128_reg,
+	#mlp_128_dropout,
     #linear_reg,
 ]
 

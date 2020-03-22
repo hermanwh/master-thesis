@@ -304,13 +304,28 @@ class AutoencoderModel():
             with open(directory + name + ".pickle", 'wb') as file_pi:
                 pickle.dump(self.history, file_pi)
 
-def ensembleModel(params, models):
+def ensembleModel(
+    params,
+    models,
+    ):
+
     X = params['X_train']
     Y = params['y_train']
     name = params['name']
-    return EnsembleModel(models, X, Y, name=name)
 
-def kerasLSTM(params, units=[128], dropout=None, alpha=None):
+    return EnsembleModel(
+        models,
+        X,
+        Y,
+        name=name,
+    )
+
+def kerasLSTM(params,
+    units=[128],
+    dropout=None,
+    alpha=None,
+    ):
+
     X_train = params['X_train']
     y_train = params['y_train']
     name = params['name']
@@ -320,14 +335,27 @@ def kerasLSTM(params, units=[128], dropout=None, alpha=None):
 
     if len(units) > 1:
         firstLayerUnits = units[0]
-        model.add(LSTM(firstLayerUnits, return_sequences=True, input_shape=(args.enrolWindow, X_train.shape[1])))
+        model.add(
+            LSTM(
+                firstLayerUnits,
+                activation = args.activation,
+                return_sequences=True,
+                input_shape=(args.enrolWindow, X_train.shape[1]),
+            )
+        )
         if alpha is not None:
             model.add(LeakyReLU(alpha=alpha))
         if dropout is not None:
             model.add(Dropout(dropout))
 
         for layerUnits in units[1:]:
-            model.add(LSTM(layerUnits, return_sequences=False))
+            model.add(
+                LSTM(
+                    layerUnits,
+                    activation = args.activation,
+                    return_sequences=False
+                )
+            )
             if alpha is not None:
                 model.add(LeakyReLU(alpha=alpha))
             if dropout is not None:
@@ -340,11 +368,31 @@ def kerasLSTM(params, units=[128], dropout=None, alpha=None):
         if dropout is not None:
             model.add(Dropout(dropout))
 
-    model.add(Dense(y_train.shape[1]))
+    model.add(
+        Dense(
+            y_train.shape[1],
+            activation='linear',
+        )
+    )
 
-    return MachinLearningModel(model, X_train, y_train, args=args, modelType="RNN", name=name)
+    return MachinLearningModel(
+        model,
+        X_train,
+        y_train,
+        args=args,
+        modelType="RNN",
+        name=name,
+    )
 
-def kerasLSTM_Recurrent(params, units=[128], dropout=0.3, recurrentDropout=0.3, alpha=None, training=False):
+def kerasLSTM_Recurrent(
+    params,
+    units=[128],
+    dropout=0.3,
+    recurrentDropout=0.3,
+    alpha=None,
+    training=False,
+    ):
+
     X_train = params['X_train']
     y_train = params['y_train']
     name = params['name']
@@ -354,33 +402,51 @@ def kerasLSTM_Recurrent(params, units=[128], dropout=0.3, recurrentDropout=0.3, 
     if len(units) > 1:
         firstLayerUnits = units[0]
         layer_1 = LSTM(firstLayerUnits,
+                            activation = args.activation,
                             dropout = dropout,
                             recurrent_dropout = recurrentDropout,
                             return_sequences = True)(input_layer, training=training)
         if alpha is not None:
             layer_1 = LeakyReLU(alpha=alpha)(layer_1)
-        for layerUnits in units[1:]:
+        for i, layerUnits in enumerate(units[1:]):
             layer_1 = LSTM(layerUnits,
+                            activation = args.activation,
                             dropout = dropout,
                             recurrent_dropout = recurrentDropout,
-                            return_sequences = False)(layer_1, training=training)
+                            return_sequences = True if (i < len(units) - 2) else False)(layer_1, training=training)
             if alpha is not None:
                 layer_1 = LeakyReLU(alpha=alpha)(layer_1)
     else:
         firstLayerUnits = units[0]
         layer_1 = LSTM(firstLayerUnits,
+                            activation = args.activation,
                             dropout = dropout,
                             recurrent_dropout = recurrentDropout)(input_layer, training=training)
         if alpha is not None:
             layer_1 = LeakyReLU(alpha=alpha)(layer_1)
 
-    output_layer = Dense(y_train.shape[-1])(layer_1)
+    output_layer = Dense(
+        y_train.shape[-1],
+        activation='linear')(layer_1)
     
     model = Model(input_layer, output_layer)
 
-    return MachinLearningModel(model, X_train, y_train, args=args, modelType="RNN", name=name)
+    return MachinLearningModel(
+        model,
+        X_train,
+        y_train,
+        args=args,
+        modelType="RNN",
+        name=name,
+    )
 
-def kerasGRU(params, units=[128], dropout=None, alpha=None):
+def kerasGRU(
+    params,
+    units=[128],
+    dropout=None,
+    alpha=None,
+    ):
+
     X_train = params['X_train']
     y_train = params['y_train']
     name = params['name']
@@ -390,31 +456,67 @@ def kerasGRU(params, units=[128], dropout=None, alpha=None):
 
     if len(units) > 1:
         firstLayerUnits = units[0]
-        model.add(GRU(firstLayerUnits, return_sequences=True, input_shape=(args.enrolWindow, X_train.shape[1])))
+        model.add(
+            GRU(
+                firstLayerUnits,
+                return_sequences=True,
+                input_shape=(args.enrolWindow, X_train.shape[1]),
+            )
+        )
         if alpha is not None:
             model.add(LeakyReLU(alpha=alpha))
         if dropout is not None:
             model.add(Dropout(dropout))
 
         for layerUnits in units[1:]:
-            model.add(GRU(layerUnits, return_sequences=False))
+            model.add(
+                GRU(
+                    layerUnits,
+                    return_sequences=False,
+                )
+            )
             if alpha is not None:
                 model.add(LeakyReLU(alpha=alpha))
             if dropout is not None:
                 model.add(Dropout(dropout))
     else:
         firstLayerUnits = units[0]
-        model.add(GRU(firstLayerUnits, input_shape=(args.enrolWindow, X_train.shape[1])))
+        model.add(
+            GRU(
+                firstLayerUnits,
+                input_shape=(args.enrolWindow, X_train.shape[1]),
+            )
+        )
         if alpha is not None:
             model.add(LeakyReLU(alpha=alpha))
         if dropout is not None:
             model.add(Dropout(dropout))
 
-    model.add(Dense(y_train.shape[1]))
+    model.add(
+        Dense(
+            y_train.shape[1],
+            activation='linear',
+        )
+    )
 
-    return MachinLearningModel(model, X_train, y_train, args=args, modelType="RNN", name=name)
+    return MachinLearningModel(
+        model,
+        X_train,
+        y_train,
+        args=args,
+        modelType="RNN",
+        name=name,
+    )
 
-def kerasGRU_Recurrent(params, units=[128], dropout=0.3, recurrentDropout=0.3, alpha=None, training=False):
+def kerasGRU_Recurrent(
+    params,
+    units=[128],
+    dropout=0.3,
+    recurrentDropout=0.3,
+    alpha=None,
+    training=False,
+    ):
+
     X_train = params['X_train']
     y_train = params['y_train']
     name = params['name']
@@ -423,33 +525,53 @@ def kerasGRU_Recurrent(params, units=[128], dropout=0.3, recurrentDropout=0.3, a
 
     if len(units) > 1:
         firstLayerUnits = units[0]
-        layer_1 = GRU(firstLayerUnits,
-                            dropout = dropout,
-                            recurrent_dropout = recurrentDropout,
-                            return_sequences = True)(input_layer, training=training)
+        layer_1 = GRU(
+            firstLayerUnits,
+            activation = args.activation,
+            dropout = dropout,
+            recurrent_dropout = recurrentDropout,
+            return_sequences = True)(input_layer, training=training)
         if alpha is not None:
             layer_1 = LeakyReLU(alpha=alpha)(layer_1)
         for layerUnits in units[1:]:
-            layer_1 = GRU(layerUnits,
-                            dropout = dropout,
-                            recurrent_dropout = recurrentDropout,
-                            return_sequences = False)(layer_1, training=training)
+            layer_1 = GRU(
+                layerUnits,
+                activation = args.activation,
+                dropout = dropout,
+                recurrent_dropout = recurrentDropout,
+                return_sequences = False)(layer_1, training=training)
             if alpha is not None:
                 layer_1 = LeakyReLU(alpha=alpha)(layer_1)
     else:
         firstLayerUnits = units[0]
-        layer_1 = GRU(firstLayerUnits,
-                            dropout = dropout,
-                            recurrent_dropout = recurrentDropout)(input_layer, training=training)
+        layer_1 = GRU(
+            firstLayerUnits,
+            activation = args.activation,
+            dropout = dropout,
+            recurrent_dropout = recurrentDropout)(input_layer, training=training)
         if alpha is not None:
             layer_1 = LeakyReLU(alpha=alpha)(layer_1)
-    output_layer = Dense(y_train.shape[-1])(layer_1)
+
+    output_layer = Dense(
+        y_train.shape[-1],
+        activation='linear')(layer_1)
     
     model = Model(input_layer, output_layer)
 
-    return MachinLearningModel(model, X_train, y_train, args=args, modelType="RNN", name=name)
+    return MachinLearningModel(
+        model,
+        X_train,
+        y_train,
+        args=args,
+        modelType="RNN",
+        name=name,
+    )
 
-def kerasSequentialRegressionModel(params, structure):
+def kerasSequentialRegressionModel(
+    params,
+    structure,
+    ):
+
     X_train = params['X_train']
     y_train = params['y_train']
     name = params['name']
@@ -458,16 +580,44 @@ def kerasSequentialRegressionModel(params, structure):
     model = Sequential()
 
     firstLayerNeurons, firstLayerActivation = structure[0]
-    model.add(Dense(firstLayerNeurons, input_dim=X_train.shape[1], activation=firstLayerActivation))
+    model.add(
+        Dense(
+            firstLayerNeurons,
+            input_dim=X_train.shape[1],
+            activation=firstLayerActivation
+        )
+    )
     
     for neurons, activation in structure[1:]:
-        model.add(Dense(neurons, activation=activation))
+        model.add(
+            Dense(
+                neurons,
+                activation=activation,
+            )
+        )
     
-    model.add(Dense(y_train.shape[1], activation='linear'))
+    model.add(
+        Dense(
+            y_train.shape[1],
+            activation='linear',
+        )
+    )
 
-    return MachinLearningModel(model, X_train, y_train, args=args, modelType="MLP", name=name)
+    return MachinLearningModel(
+        model,
+        X_train,
+        y_train,
+        args=args,
+        modelType="MLP",
+        name=name,
+    )
 
-def kerasSequentialRegressionModelWithDropout(params, structure, dropout=0.2):
+def kerasSequentialRegressionModelWithDropout(
+    params,
+    structure,
+    dropout=0.2,
+    ):
+
     X_train = params['X_train']
     y_train = params['y_train']
     name = params['name']
@@ -476,18 +626,47 @@ def kerasSequentialRegressionModelWithDropout(params, structure, dropout=0.2):
     model = Sequential()
 
     firstLayerNeurons, firstLayerActivation = structure[0]
-    model.add(Dense(firstLayerNeurons, input_dim=X_train.shape[1], activation=firstLayerActivation))
+    model.add(
+        Dense(
+            firstLayerNeurons,
+            input_dim=X_train.shape[1],
+            activation=firstLayerActivation,
+        )
+    )
     model.add(Dropout(dropout))
 
     for neurons, activation in structure[1:]:
-        model.add(Dense(neurons, activation=activation))
+        model.add(
+            Dense(
+                neurons,
+                activation=activation,
+            )
+        )
         model.add(Dropout(dropout))
     
-    model.add(Dense(y_train.shape[1], activation='linear'))
+    model.add(
+        Dense(
+            y_train.shape[1],
+            activation='linear',
+        )
+    )
 
-    return MachinLearningModel(model, X_train, y_train, args=args, modelType="MLP", name=name)
+    return MachinLearningModel(
+        model,
+        X_train,
+        y_train,
+        args=args,
+        modelType="MLP",
+        name=name,
+    )
 
-def kerasSequentialRegressionModelWithRegularization(params, structure, l1_rate=0.01, l2_rate=0.01, ):
+def kerasSequentialRegressionModelWithRegularization(
+    params,
+    structure,
+    l1_rate=0.01,
+    l2_rate=0.01,
+    ):
+
     X_train = params['X_train']
     y_train = params['y_train']
     name = params['name']
@@ -496,18 +675,41 @@ def kerasSequentialRegressionModelWithRegularization(params, structure, l1_rate=
     model = Sequential()
 
     firstLayerNeurons, firstLayerActivation = structure[0]
-    model.add(Dense(firstLayerNeurons, input_dim=X_train.shape[1], activation=firstLayerActivation,
-                kernel_regularizer=l2(l2_rate),
-                activity_regularizer=l1(l1_rate)))
+    model.add(
+        Dense(
+            firstLayerNeurons,
+            input_dim=X_train.shape[1],
+            activation=firstLayerActivation,
+            kernel_regularizer=l2(l2_rate),
+            activity_regularizer=l1(l1_rate),
+        )
+    )
     
     for neurons, activation in structure[1:]:
-        model.add(Dense(neurons, activation=activation,
+        model.add(
+            Dense(
+                neurons,
+                activation=activation,
                 kernel_regularizer=l2(l2_rate),
-                activity_regularizer=l1(l1_rate)))
+                activity_regularizer=l1(l1_rate),
+            )
+        )
     
-    model.add(Dense(y_train.shape[1], activation='linear'))
+    model.add(
+        Dense(
+            y_train.shape[1],
+            activation='linear',
+        )
+    )
 
-    return MachinLearningModel(model, X_train, y_train, args=args, modelType="MLP", name=name)
+    return MachinLearningModel(
+        model,
+        X_train,
+        y_train,
+        args=args,
+        modelType="MLP",
+        name=name,
+    )
 
 def sklearnSVM(params):
     X = params['X_train']
@@ -556,15 +758,6 @@ def sklearnMLP(params):
     Y = params['y_train']
     name = params['name']
     model = MLPRegressor(early_stopping=True)
-    return MachinLearningModel(model, X, Y, modelType="Linear", name=name)
-
-# apparently not how RBMs work...
-# look into it :) 
-def sklearnRBM(params):
-    X = params['X_train']
-    Y = params['y_train']
-    name = params['name']
-    model = BernoulliRBM()
     return MachinLearningModel(model, X, Y, modelType="Linear", name=name)
 
 def sklearnLinear(params):

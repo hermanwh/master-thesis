@@ -206,9 +206,9 @@ def plotTrainingSummary(trainingSummary):
     i = 0
     for name, summary in trainingSummary.items():
         ax1.plot(summary['loss'], color=colors[i], label=name)
-        ax1.text(summary['length'], summary['loss_final'], name)
+        ax1.text(summary['loss_loc'], summary['loss_final'], name)
         ax2.plot(summary['val_loss'], color=colors[i], label=name)
-        ax2.text(summary['length'], summary['val_loss_final'], name)
+        ax2.text(summary['val_loss_loc'], summary['val_loss_final'], name)
         i = i + 1
 
     ax1.legend(loc='upper right')

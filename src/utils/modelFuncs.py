@@ -13,6 +13,9 @@ from keras.utils import plot_model
 import plots
 import prints
 import pickle
+import numpy as np
+
+np.random.seed(100)
 
 def printModelSummary(model):
     if hasattr(model, "summary"):
@@ -155,12 +158,18 @@ def getTrainingSummary(modelList):
             if model.history is not None:
                 loss = model.history['loss']
                 val_loss = model.history['val_loss']
+                loss_best = np.amin(loss)
+                loss_loc = np.where(loss == loss_best)[0]
+                val_loss_best = np.amin(val_loss)
+                val_loc = np.where(val_loss == val_loss_best)[0]
                 loss_dict[model.name] = {
                     'loss': loss,
                     'val_loss': val_loss,
-                    'loss_final': loss[-1],
-                    'val_loss_final': val_loss[-1],
-                    'length': len(loss)
+                    'loss_final': loss_best,
+                    'loss_loc': loss_loc,
+                    'val_loss_final': val_loss_best,
+                    'val_loss_loc': val_loc,
+                    'length': len(loss),
                 }
         else:
             for submodel in model.models:
