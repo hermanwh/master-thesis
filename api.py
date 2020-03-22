@@ -35,8 +35,6 @@ default_MLP_args = {
     'enrolWindow': 0,
     'validationSize': 0.2,
     'testSize': 0.2,
-    'alpha': 0.5,
-    'dropout': 0.2,
 }
 
 default_LSTM_args = {
@@ -51,10 +49,6 @@ default_LSTM_args = {
     'enrolWindow': 16,
     'validationSize': 0.2,
     'testSize': 0.2,
-    'dropout': 0.2,
-    'recurrentDropout': 0.2,
-    'alpha': None,
-    'training': False,
 }
 
 class Api():
@@ -264,6 +258,9 @@ class Api():
             self,
             name,
             layers=[128],
+            dropout=None,
+            l1_rate=0.0,
+            l2_rate=0.0,
             activation=default_MLP_args['activation'],
             loss=default_MLP_args['loss'],
             optimizer=default_MLP_args['optimizer'],
@@ -277,65 +274,6 @@ class Api():
         """
         FUNCTION:
             Used to create a Neural Network model using multilayer perceptron
-        
-        PARAMS:
-            name: str
-                A name/alias given to the model by the user
-            layers: list of integers
-                List of neuron size for each layer
-        
-        RETURNS:
-            model: MachineLearningModel
-                Object with typical machine learning methods like train, predict etc.
-        """
-
-        mlpLayers = []
-        for layerSize in layers:
-            mlpLayers.append([layerSize, activation])
-
-        model = models.kerasSequentialRegressionModel(
-            params = {
-                'name': name,
-                'X_train': self.X_train,
-                'y_train': self.y_train,
-                'args': {
-                    'activation': activation,
-                    'loss': loss,
-                    'optimizer': optimizer,
-                    'metrics': metrics,
-                    'epochs': epochs,
-                    'batchSize': batchSize,
-                    'verbose': verbose,
-                    'callbacks': default_MLP_args['callbacks'],
-                    'enrolWindow': 0,
-                    'validationSize': validationSize,
-                    'testSize': testSize,
-                },
-            },
-            structure = mlpLayers,
-        )
-
-        return model
-    
-    def MLP_Dropout(
-            self,
-            name,
-            layers=[128],
-            dropout=default_MLP_args['dropout'],
-            activation=default_MLP_args['activation'],
-            loss=default_MLP_args['loss'],
-            optimizer=default_MLP_args['optimizer'],
-            metrics=default_MLP_args['metrics'],
-            epochs=default_MLP_args['epochs'],
-            batchSize=default_MLP_args['batchSize'],
-            verbose=default_MLP_args['verbose'],
-            validationSize=default_MLP_args['validationSize'],
-            testSize=default_MLP_args['testSize']
-        ):
-        """
-        FUNCTION:
-            Used to create a Neural Network model using multilayer perceptron
-            and reguarlization by dropout
         
         PARAMS:
             name: str
@@ -343,73 +281,12 @@ class Api():
             layers: list of integers
                 List of neuron size for each layer
             dropout: float
-                Level of dropout
-        
-        RETURNS:
-            model: MachineLearningModel
-                Object with typical machine learning methods like train, predict etc.
-        """
-
-        mlpLayers = []
-        for layerSize in layers:
-            mlpLayers.append([layerSize, activation])
-
-        model = models.kerasSequentialRegressionModelWithDropout(
-            params={
-                'name': name,
-                'X_train': self.X_train,
-                'y_train': self.y_train,
-                'args': {
-                    'activation': activation,
-                    'loss': loss,
-                    'optimizer': optimizer,
-                    'metrics': metrics,
-                    'epochs': epochs,
-                    'batchSize': batchSize,
-                    'verbose': verbose,
-                    'callbacks': default_MLP_args['callbacks'],
-                    'enrolWindow': 0,
-                    'validationSize': validationSize,
-                    'testSize': testSize,
-                },
-            },
-            structure=mlpLayers,
-            dropout=dropout,
-        )
-        
-        return model
-
-    def MLP_Regularized(
-            self,
-            name,
-            layers=[128],
-            l1_rate=0.01,
-            l2_rate=0.01,
-            activation=default_MLP_args['activation'],
-            loss=default_MLP_args['loss'],
-            optimizer=default_MLP_args['optimizer'],
-            metrics=default_MLP_args['metrics'],
-            epochs=default_MLP_args['epochs'],
-            batchSize=default_MLP_args['batchSize'],
-            verbose=default_MLP_args['verbose'],
-            validationSize=default_MLP_args['validationSize'],
-            testSize=default_MLP_args['testSize']
-        ):
-        """
-        FUNCTION:
-            Used to create a Neural Network model using multilayer perceptron
-            and reguarlization by Ridge and Lasso regluarization
-        
-        PARAMS:
-            name: str
-                A name/alias given to the model by the user
-            layers: list of integers
-                List of neuron size for each layer
+                Level of dropout regularization
             l1_rate: float
-                Level of L1 regularization
+                Level of l1 (Lasso) regularization
             l2_rate: float
-                Level of L2 regularization
-        
+                Level of l2 (Ridge) regularization
+
         RETURNS:
             model: MachineLearningModel
                 Object with typical machine learning methods like train, predict etc.
@@ -419,7 +296,7 @@ class Api():
         for layerSize in layers:
             mlpLayers.append([layerSize, activation])
 
-        model = models.kerasSequentialRegressionModelWithRegularization(
+        model = models.kerasMLP(
             params = {
                 'name': name,
                 'X_train': self.X_train,
@@ -439,18 +316,22 @@ class Api():
                 },
             },
             structure = mlpLayers,
-            l1_rate=l1_rate,
-            l2_rate=l2_rate,
+            dropout = dropout,
+            l1_rate = l1_rate,
+            l2_rate = l2_rate,
         )
-        
+
         return model
 
     def LSTM(
         self,
         name,
-        units=[128],
-        dropout=default_LSTM_args['dropout'],
-        alpha=default_LSTM_args['alpha'],
+        layers=[128],
+        dropout=0.0,
+        recurrentDropout=0.0,
+        alpha=None,
+        training=False,
+        enrolWindow=default_LSTM_args['enrolWindow'],
         activation=default_LSTM_args['activation'],
         loss=default_LSTM_args['loss'],
         optimizer=default_LSTM_args['optimizer'],
@@ -458,7 +339,6 @@ class Api():
         epochs=default_LSTM_args['epochs'],
         batchSize=default_LSTM_args['batchSize'],
         verbose=default_LSTM_args['verbose'],
-        enrolWindow=default_LSTM_args['enrolWindow'],
         validationSize=default_LSTM_args['validationSize'],
         testSize=default_LSTM_args['testSize'],
         ):
@@ -471,12 +351,16 @@ class Api():
         PARAMS:
             name: str
                 A name/alias given to the model by the user
-            units: list of integers
+            layers: list of integers
                 List of neuron size for each layer
             dropout: float
                 Level of dropout
+            recurrentDropout: float
+                Level of recurrent dropout
             alpha: float
                 Alpha of the leaky relu function
+            enrolWindow: int
+                Number of samples used to make each prediction
         
         RETURNS:
             model: MachineLearningModel
@@ -502,84 +386,11 @@ class Api():
                     'testSize': testSize,
                 },
             },
-            units=units,
-            dropout=dropout,
-            alpha=alpha,
-        )
-        
-        return model
-
-    def LSTM_Recurrent(
-        self,
-        name,
-        units=[128],
-        dropout=default_LSTM_args['dropout'],
-        recurrentDropout=default_LSTM_args['recurrentDropout'],
-        training=default_LSTM_args['training'],
-        alpha=default_LSTM_args['alpha'],
-        activation=default_LSTM_args['activation'],
-        loss=default_LSTM_args['loss'],
-        optimizer=default_LSTM_args['optimizer'],
-        metrics=default_LSTM_args['metrics'],
-        epochs=default_LSTM_args['epochs'],
-        batchSize=default_LSTM_args['batchSize'],
-        verbose=default_LSTM_args['verbose'],
-        enrolWindow=default_LSTM_args['enrolWindow'],
-        validationSize=default_LSTM_args['validationSize'],
-        testSize=default_LSTM_args['testSize'],
-        ):
-        """
-        FUNCTION:
-            Used to create a Recurrent Neural Network model using
-            Long-Short Term Memory neurons (LSTM). Uses both
-            traditional dropout and recurrent dropout for regularization,
-            hence the subname _Recurrent
-        
-        PARAMS:
-            name: str
-                A name/alias given to the model by the user
-            units: list of integers
-                List of neuron size for each layer
-            dropout: float
-                Level of dropout
-            recurrentDropout: float
-                Level of recurrent dropout
-            alpha: float
-                Alpha of the leaky relu function
-            training: boolean
-                If the model should apply dropout during prediction or not
-                If not, the prediction will be the mean of some number of
-                predictions made by the model internally
-        
-        RETURNS:
-            model: MachineLearningModel
-                Object with typical machine learning methods like train, predict etc.
-        """
-
-        model = models.kerasLSTM_Recurrent(
-            params = {
-                'name': name,
-                'X_train': self.X_train,
-                'y_train': self.y_train,
-                'args': {
-                    'activation': activation,
-                    'loss': loss,
-                    'optimizer': optimizer,
-                    'metrics': metrics,
-                    'epochs': epochs,
-                    'batchSize': batchSize,
-                    'verbose': verbose,
-                    'callbacks': default_LSTM_args['callbacks'],
-                    'enrolWindow': enrolWindow,
-                    'validationSize': validationSize,
-                    'testSize': testSize,
-                },
-            },
-            units=units,
+            layers=layers,
             dropout=dropout,
             recurrentDropout=recurrentDropout,
-            training=training,
             alpha=alpha,
+            training=training,
         )
         
         return model
@@ -587,9 +398,12 @@ class Api():
     def GRU(
         self,
         name,
-        units=[128],
-        dropout=default_LSTM_args['dropout'],
-        alpha=default_LSTM_args['alpha'],
+        layers=[128],
+        dropout=0.0,
+        recurrentDropout=0.0,
+        alpha=None,
+        training=False,
+        enrolWindow=default_LSTM_args['enrolWindow'],
         activation=default_LSTM_args['activation'],
         loss=default_LSTM_args['loss'],
         optimizer=default_LSTM_args['optimizer'],
@@ -597,7 +411,6 @@ class Api():
         epochs=default_LSTM_args['epochs'],
         batchSize=default_LSTM_args['batchSize'],
         verbose=default_LSTM_args['verbose'],
-        enrolWindow=default_LSTM_args['enrolWindow'],
         validationSize=default_LSTM_args['validationSize'],
         testSize=default_LSTM_args['testSize'],
         ):
@@ -610,74 +423,7 @@ class Api():
         PARAMS:
             name: str
                 A name/alias given to the model by the user
-            units: list of integers
-                List of neuron size for each layer
-            dropout: float
-                Level of dropout
-            alpha: float
-                Alpha of the leaky relu function
-        
-        RETURNS:
-            model: MachineLearningModel
-                Object with typical machine learning methods like train, predict etc.
-        """
-
-        model = models.kerasLSTM(
-            params = {
-                'name': name,
-                'X_train': self.X_train,
-                'y_train': self.y_train,
-                'args': {
-                    'activation': activation,
-                    'loss': loss,
-                    'optimizer': optimizer,
-                    'metrics': metrics,
-                    'epochs': epochs,
-                    'batchSize': batchSize,
-                    'verbose': verbose,
-                    'callbacks': default_LSTM_args['callbacks'],
-                    'enrolWindow': enrolWindow,
-                    'validationSize': validationSize,
-                    'testSize': testSize,
-                },
-            },
-            units=units,
-            dropout=dropout,
-            alpha=alpha,
-        )
-        
-        return model
-
-    def GRU_Recurrent(
-        self,
-        name,
-        units=[128],
-        dropout=default_LSTM_args['dropout'],
-        recurrentDropout=default_LSTM_args['recurrentDropout'],
-        training=default_LSTM_args['training'],
-        alpha=default_LSTM_args['alpha'],
-        activation=default_LSTM_args['activation'],
-        loss=default_LSTM_args['loss'],
-        optimizer=default_LSTM_args['optimizer'],
-        metrics=default_LSTM_args['metrics'],
-        epochs=default_LSTM_args['epochs'],
-        batchSize=default_LSTM_args['batchSize'],
-        verbose=default_LSTM_args['verbose'],
-        enrolWindow=default_LSTM_args['enrolWindow'],
-        validationSize=default_LSTM_args['validationSize'],
-        testSize=default_LSTM_args['testSize'],
-        ):
-        """
-        FUNCTION:
-            Used to create a Recurrent Neural Network model using
-            Long-Short Term Memory neurons (LSTM). Uses both
-            traditional dropout and recurrent dropout for regularization,
-            hence the subname _Recurrent
-        
-        PARAMS:
-            name: str
-                A name/alias given to the model by the user
-            units: list of integers
+            layers: list of integers
                 List of neuron size for each layer
             dropout: float
                 Level of dropout
@@ -685,13 +431,15 @@ class Api():
                 Level of recurrent dropout
             alpha: float
                 Alpha of the leaky relu function
+            enrolWindow: int
+                Number of samples used to make each prediction
         
         RETURNS:
             model: MachineLearningModel
                 Object with typical machine learning methods like train, predict etc.
         """
 
-        model = models.kerasLSTM_Recurrent(
+        model = models.kerasGRU(
             params = {
                 'name': name,
                 'X_train': self.X_train,
@@ -710,11 +458,11 @@ class Api():
                     'testSize': testSize,
                 },
             },
-            units=units,
+            layers=layers,
             dropout=dropout,
             recurrentDropout=recurrentDropout,
-            training=training,
             alpha=alpha,
+            training=training,
         )
         
         return model
@@ -859,7 +607,7 @@ class Api():
     def Autoencoder_Dropout(
             self,
             name,
-            dropout=default_MLP_args['dropout'],
+            dropout=0.0,
             encodingDim=3,
             activation=default_MLP_args['activation'],
             loss=default_MLP_args['loss'],

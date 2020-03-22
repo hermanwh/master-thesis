@@ -79,6 +79,8 @@ statApi.valueDistribution(df, traintime, testtime)
 
 """
 
+"""
+
 mlp_10 = mlApi.MLP('MLP 10', layers=[10], verbose=0, batchSize=128)
 mlp_20 = mlApi.MLP('MLP 20', layers=[20], verbose=0, batchSize=128)
 mlp_128 = mlApi.MLP('MLP 128', layers=[128], verbose=0, batchSize=128)
@@ -106,24 +108,21 @@ mlp_128_dropout = mlApi.MLP_Dropout('mlp 128 dropout', layers=[128], dropout=0.2
 mlp_3x_128 = mlApi.MLP_Dropout('mlp 3x', layers=[128, 128, 128], dropout=0.2)
 lstm_3x_128 = mlApi.LSTM_Recurrent('lstm 3x', units=[128, 128, 128], dropout=0.2, recurrentDropout=0.2, training=False)
 
+"""
+
+mlp_1x_128 = mlApi.MLP('mlp 1x 128', layers=[128])
+mlpd_1x_128 = mlApi.MLP('mlpd 1x 128', layers=[128], dropout=0.2)
+mlpr_1x_128 = mlApi.MLP('mlpr 1x 128', layers=[128], l1_rate=0.01, l2_rate=0.01)
+
+lstm_1x_128 = mlApi.LSTM('lstm 1x 128', layers=[128])
+lstmd_1x_128 = mlApi.LSTM('lstmr 1x 128', layers=[128], dropout=0.2, recurrentDropout=0.2)
+
 modelList = [
-	mlp_3x_128,
-	lstm_3x_128,
-	#lstm_128,
-	#lstm_128_leaky,
-	#gru_128_leaky,
-	#lstm_128_recurrent,
-	#gru_128_recurrent,
-	#autoenc_1,
-	#autoenc_2,
-    #mlp_10,
-    #mlp_20,
-    #mlp_128,
-    #mlp_10_reg,
-    #mlp_20_reg,
-    #mlp_128_reg,
-	#mlp_128_dropout,
-    #linear_reg,
+	mlp_1x_128,
+	mlpd_1x_128,
+	mlpr_1x_128,
+	lstm_1x_128,
+	lstmd_1x_128,
 ]
 
 mlApi.initModels(modelList)
