@@ -1,8 +1,8 @@
 import numpy as np
 import pandas as pd
-import tensorflow as tf
-import matplotlib.dates as mdates
 import matplotlib.pyplot as pltt
+
+np.random.seed(100)
 
 def getPlotColors():
     #colors = ['#92a8d1','#034f84','#f7cac9','#f7786b','#deeaee','#b1cbbb','#eea29a','#c94c4c']

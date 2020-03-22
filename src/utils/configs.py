@@ -1,5 +1,3 @@
-import ast
-
 class Config():
     def __init__(self, config):
         self.columns = config['columns']

@@ -9,17 +9,13 @@ if module_path not in sys.path:
 import numpy as np
 import pandas as pd
 import tensorflow as tf
-import keras
-import matplotlib.dates as mdates
 import matplotlib.pyplot as plt
-from prettytable import PrettyTable
-from sklearn.metrics import r2_score, mean_squared_log_error, mean_squared_error, mean_absolute_error, max_error
-from configs import getConfig
-from keras.callbacks.callbacks import EarlyStopping, ReduceLROnPlateau
 import metrics
 import plots
 import prints
-import ast
+
+np.random.seed(100)
+tf.random.set_seed(100)
 
 def initDataframe(filename, relevantColumns, labelNames):
     df = readDataFile(filename)

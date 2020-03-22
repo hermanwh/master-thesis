@@ -1,4 +1,14 @@
-from sklearn.metrics import r2_score, mean_squared_log_error, mean_squared_error, mean_absolute_error, max_error
+from sklearn.metrics import (
+    r2_score,
+    mean_squared_log_error,
+    mean_squared_error,
+    mean_absolute_error,
+    max_error
+)
+
+import numpy as np
+
+np.random.seed(100)
 
 def calculateR2Score(y_true, y_pred):
     r2 = r2_score(y_true, y_pred)

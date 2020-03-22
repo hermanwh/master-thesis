@@ -89,20 +89,29 @@ linear = mlApi.Linear('Linear')
 linear_reg = mlApi.Linear_Regularized('Linear r')
 ensemble = mlApi.Ensemble('Ensemble', [mlp_128_reg, linear_reg])
 
-lstm_128 = mlApi.LSTM('lstm  128', verbose=1, dropout=0.5)
-lstm_128_recurrent = mlApi.LSTM_Recurrent('lstm 128 recurrent', verbose=1, dropout=0.5, recurrentDropout=0.5)
+lstm_128 = mlApi.LSTM('lstm 128', verbose=1, dropout=0.2, alpha=None)
+lstm_128_leaky = mlApi.LSTM('lstm 128 leaky', verbose=1, dropout=0.2, alpha=None)
+lstm_128_recurrent = mlApi.LSTM_Recurrent('lstm 128 recurrent', verbose=1, dropout=0.2, recurrentDropout=0.0, alpha=None)
 lstm_2x_128 = mlApi.LSTM('lstm 2x128', verbose=1, units=[128, 128])
 lstm_2x_128_recurrent = mlApi.LSTM_Recurrent('lstm 2x128 recurrent', verbose=1, units=[128, 128])
+
+gru_128_leaky = mlApi.GRU('gru 128 leaky', verbose=1, dropout=0.2, alpha=None)
+gru_128_recurrent = mlApi.LSTM_Recurrent('gru 128 recurrent', verbose=1, dropout=0.2, recurrentDropout=0.0, alpha=None)
 
 antoenc_1 = mlApi.Autoencoder_Dropout('autoenc dropout')
 autoenc_2 = mlApi.Autoencoder_Regularized('autoenc regularized')
 
 modelList = [
+	#lstm_128,
+	lstm_128_leaky,
+	gru_128_leaky,
+	lstm_128_recurrent,
+	gru_128_recurrent,
 	#autoenc_1,
 	#autoenc_2,
-    mlp_10,
-    mlp_20,
-    mlp_128,
+    #mlp_10,
+    #mlp_20,
+    #mlp_128,
     #mlp_10_reg,
     #mlp_20_reg,
     #mlp_128_reg,
@@ -112,6 +121,15 @@ modelList = [
 mlApi.initModels(modelList)
 retrain=True
 mlApi.trainModels(retrain)
+
+import src.utils.modelFuncs as mf
+
+for model in modelList:
+	print(model.name)
+	mf.printModelSummary(model)
+	print("")
+	print("")
+
 #mlApi.predictWithAutoencoderModels()
 modelNames, metrics_train, metrics_test = mlApi.predictWithModels(plot=True, interpol=True)
 

@@ -18,6 +18,11 @@ import plots
 import prints
 import analysis
 
+import numpy as np
+import tensorflow as tf
+np.random.seed(100)
+tf.random.set_seed(100)
+
 default_MLP_args = {
     'activation': 'relu',
     'loss': 'mean_squared_error',
@@ -31,23 +36,25 @@ default_MLP_args = {
     'validationSize': 0.2,
     'testSize': 0.2,
     'alpha': 0.5,
+    'dropout': 0.2,
 }
 
 default_LSTM_args = {
-    'activation': 'relu',
+    'activation': 'tanh',
     'loss': 'mean_squared_error',
     'optimizer': 'adam',
     'metrics': ['mean_squared_error'],
-    'epochs': 50,
+    'epochs': 40,
     'batchSize': 32*2,
     'verbose': 1,
     'callbacks': modelFuncs.getBasicCallbacks(),
-    'enrolWindow': 1,
+    'enrolWindow': 16,
     'validationSize': 0.2,
     'testSize': 0.2,
     'dropout': 0.2,
     'recurrentDropout': 0.2,
-    'alpha': 0.5,
+    'alpha': None,
+    'training': False,
 }
 
 class Api():
@@ -314,7 +321,7 @@ class Api():
             self,
             name,
             layers=[128],
-            dropoutRate=0.2,
+            dropout=default_MLP_args['dropout'],
             activation=default_MLP_args['activation'],
             loss=default_MLP_args['loss'],
             optimizer=default_MLP_args['optimizer'],
@@ -335,7 +342,7 @@ class Api():
                 A name/alias given to the model by the user
             layers: list of integers
                 List of neuron size for each layer
-            dropoutRate: float
+            dropout: float
                 Level of dropout
         
         RETURNS:
@@ -367,7 +374,7 @@ class Api():
                 },
             },
             structure=mlpLayers,
-            dropoutRate=dropoutRate
+            dropout=dropout,
         )
         
         return model
@@ -508,6 +515,146 @@ class Api():
         units=[128],
         dropout=default_LSTM_args['dropout'],
         recurrentDropout=default_LSTM_args['recurrentDropout'],
+        training=default_LSTM_args['training'],
+        alpha=default_LSTM_args['alpha'],
+        activation=default_LSTM_args['activation'],
+        loss=default_LSTM_args['loss'],
+        optimizer=default_LSTM_args['optimizer'],
+        metrics=default_LSTM_args['metrics'],
+        epochs=default_LSTM_args['epochs'],
+        batchSize=default_LSTM_args['batchSize'],
+        verbose=default_LSTM_args['verbose'],
+        enrolWindow=default_LSTM_args['enrolWindow'],
+        validationSize=default_LSTM_args['validationSize'],
+        testSize=default_LSTM_args['testSize'],
+        ):
+        """
+        FUNCTION:
+            Used to create a Recurrent Neural Network model using
+            Long-Short Term Memory neurons (LSTM). Uses both
+            traditional dropout and recurrent dropout for regularization,
+            hence the subname _Recurrent
+        
+        PARAMS:
+            name: str
+                A name/alias given to the model by the user
+            units: list of integers
+                List of neuron size for each layer
+            dropout: float
+                Level of dropout
+            recurrentDropout: float
+                Level of recurrent dropout
+            alpha: float
+                Alpha of the leaky relu function
+            training: boolean
+                If the model should apply dropout during prediction or not
+                If not, the prediction will be the mean of some number of
+                predictions made by the model internally
+        
+        RETURNS:
+            model: MachineLearningModel
+                Object with typical machine learning methods like train, predict etc.
+        """
+
+        model = models.kerasLSTM_Recurrent(
+            params = {
+                'name': name,
+                'X_train': self.X_train,
+                'y_train': self.y_train,
+                'args': {
+                    'activation': activation,
+                    'loss': loss,
+                    'optimizer': optimizer,
+                    'metrics': metrics,
+                    'epochs': epochs,
+                    'batchSize': batchSize,
+                    'verbose': verbose,
+                    'callbacks': default_LSTM_args['callbacks'],
+                    'enrolWindow': enrolWindow,
+                    'validationSize': validationSize,
+                    'testSize': testSize,
+                },
+            },
+            units=units,
+            dropout=dropout,
+            recurrentDropout=recurrentDropout,
+            training=training,
+            alpha=alpha,
+        )
+        
+        return model
+
+    def GRU(
+        self,
+        name,
+        units=[128],
+        dropout=default_LSTM_args['dropout'],
+        alpha=default_LSTM_args['alpha'],
+        activation=default_LSTM_args['activation'],
+        loss=default_LSTM_args['loss'],
+        optimizer=default_LSTM_args['optimizer'],
+        metrics=default_LSTM_args['metrics'],
+        epochs=default_LSTM_args['epochs'],
+        batchSize=default_LSTM_args['batchSize'],
+        verbose=default_LSTM_args['verbose'],
+        enrolWindow=default_LSTM_args['enrolWindow'],
+        validationSize=default_LSTM_args['validationSize'],
+        testSize=default_LSTM_args['testSize'],
+        ):
+        """
+        FUNCTION:
+            Used to create a Recurrent Neural Network model using
+            Long-Short Term Memory neurons (LSTM). Uses 
+            traditional dropout as regularization method
+        
+        PARAMS:
+            name: str
+                A name/alias given to the model by the user
+            units: list of integers
+                List of neuron size for each layer
+            dropout: float
+                Level of dropout
+            alpha: float
+                Alpha of the leaky relu function
+        
+        RETURNS:
+            model: MachineLearningModel
+                Object with typical machine learning methods like train, predict etc.
+        """
+
+        model = models.kerasLSTM(
+            params = {
+                'name': name,
+                'X_train': self.X_train,
+                'y_train': self.y_train,
+                'args': {
+                    'activation': activation,
+                    'loss': loss,
+                    'optimizer': optimizer,
+                    'metrics': metrics,
+                    'epochs': epochs,
+                    'batchSize': batchSize,
+                    'verbose': verbose,
+                    'callbacks': default_LSTM_args['callbacks'],
+                    'enrolWindow': enrolWindow,
+                    'validationSize': validationSize,
+                    'testSize': testSize,
+                },
+            },
+            units=units,
+            dropout=dropout,
+            alpha=alpha,
+        )
+        
+        return model
+
+    def GRU_Recurrent(
+        self,
+        name,
+        units=[128],
+        dropout=default_LSTM_args['dropout'],
+        recurrentDropout=default_LSTM_args['recurrentDropout'],
+        training=default_LSTM_args['training'],
         alpha=default_LSTM_args['alpha'],
         activation=default_LSTM_args['activation'],
         loss=default_LSTM_args['loss'],
@@ -566,6 +713,8 @@ class Api():
             units=units,
             dropout=dropout,
             recurrentDropout=recurrentDropout,
+            training=training,
+            alpha=alpha,
         )
         
         return model
@@ -710,7 +859,7 @@ class Api():
     def Autoencoder_Dropout(
             self,
             name,
-            dropoutRate=0.2,
+            dropout=default_MLP_args['dropout'],
             encodingDim=3,
             activation=default_MLP_args['activation'],
             loss=default_MLP_args['loss'],
@@ -733,7 +882,7 @@ class Api():
         PARAMS:
             name: str
                 A name/alias given to the model by the user
-            dropoutRate: float
+            dropout: float
                 Level of dropout
             encodingDim: int
                 Size of autoencoder middle layer
@@ -761,7 +910,7 @@ class Api():
                     'testSize': testSize,
                 },
             },
-            dropoutRate=dropoutRate,
+            dropout=dropout,
             encodingDim=encodingDim,
         )
         

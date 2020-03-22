@@ -1,7 +1,9 @@
+from prettytable import PrettyTable
+
 import numpy as np
 import utilities
 
-from prettytable import PrettyTable
+np.random.seed(100)
 
 def printCorrelationMatrix(covMat, df, columnNames=None):
     if 'Date' in df.columns:

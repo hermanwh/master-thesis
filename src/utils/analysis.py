@@ -4,16 +4,15 @@ module_path = os.path.abspath(os.path.join(ROOT_PATH+"/src/utils/"))
 if module_path not in sys.path:
     sys.path.append(module_path)
 
-import time
-import numpy as np
 import utilities
-import plots
+import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
-from configs import getConfig
 from sklearn.preprocessing import StandardScaler
 from sklearn.decomposition import PCA
+
+np.random.seed(100)
 
 colors = list(utilities.getColorScheme().values())
 
