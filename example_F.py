@@ -54,7 +54,7 @@ traintime = [
 
 testtime = [
     "2017-08-05 00:00:00",
-    "2020-02-01 00:00:00"
+    "2019-05-01 00:00:00"
 ]
 
 df = mlApi.initDataframe(filename, columns, irrelevantColumns)
@@ -79,36 +79,8 @@ statApi.valueDistribution(df, traintime, testtime)
 
 """
 
-"""
-
-mlp_10 = mlApi.MLP('MLP 10', layers=[10], verbose=0, batchSize=128)
-mlp_20 = mlApi.MLP('MLP 20', layers=[20], verbose=0, batchSize=128)
-mlp_128 = mlApi.MLP('MLP 128', layers=[128], verbose=0, batchSize=128)
-mlp_10_reg = mlApi.MLP_Regularized('MLPr 10', layers=[10], verbose=0, batchSize=128)
-mlp_20_reg = mlApi.MLP_Regularized('MLPr 20', layers=[20], verbose=0, batchSize=128)
-mlp_128_reg = mlApi.MLP_Regularized('MLPr 128', layers=[128], verbose=0, batchSize=128)
-linear = mlApi.Linear('Linear')
-linear_reg = mlApi.Linear_Regularized('Linear r')
-ensemble = mlApi.Ensemble('Ensemble', [mlp_128_reg, linear_reg])
-
-lstm_128 = mlApi.LSTM('lstm 128', verbose=1, dropout=0.2, alpha=None)
-lstm_128_leaky = mlApi.LSTM('lstm 128 leaky', verbose=1, dropout=0.2, alpha=None)
-lstm_128_recurrent = mlApi.LSTM_Recurrent('lstm 128 recurrent', verbose=1, dropout=0.2, recurrentDropout=0.0, alpha=None)
-lstm_2x_128 = mlApi.LSTM('lstm 2x128', verbose=1, units=[128, 128])
-lstm_2x_128_recurrent = mlApi.LSTM_Recurrent('lstm 2x128 recurrent', verbose=1, units=[128, 128])
-
-gru_128_leaky = mlApi.GRU('gru 128 leaky', verbose=1, dropout=0.2, alpha=None)
-gru_128_recurrent = mlApi.LSTM_Recurrent('gru 128 recurrent', verbose=1, dropout=0.2, recurrentDropout=0.0, alpha=None)
-
-antoenc_1 = mlApi.Autoencoder_Dropout('autoenc dropout')
-autoenc_2 = mlApi.Autoencoder_Regularized('autoenc regularized')
-
-mlp_128_dropout = mlApi.MLP_Dropout('mlp 128 dropout', layers=[128], dropout=0.2, )
-
-mlp_3x_128 = mlApi.MLP_Dropout('mlp 3x', layers=[128, 128, 128], dropout=0.2)
-lstm_3x_128 = mlApi.LSTM_Recurrent('lstm 3x', units=[128, 128, 128], dropout=0.2, recurrentDropout=0.2, training=False)
-
-"""
+linear = mlApi.Linear('linear')
+linear_r = mlApi.Linear_Regularized('linear r')
 
 mlp_1x_128 = mlApi.MLP('mlp 1x 128', layers=[128])
 mlpd_1x_128 = mlApi.MLP('mlpd 1x 128', layers=[128], dropout=0.2)
@@ -118,15 +90,17 @@ lstm_1x_128 = mlApi.LSTM('lstm 1x 128', layers=[128])
 lstmd_1x_128 = mlApi.LSTM('lstmr 1x 128', layers=[128], dropout=0.2, recurrentDropout=0.2)
 
 modelList = [
-	mlp_1x_128,
-	mlpd_1x_128,
-	mlpr_1x_128,
 	lstm_1x_128,
-	lstmd_1x_128,
+	#lstmd_1x_128,
+	#mlp_1x_128,
+	#mlpd_1x_128,
+	#mlpr_1x_128,
+	#linear,
+	linear_r,
 ]
 
 mlApi.initModels(modelList)
-retrain=True
+retrain=False
 mlApi.trainModels(retrain)
 
 import src.utils.modelFuncs as mf

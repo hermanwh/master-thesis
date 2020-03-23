@@ -28,14 +28,13 @@ targetColumns = [
 ]
 
 traintime = [
-        ["2016-01-01 00:00:00", "2016-03-01 00:00:00"],
-        ["2016-05-01 00:00:00", "2016-06-01 00:00:00"],
-        ["2016-08-01 00:00:00", "2016-10-01 00:00:00"],
-        ["2017-07-01 00:00:00", "2017-08-01 00:00:00"],
-        ["2017-10-01 00:00:00", "2017-11-01 00:00:00"],
+        ["2016-08-01 00:00:00", "2016-11-01 00:00:00"],
 ]
 	
-testtime = ["2016-01-01 00:00:00", "2020-03-01 00:00:00"]
+testtime = [
+        "2016-01-01 00:00:00",
+		"2019-01-01 00:00:00",
+	]
 
 df = mlApi.initDataframe(filename, columns, irrelevantColumns)
 df_train, df_test = mlApi.getTestTrainSplit(traintime, testtime)
@@ -47,19 +46,24 @@ statApi.printCorrelationMatrix(covmat, df_train, mlApi.columnDescriptions)
 pca = statApi.pca(df_train, -1, mlApi.relevantColumns, mlApi.columnDescriptions)
 statApi.printExplainedVarianceRatio(pca)
 
-mlp_1x_128 = mlApi.MLP('mlp 1x 128', layers=[128])
+#mlp_1x_128 = mlApi.MLP('mlp 1x 128', layers=[128])
 mlpd_1x_128 = mlApi.MLP('mlpd 1x 128', layers=[128], dropout=0.2)
-mlpr_1x_128 = mlApi.MLP('mlpr 1x 128', layers=[128], l1_rate=0.01, l2_rate=0.01)
+#mlpr_1x_128 = mlApi.MLP('mlpr 1x 128', layers=[128], l1_rate=0.01, l2_rate=0.01)
 
-lstm_1x_128 = mlApi.LSTM('lstm 1x 128', layers=[128])
+#lstm_1x_128 = mlApi.LSTM('lstm 1x 128', layers=[128])
 lstmd_1x_128 = mlApi.LSTM('lstmr 1x 128', layers=[128], dropout=0.2, recurrentDropout=0.2)
 
+linear = mlApi.Linear('linear')
+linear_r = mlApi.Linear_Regularized('linear r')
+
 modelList = [
-	mlp_1x_128,
-	mlpd_1x_128,
-	mlpr_1x_128,
-	lstm_1x_128,
 	lstmd_1x_128,
+	#mlp_1x_128,
+	mlpd_1x_128,
+	#mlpr_1x_128,
+	#lstmd_1x_128,
+	#linear,
+	linear_r,
 ]
 
 mlApi.initModels(modelList)

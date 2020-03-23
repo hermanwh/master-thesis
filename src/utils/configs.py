@@ -326,15 +326,15 @@ def getConfigF():
 def getConfigG():
 	columnDescriptions = {
 		'Date':'Date',
-		'PDI0064': 'Gas DP',
-		'TI0066': 'Gas T out',
-		'TZI0012': 'Gas T in',
+		'PDI0064': 'Gas dP',
+		'TI0066': 'Gas Temperature out',
+		'TZI0012': 'Gas Temperature in',
 		'FI0010': 'Gas rate',
-		'TT0025': 'SW T in',
-		'TT0026': 'SW T out',
+		'TT0025': 'SW Temperature in',
+		'TT0026': 'SW Temperature out',
 		'FT0027': 'SW rate',
 		'TIC0022U': 'SW valve',
-		'PDT0024': 'SW DP',
+		'PDT0024': 'SW dP',
 	}
 
 	irrelevantColumns = [

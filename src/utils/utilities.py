@@ -82,8 +82,15 @@ def getTestTrainSplit(df, traintime, testtime):
         nextDf = getDataByTimeframe(df, start_train, end_train)
         df_train = pd.concat([df_train, nextDf])
 
-    start_test, end_test = testtime
-    df_test = getDataByTimeframe(df, start_test, end_test)
+    if isinstance(testtime[0], str):
+        start_test, end_test = testtime
+        df_test = getDataByTimeframe(df, start_test, end_test)
+    else:
+        start_test, end_test = testtime[0]
+        df_test = getDataByTimeframe(df, start_test, end_test)
+        for start_test, end_test in testtime[1:]:
+            nextDf = getDataByTimeframe(df, start_test, end_test)
+            df_train = pd.concat([df_train, nextDf])
 
     return [df_train, df_test]
 

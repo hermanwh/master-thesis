@@ -32,6 +32,54 @@ tf.random.set_seed(100)
 
 CURRENT_MODEL_WEIGHTS_FILEPATH = ROOT_PATH + '/src/ml/trained_models/'
 
+def lstm_data_generator(x_data, y_data, lookback, train_val_ratio=5):
+    num_x_signals = x_data.shape[1]
+    num_y_signals = y_data.shape[1]
+
+    num_x_samples = x_data.shape[0]
+    num_y_samples = y_data.shape[0]
+
+    import math
+
+    length_valid = math.ceil(num_x_samples / train_val_ratio)
+    length_train = num_x_samples - length_valid
+
+    x_shape_train = (length_train, lookback, num_x_signals)
+    x_shape_val = (length_valid, lookback, num_x_signals)
+
+    X = np.zeros(shape=x_shape_train, dtype=np.float16)
+    X_val = np.zeros(shape=x_shape_val, dtype=np.float16)
+
+    y_shape_train = (length_train, num_y_signals)
+    y_shape_val = (length_valid, num_y_signals)
+
+    Y = np.zeros(shape=y_shape_train, dtype=np.float16)
+    Y_val = np.zeros(shape=y_shape_val, dtype=np.float16)
+
+    print(lookback)
+    print(x_shape_train)
+    print(x_shape_val)
+    print(y_shape_train)
+    print(y_shape_val)
+
+    # Fill the batch with random sequences of data.
+    index_train = 0
+    index_val = 0
+    for i in range(num_x_samples - 2*lookback - 1):
+        if i % train_val_ratio == 0:
+            # validation sample
+            X[index_train] = x_data[i:i+lookback]
+            Y[index_train] = y_data[i+lookback]
+            index_val += 1
+        else:
+            # training sample
+            X_val[index_val] = x_data[i:i+lookback]
+            Y_val[index_val] = y_data[i+lookback]
+            index_train += 1
+    
+    return [X, X_val, Y, Y_val]
+
+
 class Args():
     def __init__(self, args):
         self.activation = args['activation']
@@ -165,6 +213,7 @@ class MachinLearningModel():
         ),
 
         if self.modelType == "RNN":
+            """
             X_t, X_v, y_t, y_v = train_test_split(self.X_train, self.y_train, test_size=0.2, shuffle=False)
             validation_generator = TimeseriesGenerator(
                 self.inputScaler.transform(X_v),
@@ -191,6 +240,25 @@ class MachinLearningModel():
                 verbose = self.args.verbose,
                 callbacks = [*self.args.callbacks, *checkpoint],
                 validation_data = validation_generator,
+            )
+            """
+            X_t, X_v, y_t, y_v = lstm_data_generator(
+                self.inputScaler.transform(self.X_train),
+                self.outputScaler.transform(self.y_train),
+                self.args.enrolWindow,
+            )
+            self.model.compile(
+                loss = self.args.loss,
+                optimizer = self.args.optimizer,
+                metrics = self.args.metrics
+            )
+            history = self.model.fit(
+                X_t,
+                y_t,
+                epochs = self.args.epochs,
+                verbose = self.args.verbose,
+                callbacks = [*self.args.callbacks, *checkpoint],
+                validation_data = (X_v, y_v),
             )
             self.history = history.history
             self.model.load_weights(weights_path)
@@ -357,6 +425,7 @@ def kerasLSTM(
         layer_1 = LSTM(firstLayerUnits,
                             activation = args.activation,
                             dropout = dropout,
+                            return_sequences = False,
                             recurrent_dropout = recurrentDropout)(input_layer, training=training)
         if alpha is not None:
             layer_1 = LeakyReLU(alpha=alpha)(layer_1)
