@@ -176,11 +176,18 @@ def getTrainingSummary(modelList):
                 if submodel.history is not None:
                     loss = submodel.history['loss']
                     val_loss = submodel.history['val_loss']
-                    loss_dict[model.name + " " + submodel.name] = {
-                        'loss': loss,
-                        'val_loss': val_loss,
-                        'loss_final': loss[-1],
-                        'val_loss_final': val_loss[-1],
-                        'length': len(loss)
-                    }
+                    loss_best = np.amin(loss)
+                    loss_loc = np.where(loss == loss_best)[0]
+                    val_loss_best = np.amin(val_loss)
+                    val_loc = np.where(val_loss == val_loss_best)[0]
+                    loss_dict[model.name + ", " + submodel.name] = {
+                    'loss': loss,
+                    'val_loss': val_loss,
+                    'loss_final': loss_best,
+                    'loss_loc': loss_loc,
+                    'val_loss_final': val_loss_best,
+                    'val_loss_loc': val_loc,
+                    'length': len(loss),
+                }
     return loss_dict
+
