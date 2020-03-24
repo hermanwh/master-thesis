@@ -295,7 +295,7 @@ class Api():
                 metrics_test
             )
 
-        return [modelNames, metrics_train, metrics_test]
+        return [modelNames, metrics_train, metrics_test, columnsList, deviationsList]
 
     def predictWithAutoencoderModels(self):
         """

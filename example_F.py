@@ -119,5 +119,5 @@ for model in modelList:
 	print("")
 """
 #mlApi.predictWithAutoencoderModels()
-modelNames, metrics_train, metrics_test = mlApi.predictWithModels(plot=True, interpol=False)
+modelNames, metrics_train, metrics_test, columnsList, deviationsList = mlApi.predictWithModels(plot=True, interpol=False)
 

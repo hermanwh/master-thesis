@@ -159,7 +159,7 @@ def predictWithModels(modelList, X_train, y_train, X_test, y_test, targetColumns
                     targetColumns[j],
                     pred_test[:, j][enrolDiff:],
                     colors[i],
-                    0.9,
+                    0.5,
                 ]
             )
             deviationsList[j].append(
@@ -168,7 +168,7 @@ def predictWithModels(modelList, X_train, y_train, X_test, y_test, targetColumns
                     targetColumns[j],
                     y_test[:, j][maxEnrol:] - pred_test[:, j][enrolDiff:],
                     colors[i],
-                    0.9,
+                    0.5,
                 ]
             )
 

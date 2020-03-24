@@ -113,6 +113,6 @@ retrain=False
 mlApi.trainModels(retrain)
 
 #mlApi.predictWithAutoencoderModels()
-modelNames, metrics_train, metrics_test = mlApi.predictWithModels(plot=True)
+modelNames, metrics_train, metrics_test, columnsList, deviationsList = mlApi.predictWithModels(plot=True)
 
 print(linear.model.coef_)

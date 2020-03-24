@@ -97,4 +97,4 @@ ax.legend(loc='upper left')
 
 plt.show()
 
-#modelNames, metrics_train, metrics_test = mlApi.predictWithModels(plot=True)
+#modelNames, metrics_train, metrics_test, columnsList, deviationsList = mlApi.predictWithModels(plot=True)
