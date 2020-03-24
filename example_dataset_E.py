@@ -3,7 +3,7 @@ from api import Api
 mlApi = Api()
 
 # define dataset specifics
-filename = "../master-thesis-db/datasets/B/data_0min.csv"
+filename = "../master-thesis-db/datasets/E/data.csv"
 
 columns = [
 	['TT0102': 'Varm side temperatur inn', 'degrees'],

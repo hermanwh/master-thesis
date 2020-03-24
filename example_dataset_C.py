@@ -3,7 +3,7 @@ from api import Api
 mlApi = Api()
 
 # define dataset specifics
-filename = "../master-thesis-db/datasets/B/data_0min.csv"
+filename = "../master-thesis-db/datasets/C/data.csv"
 
 columns = [
 	['FT202Flow', 'Process flow', 'unknown'],

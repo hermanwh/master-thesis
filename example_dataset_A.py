@@ -21,6 +21,7 @@ columns = [
 irrelevantColumns = [
 		'XV127.CMD',
 		'XV127.ZSH',
+		'ZT127.PV',
 ]
 
 targetColumns = [
@@ -28,13 +29,13 @@ targetColumns = [
 ]
 
 traintime = [
-        ["2016-07-01 00:00:00", "2016-10-06 00:00:00"],
+    ["2016-07-01 00:00:00", "2016-10-06 00:00:00"],
 ]
 	
 testtime = [
-        "2016-01-01 00:00:00",
-		"2020-03-01 00:00:00",
-	]
+	"2016-01-01 00:00:00",
+	"2020-03-01 00:00:00",
+]
 
 df = mlApi.initDataframe(filename, columns, irrelevantColumns)
 df_train, df_test = mlApi.getTestTrainSplit(traintime, testtime)
@@ -54,7 +55,7 @@ modelList = [
 ]
 
 mlApi.initModels(modelList)
-retrain=False
+retrain=True
 mlApi.trainModels(retrain)
 modelNames, metrics_train, metrics_test, columnsList, deviationsList = mlApi.predictWithModels(
 	plot=True,

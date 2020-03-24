@@ -21,6 +21,7 @@ columns = [
 irrelevantColumns = [
 		'XV167.CMD',
 		'XV167.ZSH',
+		'ZT167.PV',
 ]
 
 targetColumns = [
@@ -28,13 +29,13 @@ targetColumns = [
 ]
 
 traintime = [
-        ["2016-04-01 00:00:00", "2016-06-10 00:00:00"],
+    ["2016-07-01 00:00:00", "2016-10-06 00:00:00"],
 ]
 	
 testtime = [
-        "2016-01-01 00:00:00",
-		"2020-03-01 00:00:00",
-	]
+	"2016-01-01 00:00:00",
+	"2020-03-01 00:00:00",
+]
 
 df = mlApi.initDataframe(filename, columns, irrelevantColumns)
 df_train, df_test = mlApi.getTestTrainSplit(traintime, testtime)

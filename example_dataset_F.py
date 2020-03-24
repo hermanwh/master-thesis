@@ -51,11 +51,11 @@ targetColumns = [
 ]
 
 traintime = [
-        ["2017-08-05 00:00:00", "2018-08-01 00:00:00"],
+        ["2018-01-01 00:00:00", "2018-08-01 00:00:00"],
     ]
 
 testtime = [
-    "2017-08-05 00:00:00",
+    "2018-01-01 00:00:00",
     "2019-05-01 00:00:00"
 ]
 
@@ -77,7 +77,7 @@ modelList = [
 ]
 
 mlApi.initModels(modelList)
-retrain=False
+retrain=True
 mlApi.trainModels(retrain)
 modelNames, metrics_train, metrics_test, columnsList, deviationsList = mlApi.predictWithModels(
 	plot=True,

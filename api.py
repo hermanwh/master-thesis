@@ -28,7 +28,7 @@ default_MLP_args = {
     'loss': 'mean_squared_error',
     'optimizer': 'adam',
     'metrics': ['mean_squared_error'],
-    'epochs': 500,
+    'epochs': 700,
     'batchSize': 128,
     'verbose': 1,
     'callbacks': modelFuncs.getBasicCallbacks(),

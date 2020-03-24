@@ -3,39 +3,39 @@ from api import Api
 mlApi = Api()
 
 # define dataset specifics
-filename = "../master-thesis-db/datasets/B/data_0min.csv"
+filename = "../master-thesis-db/datasets/D/dataC.csv"
 
 columns = [
-	['TT181.PV', 'Gas side inlet temperature', 'MSm^3/d'],
-	['TIC215.PV', 'Gas side outlet temperature','g/mole'],
-	['FI165B.PV', 'Gas side flow', 'degrees'],
-	['PT180.PV', 'Gas side compressor pressure', 'degrees'],
-	['TT069.PV', 'Cooling side inlet temperature', 'degrees'],
-	['PT074.PV', 'Cooling side pressure', 'degrees'],
-	['TIC215.OUT', 'Cooling side vavle opening', 'degrees'],
-	['XV167.CMD', 'Anti-surge compressor valve', 'degrees'],
-	['XV167.ZSH', 'Anti-surge valve', 'degrees'],
-	['ZT167.PV', 'Anti-surge unknown', 'Bar'],
+    ['20TT001', 'Gas side inlet temperature', 'degrees'],
+    ['20PT001', 'Gas side inlet pressure', 'barG'],
+    ['20FT001', 'Gas side flow', 'M^3/s'],
+    ['20TT002', 'Gas side outlet temperature', 'degrees'],
+    ['20PDT001', 'Gas side pressure difference', 'bar'],
+    ['50TT001', 'Cooling side inlet temperature', 'degrees'],
+    ['50PT001', 'Cooling side inlet pressure', 'barG'],
+    ['50FT001', 'Cooling side flow', 'M^3/s'],
+    ['50TT002', 'Cooling side outlet temperature', 'degrees'],
+    ['50PDT001', 'Cooling side pressure differential', 'bar'],
+    ['50TV001', 'Cooling side valve opening', '%'],
 ]
 
 irrelevantColumns = [
-		'XV167.CMD',
-		'XV167.ZSH',
+    '50PDT001',
+    '20PDT001',
 ]
 
 targetColumns = [
-    'TIC215.PV',
+    '50TT002',
 ]
 
 traintime = [
-        ["2016-08-01 00:00:00", "2016-11-01 00:00:00"],
-]
-	
-testtime = [
-        "2016-01-01 00:00:00",
-		"2019-01-01 00:00:00",
-	]
+        ["2020-01-01 00:00:00", "2020-04-01 00:00:00"],
+    ]
 
+testtime = [
+    "2020-01-01 00:00:00",
+    "2020-08-01 00:00:00"
+]
 df = mlApi.initDataframe(filename, columns, irrelevantColumns)
 df_train, df_test = mlApi.getTestTrainSplit(traintime, testtime)
 X_train, y_train, X_test, y_test = mlApi.getFeatureTargetSplit(targetColumns)
@@ -56,5 +56,8 @@ modelList = [
 mlApi.initModels(modelList)
 retrain=True
 mlApi.trainModels(retrain)
-modelNames, metrics_train, metrics_test, columnsList, deviationsList = mlApi.predictWithModels(plot=True, interpol=True)
+modelNames, metrics_train, metrics_test, columnsList, deviationsList = mlApi.predictWithModels(
+	plot=True,
+	interpol=False,
+)
 
