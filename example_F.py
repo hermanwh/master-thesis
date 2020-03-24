@@ -39,12 +39,14 @@ irrelevantColumns = [
 		'TT0652_MA_Y',
 		'TIC0103_CA_Y',
 		'PIC0104_CA_YX',
-		#'TIC0101_CA_Y',
-		#'TIC0105_CA_Y',
+		'TIC0101_CA_Y',
+		'TIC0105_CA_Y',
+		'TT0102_MA_Y',
+		'TIC0101_CA_YX',
+		'TT0651_MA_Y',
 ]
 
 targetColumns = [
-    'TT0651_MA_Y',
     'TT0653_MA_Y'
 ]
 
@@ -88,15 +90,19 @@ mlpr_1x_128 = mlApi.MLP('mlpr 1x 128', layers=[128], l1_rate=0.01, l2_rate=0.01)
 
 lstm_1x_128 = mlApi.LSTM('lstm 1x 128', layers=[128])
 lstmd_1x_128 = mlApi.LSTM('lstmr 1x 128', layers=[128], dropout=0.2, recurrentDropout=0.2)
+lstmdx_1x_128 = mlApi.LSTM('lstmr 1x 128 no valve', layers=[128], dropout=0.2, recurrentDropout=0.2)
+lstmdxx_1x_128 = mlApi.LSTM('lstmr 1x 128 no xxx', layers=[128], dropout=0.2, recurrentDropout=0.2)
 
 modelList = [
-	lstm_1x_128,
+	#mlpd_1x_128,
+	#lstmd_1x_128,
+	lstmdxx_1x_128,
 	#lstmd_1x_128,
 	#mlp_1x_128,
 	#mlpd_1x_128,
 	#mlpr_1x_128,
 	#linear,
-	linear_r,
+	#linear_r,
 ]
 
 mlApi.initModels(modelList)
@@ -105,12 +111,13 @@ mlApi.trainModels(retrain)
 
 import src.utils.modelFuncs as mf
 
+"""
 for model in modelList:
 	print(model.name)
 	mf.printModelSummary(model)
 	print("")
 	print("")
-
+"""
 #mlApi.predictWithAutoencoderModels()
-modelNames, metrics_train, metrics_test = mlApi.predictWithModels(plot=True, interpol=True)
+modelNames, metrics_train, metrics_test = mlApi.predictWithModels(plot=True, interpol=False)
 

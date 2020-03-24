@@ -72,6 +72,7 @@ def dropIrrelevantColumns(df, args):
     prints.printEmptyLine()
     print("Columns after removal: ")
     prints.printColumns(df, columnDescriptions)
+    prints.printEmptyLine()
     
     return df
 
@@ -95,10 +96,10 @@ def getTestTrainSplit(df, traintime, testtime):
     return [df_train, df_test]
 
 def getDataByTimeframe(df, start, end):
-    prints.printEmptyLine()
     print("Finding data between", start, "and", end)
     df = df.loc[start:end]
     print("Found " + str(df.shape[0]) + " rows")
+    prints.printEmptyLine()
     return df
 
 def getFeatureTargetSplit(df_train, df_test, targetColumns):

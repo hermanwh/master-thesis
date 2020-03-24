@@ -125,7 +125,7 @@ def main(filename, targetColumn):
                     0.5,
                 ]
             ],
-            desc="Prediction vs. targets, ",
+            desc="Prediction targets",
             columnDescriptions=labelNames,
             trainEndStr=[end_train],
         )

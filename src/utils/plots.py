@@ -28,7 +28,7 @@ def getPlotColors():
     return colors
 
 def plotDataColumnSingle(df, plt, column, data, columnDescriptions=None, color='darkgreen', interpoldeg=3):
-    fig, ax = plt.subplots()
+    fig, ax = plt.subplots(1, 1, figsize=(8,6), dpi=100)
     ax.set_xlabel('Date')
     if columnDescriptions:
         ax.set_ylabel(columnDescriptions[column])
@@ -52,12 +52,12 @@ def plotDataColumnSingle(df, plt, column, data, columnDescriptions=None, color='
     fig.autofmt_xdate()
 
 def plotColumns(dfindex, plt, args, desc="", columnDescriptions=None, trainEndStr=None, columnUnits=None, interpol=False, interpoldeg=3):
-    fig,ax = plt.subplots()
+    fig,ax = plt.subplots(1, 1, figsize=(10,3), dpi=100)
     ax.set_xlabel('Date')
     for i, arg in enumerate(args):
         label, column, data, color, alpha = arg
         
-        ax.set_title((desc + columnDescriptions[column]) if columnDescriptions else (desc + column))
+        ax.set_title((desc + "\n" + columnDescriptions[column]) if columnDescriptions else (desc + "\n" + column))
         ax.set_ylabel(columnUnits[column] if columnUnits is not None else "")
 
         if color is not None:
@@ -77,12 +77,12 @@ def plotColumns(dfindex, plt, args, desc="", columnDescriptions=None, trainEndSt
 
     if trainEndStr:
         for i, trainEndString in enumerate(trainEndStr):
-            ax.axvline(x=pd.to_datetime(trainEndString, dayfirst=True), color='blue' if i % 2 == 0 else 'red')
+            ax.axvline(x=pd.to_datetime(trainEndString, dayfirst=True), color='black' if i % 2 == 0 else 'blue', label='start training' if i % 2 == 0 else 'end training')
     ax.tick_params(axis='y', labelcolor=color)
     ax.grid(1, axis='y')
 
     fig.subplots_adjust(right=0.7)
-    ax.legend(bbox_to_anchor=(1.05, 1), loc='upper left', borderaxespad=0.)
+    ax.legend(bbox_to_anchor=(1.05, 1), loc='upper left', borderaxespad=0., prop={'size': 10})
     fig.autofmt_xdate()
 
 def duoPlot(y1, y2, x, plt, columnDescriptions=None, relevantColumns=None, columnUnits=None, color1='darkgreen', color2='red'):
@@ -158,19 +158,21 @@ def plotModelScores(plt, names, r2_train, r2_test):
     plt.xlabel('Model')
     plt.title('Model metrics')
 
-    plt.plot(names, r2_train)
-    plt.plot(names, r2_test)
+    plt.plot(names, r2_train, marker='x', markersize=10, label="Training metrics")
+    plt.plot(names, r2_test, marker='x', markersize=10, label="Test metrics")
+    plt.legend()
 
     plt.show()
 
-def plotModelPredictions(plt, deviationsList, columnsList, indexList, labelNames, traintime, interpol=False, interpoldeg=3):
+def plotModelPredictions(plt, deviationsList, columnsList, indexList, labelNames, columnUnits, traintime, interpol=False, interpoldeg=3):
     for i in range(len(deviationsList)):
         plotColumns(
             indexList,
             plt,
-            deviationsList[i],
-            desc="Deviation, ",
+            columnsList[i],
+            desc="Prediction and targets",
             columnDescriptions=labelNames,
+            columnUnits=columnUnits,
             trainEndStr=[item for sublist in traintime for item in sublist],
             interpol=interpol,
             interpoldeg=interpoldeg,
@@ -178,9 +180,10 @@ def plotModelPredictions(plt, deviationsList, columnsList, indexList, labelNames
         plotColumns(
             indexList,
             plt,
-            columnsList[i],
-            desc="Prediction vs. targets, ",
+            deviationsList[i],
+            desc="Deviation",
             columnDescriptions=labelNames,
+            columnUnits=columnUnits,
             trainEndStr=[item for sublist in traintime for item in sublist],
             interpol=interpol,
             interpoldeg=interpoldeg,
@@ -191,7 +194,7 @@ def plotModelPredictions(plt, deviationsList, columnsList, indexList, labelNames
 def plotTrainingSummary(trainingSummary):
     colors = getPlotColors()
 
-    fig,axs = pltt.subplots(nrows=1, ncols=2, figsize=(10, 4), dpi=100)
+    fig,axs = pltt.subplots(nrows=1, ncols=2, figsize=(10, 3), dpi=100)
     fig.tight_layout(w_pad=3.0)
 
     ax1, ax2 = axs
@@ -206,11 +209,11 @@ def plotTrainingSummary(trainingSummary):
     i = 0
     for name, summary in trainingSummary.items():
         ax1.plot(summary['loss'], color=colors[i], label=name)
-        ax1.text(summary['loss_loc'], summary['loss_final'], name)
+        ax1.plot(summary['loss_loc'], summary['loss_final'], color=colors[i], marker='x', markersize=10)
         ax2.plot(summary['val_loss'], color=colors[i], label=name)
-        ax2.text(summary['val_loss_loc'], summary['val_loss_final'], name)
+        ax2.plot(summary['val_loss_loc'], summary['val_loss_final'], color=colors[i], marker='x', markersize=10)
         i = i + 1
 
-    ax1.legend(loc='upper right')
-    ax2.legend(loc='upper right')
+    ax1.legend(loc='upper right', prop={'size': 10})
+    ax2.legend(loc='upper right', prop={'size': 10})
     pltt.show()

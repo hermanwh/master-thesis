@@ -191,3 +191,43 @@ def getTrainingSummary(modelList):
                 }
     return loss_dict
 
+def getRNNSplit(x_data, y_data, lookback, train_val_ratio=5):
+    num_x_signals = x_data.shape[1]
+    num_y_signals = y_data.shape[1]
+
+    num_x_samples = x_data.shape[0]
+    num_y_samples = y_data.shape[0]
+
+    import math
+
+    length_valid = math.ceil(num_x_samples / train_val_ratio)
+    length_train = num_x_samples - length_valid
+
+    x_shape_train = (length_train, lookback, num_x_signals)
+    x_shape_val = (length_valid, lookback, num_x_signals)
+
+    X = np.zeros(shape=x_shape_train, dtype=np.float16)
+    X_val = np.zeros(shape=x_shape_val, dtype=np.float16)
+
+    y_shape_train = (length_train, num_y_signals)
+    y_shape_val = (length_valid, num_y_signals)
+
+    Y = np.zeros(shape=y_shape_train, dtype=np.float16)
+    Y_val = np.zeros(shape=y_shape_val, dtype=np.float16)
+
+    # Fill the batch with random sequences of data.
+    index_train = 0
+    index_val = 0
+    for i in range(num_x_samples - 2*lookback - 1):
+        if i % train_val_ratio == 0:
+            # validation sample
+            X[index_train] = x_data[i:i+lookback]
+            Y[index_train] = y_data[i+lookback]
+            index_val += 1
+        else:
+            # training sample
+            X_val[index_val] = x_data[i:i+lookback]
+            Y_val[index_val] = y_data[i+lookback]
+            index_train += 1
+    
+    return [X, X_val, Y, Y_val]

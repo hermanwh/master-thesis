@@ -102,14 +102,14 @@ modelList = [
     #mlpd_2x_64,
 	#mlpd_2x_128,
 	#mlpr_1x_128,
-	lstm_1x_128,
-	lstmd_1x_128,
+	#lstm_1x_128,
+	#lstmd_1x_128,
     #ensemble,
     linear,
 ]
 
 mlApi.initModels(modelList)
-retrain=True
+retrain=False
 mlApi.trainModels(retrain)
 
 #mlApi.predictWithAutoencoderModels()

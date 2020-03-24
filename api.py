@@ -106,8 +106,14 @@ class Api():
         self.columnUnits = columnUnits
         self.columnNames = columnNames
         
-        df = utilities.initDataframe(filename, relevantColumns, columnDescriptions)
+        df = utilities.initDataframe(
+            filename,
+            relevantColumns,
+            columnDescriptions,
+        )
+
         self.df = df
+
         return df
 
     def getTestTrainSplit(self, traintime, testtime):
@@ -129,9 +135,16 @@ class Api():
 
         self.traintime = traintime
         self.testtime = testtime
-        df_train, df_test = utilities.getTestTrainSplit(self.df, traintime, testtime)
+
+        df_train, df_test = utilities.getTestTrainSplit(
+            self.df,
+            traintime,
+            testtime,
+        )
+
         self.df_train = df_train
         self.df_test = df_test
+
         return [df_train, df_test]
 
     def getFeatureTargetSplit(self, targetColumns):
@@ -149,11 +162,18 @@ class Api():
         """
 
         self.targetColumns = targetColumns
-        X_train, y_train, X_test, y_test =  utilities.getFeatureTargetSplit(self.df_train, self.df_test, targetColumns)
+
+        X_train, y_train, X_test, y_test =  utilities.getFeatureTargetSplit(
+            self.df_train,
+            self.df_test,
+            targetColumns,
+        )
+
         self.X_train = X_train
         self.y_train = y_train
         self.X_test = X_test
         self.y_test = y_test
+
         return [X_train, y_train, X_test, y_test]
 
     def prepareDataframe(self, df, traintime, testtime, targetColumns):
@@ -178,8 +198,17 @@ class Api():
                 Arrays of feature and target values for training and testing
         """
 
-        df_train, df_test = getTestTrainSplit(df, traintime, testtime)
-        return getFeatureTargetSplit(df_train, df_test, targetColumns)
+        df_train, df_test = getTestTrainSplit(
+            df,
+            traintime,
+            testtime,
+        )
+
+        return getFeatureTargetSplit(
+            df_train,
+            df_test,
+            targetColumns,
+        )
 
     def initModels(self, modelList):
         """
@@ -211,7 +240,12 @@ class Api():
             None
         """
 
-        modelFuncs.trainModels(self.modelList, self.filename, self.targetColumns, retrain)
+        modelFuncs.trainModels(
+            self.modelList,
+            self.filename,
+            self.targetColumns,
+            retrain
+        )
 
     def predictWithModels(self, plot=True, interpol=False):
         """
@@ -237,22 +271,44 @@ class Api():
             self.y_test,
             self.targetColumns 
         )
+
         if plot:
-            prints.printModelScores(modelNames, metrics_train, metrics_test)
+            prints.printModelScores(
+                modelNames,
+                metrics_train,
+                metrics_test
+            )
             plots.plotModelPredictions(
                 plt,
                 deviationsList,
                 columnsList,
                 self.indexColumn,
                 self.columnDescriptions,
+                self.columnUnits,
                 self.traintime,
                 interpol=interpol,
             )
-            plots.plotModelScores(plt, modelNames, metrics_train, metrics_test)
+            plots.plotModelScores(
+                plt,
+                modelNames,
+                metrics_train,
+                metrics_test
+            )
+
         return [modelNames, metrics_train, metrics_test]
 
     def predictWithAutoencoderModels(self):
-        utilities.predictWithAutoencoderModels(self.modelList, self.df_test, self.X_test)
+        """
+        FUNCTION:
+            Used to make predictions in the case where all
+            models in self.modelList are of type AutoencoderModel
+        """
+
+        utilities.predictWithAutoencoderModels(
+            self.modelList,
+            self.df_test,
+            self.X_test
+        )
 
     def MLP(
             self,
