@@ -63,61 +63,24 @@ df = mlApi.initDataframe(filename, columns, irrelevantColumns)
 df_train, df_test = mlApi.getTestTrainSplit(traintime, testtime)
 X_train, y_train, X_test, y_test = mlApi.getFeatureTargetSplit(targetColumns)
 
-covmat = statApi.correlationMatrix(df_train)
-statApi.printCorrelationMatrix(covmat, df_train, mlApi.columnDescriptions)
-
-pca = statApi.pca(df_train, -1, mlApi.relevantColumns, mlApi.columnDescriptions)
-statApi.printExplainedVarianceRatio(pca)
-"""
-statApi.pcaPlot(df, [traintime, testtime, []])
-
-statApi.pairplot(df)
-
-statApi.scatterplot(df)
-
-statApi.correlationPlot(df_train)
-
-statApi.valueDistribution(df, traintime, testtime)
-
-"""
-
 linear = mlApi.Linear('linear')
 linear_r = mlApi.Linear_Regularized('linear r')
 
-mlp_1x_128 = mlApi.MLP('mlp 1x 128', layers=[128])
 mlpd_1x_128 = mlApi.MLP('mlpd 1x 128', layers=[128], dropout=0.2)
-mlpr_1x_128 = mlApi.MLP('mlpr 1x 128', layers=[128], l1_rate=0.01, l2_rate=0.01)
-
-lstm_1x_128 = mlApi.LSTM('lstm 1x 128', layers=[128])
 lstmd_1x_128 = mlApi.LSTM('lstmr 1x 128', layers=[128], dropout=0.2, recurrentDropout=0.2)
-lstmdx_1x_128 = mlApi.LSTM('lstmr 1x 128 no valve', layers=[128], dropout=0.2, recurrentDropout=0.2)
-lstmdxx_1x_128 = mlApi.LSTM('lstmr 1x 128 no xxx', layers=[128], dropout=0.2, recurrentDropout=0.2)
 
 modelList = [
-	#mlpd_1x_128,
-	#lstmd_1x_128,
-	lstmdxx_1x_128,
-	#lstmd_1x_128,
-	#mlp_1x_128,
-	#mlpd_1x_128,
-	#mlpr_1x_128,
+	mlpd_1x_128,
+	lstmd_1x_128,
 	#linear,
-	#linear_r,
+	linear_r,
 ]
 
 mlApi.initModels(modelList)
 retrain=False
 mlApi.trainModels(retrain)
-
-import src.utils.modelFuncs as mf
-
-"""
-for model in modelList:
-	print(model.name)
-	mf.printModelSummary(model)
-	print("")
-	print("")
-"""
-#mlApi.predictWithAutoencoderModels()
-modelNames, metrics_train, metrics_test, columnsList, deviationsList = mlApi.predictWithModels(plot=True, interpol=False)
+modelNames, metrics_train, metrics_test, columnsList, deviationsList = mlApi.predictWithModels(
+	plot=True,
+	interpol=False,
+)
 

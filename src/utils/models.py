@@ -31,7 +31,7 @@ from modelFuncs import getRNNSplit
 np.random.seed(100)
 tf.random.set_seed(100)
 
-CURRENT_MODEL_WEIGHTS_FILEPATH = ROOT_PATH + '/src/ml/trained_models/'
+CURRENT_MODEL_WEIGHTS_FILEPATH = ROOT_PATH + '/src/ml/trained_models/training_weights/'
 
 class Args():
     def __init__(self, args):
