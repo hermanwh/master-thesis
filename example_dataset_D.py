@@ -36,6 +36,7 @@ testtime = [
     "2020-01-01 00:00:00",
     "2020-08-01 00:00:00"
 ]
+
 df = mlApi.initDataframe(filename, columns, irrelevantColumns)
 df_train, df_test = mlApi.getTestTrainSplit(traintime, testtime)
 X_train, y_train, X_test, y_test = mlApi.getFeatureTargetSplit(targetColumns)

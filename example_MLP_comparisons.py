@@ -1,3 +1,4 @@
+import statApi
 from api import Api
 mlApi = Api()
 
@@ -58,6 +59,10 @@ linear = mlApi.Linear('linear')
 
 lstm_1x_128 = mlApi.LSTM('lstm 1x 128', layers=[128])
 lstmd_1x_128 = mlApi.LSTM('lstmr 1x 128', layers=[128], dropout=0.2, recurrentDropout=0.2)
+
+
+statApi.pcaPlot(df, [traintime, testtime, []])
+
 """
 pca = statApi.pca(df_train, -1, mlApi.relevantColumns, mlApi.columnDescriptions)
 statApi.printExplainedVarianceRatio(pca)
@@ -75,10 +80,11 @@ statApi.correlationPlot(df_train)
 covmat_test = statApi.correlationMatrix(df_test)
 statApi.printCorrelationMatrix(covmat_test, df_test, mlApi.columnDescriptions)
 
-
 statApi.correlationPlot(df_test)
 
 statApi.valueDistribution(df, traintime, testtime)
+"""
+
 """
 ensemble = mlApi.Ensemble(
     'linear + mlpd128',
@@ -96,7 +102,7 @@ modelList = [
     #mlpd_1x_16,
     #mlpd_1x_32,
     #mlpd_1x_64,
-	mlpd_1x_128,
+	#mlpd_1x_128,
     #mlpd_2x_16,
     #mlpd_2x_32,
     #mlpd_2x_64,
@@ -116,3 +122,5 @@ mlApi.trainModels(retrain)
 modelNames, metrics_train, metrics_test, columnsList, deviationsList = mlApi.predictWithModels(plot=True)
 
 print(linear.model.coef_)
+
+"""

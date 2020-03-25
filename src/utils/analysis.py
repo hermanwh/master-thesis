@@ -85,9 +85,70 @@ def pcaPlot(df, timestamps=None):
     indexx = list(range(df_pca_test.shape[0]))
     if df_pca_train is not None:
         ax.scatter(df_pca_train['pca1'], df_pca_train['pca2'], c = 'red')
-    points = ax.scatter(df_pca_test['pca1'], df_pca_test['pca2'], c = indexx, cmap = cmap, alpha=0.2)
+    points = ax.scatter(df_pca_test['pca1'], df_pca_test['pca2'], c = indexx, cmap = cmap, alpha=0.7)
     fig.colorbar(points)
     plt.show()
+
+def pcaDuoPlot(df_1_train, df_1_test, df_2_test):
+    train_vals = df_1_train.values
+
+    sc = StandardScaler()
+    train_vals = sc.fit_transform(train_vals)
+    
+    numberOfComponents = 2
+
+    pca = PCA(n_components=numberOfComponents)
+    pca.fit(train_vals)
+
+    X_1_train = df_1_train.values
+    X_1_train = sc.transform(X_1_train)
+    X_1_train = pca.transform(X_1_train)
+    df_train1 = pd.DataFrame(data = X_1_train, index=df_1_train.index, columns=['pca1', 'pca2'])
+    df_train1 = df_train1.resample("180min").mean()
+
+    X_1_test = df_1_test.values
+    X_1_test = sc.transform(X_1_test)
+    X_1_test = pca.transform(X_1_test)
+    df_test1 = pd.DataFrame(data = X_1_test, index=df_1_test.index, columns=['pca1', 'pca2'])
+    df_test1 = df_test1.resample("180min").mean()
+
+    X_2_test = df_2_test.values
+    X_2_test = sc.transform(X_2_test)
+    X_2_test = pca.transform(X_2_test)
+    df_test2 = pd.DataFrame(data = X_2_test, index=df_2_test.index, columns=['pca1', 'pca2'])
+    df_test2 = df_test2.resample("180min").mean()
+
+    fig = plt.figure(figsize = (8,8))
+    ax = fig.add_subplot(1, 1, 1)
+    ax.set_xlabel('PCA 1', fontsize=10)
+    ax.set_ylabel('PCA 2', fontsize=10)
+    ax.set_title('PCA plot timeseries part 1', fontsize=12)
+    cmap1 = sns.cubehelix_palette(reverse=False, as_cmap=True)
+    cmap2 = sns.cubehelix_palette(reverse=False, start=50.0, rot=0.1, as_cmap=True)
+    index1 = list(range(df_test1.shape[0]))
+    index2 = list(range(df_test2.shape[0]))
+    ax.scatter(df_train1['pca1'], df_train1['pca2'], c = 'red', alpha=0.3)
+    points1 = ax.scatter(df_test1['pca1'], df_test1['pca2'], c = index1, cmap = cmap1, alpha=1.0)
+    #points2 = ax.scatter(df_test2['pca1'], df_test2['pca2'], c = index2, cmap = cmap2, alpha=1.0)
+    
+    fig.colorbar(points1)
+
+    fig2 = plt.figure(figsize = (8,8))
+    ax2 = fig2.add_subplot(1, 1, 1)
+    ax2.set_xlabel('PCA 1', fontsize=10)
+    ax2.set_ylabel('PCA 2', fontsize=10)
+    ax2.set_title('PCA plot timeseries part 2', fontsize=12)
+    cmap1 = sns.cubehelix_palette(reverse=False, as_cmap=True)
+    cmap2 = sns.cubehelix_palette(reverse=False, start=50.0, rot=0.1, as_cmap=True)
+    index1 = list(range(df_test1.shape[0]))
+    index2 = list(range(df_test2.shape[0]))
+    ax2.scatter(df_train1['pca1'], df_train1['pca2'], c = 'red', alpha=0.3)
+    #points1 = ax2.scatter(df_test1['pca1'], df_test1['pca2'], c = index1, cmap = cmap1, alpha=1.0)
+    points2 = ax2.scatter(df_test2['pca1'], df_test2['pca2'], c = index2, cmap = cmap2, alpha=1.0)
+    
+    fig2.colorbar(points2)
+    plt.show()
+
 
 def pairplot(df):
     scaler = StandardScaler()

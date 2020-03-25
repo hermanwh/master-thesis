@@ -28,6 +28,12 @@ def getConfig(name):
 		return [None, None, None, None, None]
 
 def getConfigA():
+	# A/data_0min.csv
+	#  startdate: 2016-01-01
+	#    enddate: 2020-03-01
+	# resolution: 10min
+	# 		rows: 202891
+
 	columnDescriptions = {
 	    'TIT139.PV': 'Gas side inlet temperature',
 	    'TIC205.PV': 'Gas side outlet temperature',
@@ -60,6 +66,12 @@ def getConfigA():
 	return [columns, relevantColumns, columnDescriptions, columnUnits, timestamps]
 
 def getConfigB():
+	# B/data_0min.csv
+	#  startdate: 2016-01-01
+	#    enddate: 2020-03-01
+	# resolution: 10min
+	# 		rows: 199346
+
 	columnDescriptions = {
 	    'TT181.PV': 'Gas side inlet temperature',
 	    'TIC215.PV': 'Gas side outlet temperature',
@@ -102,6 +114,12 @@ def getConfigB():
 
 
 def getConfigC():
+	# C/data.csv
+	#  startdate: 2019-09-11
+	#    enddate: 2019-10-09
+	# resolution: 10sec
+	# 		rows: 238040
+
 	columnDescriptions = {
 	    "Date": "Date",
 	    "FT202Flow": "Process flow",
@@ -162,6 +180,12 @@ def getConfigC():
 	return [columns, relevantColumns, columnDescriptions, columnUnits, timestamps]
 
 def getConfigD():
+	# D/dataC.csv
+	#  startdate: 2020-01-01
+	#    enddate: 2020-07-01
+	# resolution: 360min
+	# 		rows: 727
+
 	columnDescriptions = {
 	    '20TT001': 'Gas side inlet temperature',
 	    '20PT001': 'Gas side inlet pressure',
@@ -193,6 +217,12 @@ def getConfigD():
 	return [columns, relevantColumns, columnDescriptions, columnUnits, timestamps]
 
 def getConfigE():
+	# E/data.csv
+	#  startdate: 2014-04-01
+	#    enddate: 2018-11-22
+	# resolution: 360min
+	# 		rows: 6788
+
 	columnDescriptions = {
 		'Date': 'Datetime',
 		'TT0102': 'Varm side temperatur inn',
@@ -241,6 +271,12 @@ def getConfigE():
 	return [columns, relevantColumns, columnDescriptions, columnUnits, timestamps]
 	
 def getConfigF():
+	# F/data2_30min.csv
+	#  startdate: 2017-10-21
+	#    enddate: 2020-02-01
+	# resolution: 30min
+	# 		rows: 32781
+
 	columnDescriptions = {
 		'Date':'Date',
 		'FYN0111': 'Gasseksport rate',
@@ -324,6 +360,12 @@ def getConfigF():
 	return [columns, relevantColumns, columnDescriptions, columnUnits, timestamps]
 
 def getConfigG():
+	# G/data_60min.csv
+	#  startdate: 2011-06-11
+	#    enddate: 2020-03-01
+	# resolution: 60min
+	# 		rows: 68807
+
 	columnDescriptions = {
 		'Date':'Date',
 		'PDI0064': 'Gas dP',
