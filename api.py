@@ -45,7 +45,7 @@ default_LSTM_args = {
     'epochs': 300,
     'batchSize': 128,
     'verbose': 1,
-    'callbacks': modelFuncs.getBasicCallbacks(),
+    'callbacks': modelFuncs.getBasicCallbacks(patience_es=30, patience_rlr=15),
     'enrolWindow': 32,
     'validationSize': 0.2,
     'testSize': 0.2,
@@ -247,10 +247,33 @@ class Api():
             retrain
         )
 
+    def predictWithModelsUsingDropout(self, numberOfPredictions=20):
+        """
+        FUNCTION:
+            Used to make predictions with RNN models using dropout
+            at predict time. Requires that the provided models
+            have training=True, otherwise mean and std will be zero
+        
+        PARAMS:
+            numberOfPredictions: int
+                How many predictions to average in the result
+        
+        RETURNS:
+            List[predictions, means, standarddevs]: [list(float), list(float), list(float)]
+                Lists containing the predicted values and their means and stds
+        """
+
+        return utilities.predictMultipleWithModels(
+            self.modelList,
+            self.X_test,
+            self.y_test,
+            numberOfPredictions,
+        )
+
     def predictWithModels(self, plot=True, interpol=False):
         """
         FUNCTION:
-            Used to create a Neural Network model using multilayer perceptron
+            Used to make predictions using previously defined models
         
         PARAMS:
             plot: boolean

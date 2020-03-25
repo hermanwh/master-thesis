@@ -114,6 +114,20 @@ def getFeatureTargetSplit(df_train, df_test, targetColumns):
 def predictWithModel(model, X_train, y_train, X_test, y_test, targetColumns):
     return predictWithModels([model], X_train, y_train, X_test, y_test, targetColumns)
 
+def predictMultipleWithModels(modelList, X_test, y_test, numberOfPredictions):
+    predictions = []
+    means = []
+    standarddevs = []
+
+    for model in modelList:
+        if model.modelType == "RNN":
+            pred, mean, standarddev = model.predictMultiple(X_test, y_test, numberOfPredictions)
+            predictions.append(pred)
+            means.append(mean)
+            standarddevs.append(standarddev)
+    
+    return [predictions, means, standarddevs]
+
 def predictWithModels(modelList, X_train, y_train, X_test, y_test, targetColumns):
     colors = plots.getPlotColors()
     maxEnrol = findMaxEnrolWindow(modelList)

@@ -583,11 +583,11 @@ def sklearnLasso(params, alpha=0.1):
     model = Lasso(alpha=alpha)
     return MachinLearningModel(model, X, Y, modelType="Linear", name=name)
 
-def sklearnLassoCV(params, alphas=(0.1, 1.0, 10.0)):
+def sklearnLassoCV(params, alphas=(0.1, 1.0, 10.0), folds=10):
     X = params['X_train']
     Y = params['y_train']
     name = params['name']
-    model = LassoCV(alphas=alphas)
+    model = LassoCV(alphas=alphas, cv=folds)
     return MachinLearningModel(model, X, Y, modelType="Linear", name=name)
 
 def sklearnRidge(params, alpha=1.0):
@@ -597,11 +597,11 @@ def sklearnRidge(params, alpha=1.0):
     model = Ridge(alpha=alpha)
     return MachinLearningModel(model, X, Y, modelType="Linear", name=name)
 
-def sklearnRidgeCV(params, alphas=(0.1, 1.0, 10.0)):
+def sklearnRidgeCV(params, alphas=(0.1, 1.0, 10.0), folds=10):
     X = params['X_train']
     Y = params['y_train']
     name = params['name']
-    model = RidgeCV(alphas=alphas)
+    model = RidgeCV(alphas=alphas, cv=folds)
     return MachinLearningModel(model, X, Y, modelType="Linear", name=name)
 
 def sklearnElasticNet(params, alpha=1.0, l1_ratio=0.5):
@@ -611,11 +611,11 @@ def sklearnElasticNet(params, alpha=1.0, l1_ratio=0.5):
     model = ElasticNet(alpha=alpha, l1_ratio=l1_ratio)
     return MachinLearningModel(model, X, Y, modelType="Linear", name=name)
 
-def sklearnElasticNetCV(params, alphas=None, l1_ratio=0.5):
+def sklearnElasticNetCV(params, alphas=None, l1_ratio=0.5, folds=10):
     X = params['X_train']
     Y = params['y_train']
     name = params['name']
-    model = ElasticNetCV(alphas=alphas, l1_ratio=l1_ratio)
+    model = ElasticNetCV(alphas=alphas, l1_ratio=l1_ratio, cv=folds)
     return MachinLearningModel(model, X, Y, modelType="Linear", name=name)
 
 def autoencoder_Dropout(params, dropout=0.2, encodingDim=3):
