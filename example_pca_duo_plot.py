@@ -1,12 +1,15 @@
-# %load example_pca_duo_plot.py
 import statApi
 from api import Api
-
 mlApi = Api()
 
+# 1. Define dataset specifics 
+
+# File path to dataset .csv
 filename = "../master-thesis-db/datasets/F/data2_30min.csv"
+# A desired name for the dataset, used as plot titles
 datasetName = "F/data2_30min.csv"
 
+# List of columns on form ['name', 'desc', 'unit']
 columns = [
 	['FYN0111', 'Gasseksport rate', 'MSm^3/d'],
 	['FT0111', 'Gasseksport molvekt','g/mole'],
@@ -30,6 +33,7 @@ columns = [
 	['TIC0105_CA_Y', 'Kald side C ventilåpning', '%'],
 ]
 
+# List of column names to ignore completely
 irrelevantColumns = [
 		'FT0111',
 		'PDT0108_MA_Y',
@@ -47,23 +51,28 @@ irrelevantColumns = [
 		'TT0651_MA_Y',
 ]
 
+# List of column names used as targets
 targetColumns = [
     'TT0653_MA_Y'
 ]
 
+# List of training periods on form ['start', 'end']
 traintime = [
         ["2018-01-01 00:00:00", "2018-08-01 00:00:00"],
     ]
 
+# Entire testing period
 testtime = [
     ["2018-01-01 00:00:00", "2019-05-01 00:00:00"]
 ]
 
+# Part 1 of the testing period
 testtime1 = [
     "2018-09-25 00:00:00",
     "2018-12-10 00:00:00"
 ]
 
+# Part 2 of the testing period
 testtime2 = [
     "2019-02-15 00:00:00",
     "2019-05-01 00:00:00",
@@ -72,13 +81,18 @@ testtime2 = [
 print("Finding PCA plot for dataset 1, "+datasetName)
 print(" ")
 
+# 2. Initiate and divide data
 df = mlApi.initDataframe(filename, columns, irrelevantColumns)
 df_train, df_test = mlApi.getTestTrainSplit(traintime, testtime)
 df_test_1, df_test_2 = mlApi.getTestTrainSplit([testtime1], testtime2)
 
+# 3. Plot scatter plot of training data with color scaling
+statApi.pcaPlot(df_train)
+
+# 4. Plot scatter plot of testing data
 statApi.pcaDuoPlot(df_train, df_test_1, df_test_2, datasetName)
 
-
+# Reset Api with default values
 mlApi = Api()
 
 filename = "../master-thesis-db/datasets/D/dataC.csv"
@@ -135,5 +149,7 @@ print(" ")
 df = mlApi.initDataframe(filename, columns, irrelevantColumns)
 df_train, df_test = mlApi.getTestTrainSplit(traintime, testtime)
 df_test_1, df_test_2 = mlApi.getTestTrainSplit([testtime1], testtime2)
+
+statApi.pcaPlot(df_train)
 
 statApi.pcaDuoPlot(df_train, df_test_1, df_test_2, datasetName)

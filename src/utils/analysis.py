@@ -76,7 +76,7 @@ def pcaPlot(df, timestamps=None):
     else:
         df_pca_train, df_pca_test = None, df_pca
 
-    fig = plt.figure(figsize = (8,8))
+    fig = plt.figure(figsize = (8,4))
     ax = fig.add_subplot(1, 1, 1)
     ax.set_xlabel('PCA 1', fontsize=10)
     ax.set_ylabel('PCA 2', fontsize=10)
