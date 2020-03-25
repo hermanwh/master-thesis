@@ -27,8 +27,8 @@ def pca(df, numberOfComponents, relevantColumns=None, columnDescriptions=None):
 def pcaPlot(df, timestamps=None):
     return analysis.pcaPlot(df, timestamps)
 
-def pcaDuoPlot(df_train, df_test_1, df_test_2):
-    return analysis.pcaDuoPlot(df_train, df_test_1, df_test_2)
+def pcaDuoPlot(df_train, df_test_1, df_test_2, plotTitle=None):
+    return analysis.pcaDuoPlot(df_train, df_test_1, df_test_2, plotTitle)
 
 def pairplot(df):
     return analysis.pairplot(df)

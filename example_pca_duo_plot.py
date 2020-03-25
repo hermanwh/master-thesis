@@ -1,9 +1,11 @@
+# %load example_pca_duo_plot.py
 import statApi
 from api import Api
 
 mlApi = Api()
 
 filename = "../master-thesis-db/datasets/F/data2_30min.csv"
+datasetName = "F/data2_30min.csv"
 
 columns = [
 	['FYN0111', 'Gasseksport rate', 'MSm^3/d'],
@@ -67,16 +69,20 @@ testtime2 = [
     "2019-05-01 00:00:00",
 ]
 
+print("Finding PCA plot for dataset 1, "+datasetName)
+print(" ")
+
 df = mlApi.initDataframe(filename, columns, irrelevantColumns)
 df_train, df_test = mlApi.getTestTrainSplit(traintime, testtime)
 df_test_1, df_test_2 = mlApi.getTestTrainSplit([testtime1], testtime2)
 
-statApi.pcaDuoPlot(df_train, df_test_1, df_test_2)
+statApi.pcaDuoPlot(df_train, df_test_1, df_test_2, datasetName)
 
 
 mlApi = Api()
 
 filename = "../master-thesis-db/datasets/D/dataC.csv"
+datasetName = "D/dataC.csv"
 
 columns = [
     ['20TT001', 'Gas side inlet temperature', 'degrees'],
@@ -93,7 +99,11 @@ columns = [
 ]
 
 irrelevantColumns = [
-    '50FT001'
+    '50FT001',
+    '20PT001',
+    '50PT001',
+    '20PDT001',
+    '50PDT001',
 ]
 
 targetColumns = [
@@ -119,8 +129,11 @@ testtime2 = [
     "2020-08-01 00:00:00",
 ]
 
+print("Finding PCA plot for dataset 2, "+datasetName)
+print(" ")
+
 df = mlApi.initDataframe(filename, columns, irrelevantColumns)
 df_train, df_test = mlApi.getTestTrainSplit(traintime, testtime)
 df_test_1, df_test_2 = mlApi.getTestTrainSplit([testtime1], testtime2)
 
-statApi.pcaDuoPlot(df_train, df_test_1, df_test_2)
+statApi.pcaDuoPlot(df_train, df_test_1, df_test_2, datasetName)

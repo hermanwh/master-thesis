@@ -89,7 +89,7 @@ def pcaPlot(df, timestamps=None):
     fig.colorbar(points)
     plt.show()
 
-def pcaDuoPlot(df_1_train, df_1_test, df_2_test):
+def pcaDuoPlot(df_1_train, df_1_test, df_2_test, plotTitle=None):
     train_vals = df_1_train.values
 
     sc = StandardScaler()
@@ -118,11 +118,14 @@ def pcaDuoPlot(df_1_train, df_1_test, df_2_test):
     df_test2 = pd.DataFrame(data = X_2_test, index=df_2_test.index, columns=['pca1', 'pca2'])
     df_test2 = df_test2.resample("180min").mean()
 
-    fig = plt.figure(figsize = (8,8))
-    ax = fig.add_subplot(1, 1, 1)
+    fig,axs = plt.subplots(nrows=1, ncols=2, figsize=(10, 4), dpi=100)
+    fig.tight_layout(w_pad=3.0)
+
+    ax, ax2 = axs
+    
     ax.set_xlabel('PCA 1', fontsize=10)
     ax.set_ylabel('PCA 2', fontsize=10)
-    ax.set_title('PCA plot timeseries part 1', fontsize=12)
+    ax.set_title(((plotTitle + '\n') if plotTitle is not None else '') + 'PCA plot timeseries part 1', fontsize=12)
     cmap1 = sns.cubehelix_palette(reverse=False, as_cmap=True)
     cmap2 = sns.cubehelix_palette(reverse=False, start=50.0, rot=0.1, as_cmap=True)
     index1 = list(range(df_test1.shape[0]))
@@ -131,13 +134,11 @@ def pcaDuoPlot(df_1_train, df_1_test, df_2_test):
     points1 = ax.scatter(df_test1['pca1'], df_test1['pca2'], c = index1, cmap = cmap1, alpha=1.0)
     #points2 = ax.scatter(df_test2['pca1'], df_test2['pca2'], c = index2, cmap = cmap2, alpha=1.0)
     
-    fig.colorbar(points1)
+    fig.colorbar(points1, ax=ax)
 
-    fig2 = plt.figure(figsize = (8,8))
-    ax2 = fig2.add_subplot(1, 1, 1)
     ax2.set_xlabel('PCA 1', fontsize=10)
     ax2.set_ylabel('PCA 2', fontsize=10)
-    ax2.set_title('PCA plot timeseries part 2', fontsize=12)
+    ax2.set_title(((plotTitle + '\n') if plotTitle is not None else "") + 'PCA plot timeseries part 2', fontsize=12)
     cmap1 = sns.cubehelix_palette(reverse=False, as_cmap=True)
     cmap2 = sns.cubehelix_palette(reverse=False, start=50.0, rot=0.1, as_cmap=True)
     index1 = list(range(df_test1.shape[0]))
@@ -146,7 +147,7 @@ def pcaDuoPlot(df_1_train, df_1_test, df_2_test):
     #points1 = ax2.scatter(df_test1['pca1'], df_test1['pca2'], c = index1, cmap = cmap1, alpha=1.0)
     points2 = ax2.scatter(df_test2['pca1'], df_test2['pca2'], c = index2, cmap = cmap2, alpha=1.0)
     
-    fig2.colorbar(points2)
+    fig.colorbar(points2, ax=ax2)
     plt.show()
 
 
