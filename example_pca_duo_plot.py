@@ -51,11 +51,6 @@ irrelevantColumns = [
 		'TT0651_MA_Y',
 ]
 
-# List of column names used as targets
-targetColumns = [
-    'TT0653_MA_Y'
-]
-
 # List of training periods on form ['start', 'end']
 traintime = [
         ["2018-01-01 00:00:00", "2018-08-01 00:00:00"],
@@ -118,10 +113,6 @@ irrelevantColumns = [
     '50PT001',
     '20PDT001',
     '50PDT001',
-]
-
-targetColumns = [
-    '50TT002',
 ]
 
 traintime = [
