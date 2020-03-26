@@ -374,7 +374,8 @@ def getConfigG():
 		'FI0010': 'Gas rate',
 		'TT0025': 'SW Temperature in',
 		'TT0026': 'SW Temperature out',
-		'FT0027': 'SW rate',
+		'PI0001': 'SW Pressure in',
+		'FI0027': 'SW rate',
 		'TIC0022U': 'SW valve',
 		'PDT0024': 'SW dP',
 	}
@@ -393,7 +394,8 @@ def getConfigG():
 		'FI0010': 'm3/h',
 		'TT0025': 'degrees',
 		'TT0026': 'degrees',
-		'FT0027': 'm3/h',
+		'PI0001': 'bar',
+		'FI0027': 'm3/h',
 		'TIC0022U': '%',
 		'PDT0024': 'bar',
 	}

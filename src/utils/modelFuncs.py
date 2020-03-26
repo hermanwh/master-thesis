@@ -114,8 +114,9 @@ def trainModels(modelList, filename, targetColumns, retrain=False, save=True):
         saveModels(modelList, filename, targetColumns)
 
     trainingSummary = getTrainingSummary(modelList)
-    prints.printTrainingSummary(trainingSummary)
-    plots.plotTrainingSummary(trainingSummary)
+    if trainingSummary:
+        prints.printTrainingSummary(trainingSummary)
+        plots.plotTrainingSummary(trainingSummary)
               
 def loadModel(modelname, filename, targetColumns, ensembleName=None):
     subdir = filename.split('/')[-2]
@@ -153,6 +154,7 @@ def saveModels(modelList, filename, targetColumns):
 
 def getTrainingSummary(modelList):
     loss_dict = {}
+    modelNames = list(map(lambda mod: mod.name, modelList))
     for model in modelList:
         if model.modelType != "Ensemble":
             if model.history is not None:
@@ -162,33 +164,37 @@ def getTrainingSummary(modelList):
                 loss_loc = np.where(loss == loss_best)[0]
                 val_loss_best = np.amin(val_loss)
                 val_loc = np.where(val_loss == val_loss_best)[0]
+                loss_actual = loss[val_loc[0]]
                 loss_dict[model.name] = {
                     'loss': loss,
                     'val_loss': val_loss,
                     'loss_final': loss_best,
                     'loss_loc': loss_loc,
+                    'loss_actual': loss_actual,
                     'val_loss_final': val_loss_best,
                     'val_loss_loc': val_loc,
                     'length': len(loss),
                 }
         else:
             for submodel in model.models:
-                if submodel.history is not None:
+                if submodel.history is not None and submodel.name not in modelNames:
                     loss = submodel.history['loss']
                     val_loss = submodel.history['val_loss']
                     loss_best = np.amin(loss)
                     loss_loc = np.where(loss == loss_best)[0]
                     val_loss_best = np.amin(val_loss)
                     val_loc = np.where(val_loss == val_loss_best)[0]
+                    loss_actual = loss[val_loc[0]]
                     loss_dict[model.name + ", " + submodel.name] = {
-                    'loss': loss,
-                    'val_loss': val_loss,
-                    'loss_final': loss_best,
-                    'loss_loc': loss_loc,
-                    'val_loss_final': val_loss_best,
-                    'val_loss_loc': val_loc,
-                    'length': len(loss),
-                }
+                        'loss': loss,
+                        'val_loss': val_loss,
+                        'loss_final': loss_best,
+                        'loss_loc': loss_loc,
+                        'loss_actual': loss_actual,
+                        'val_loss_final': val_loss_best,
+                        'val_loss_loc': val_loc,
+                        'length': len(loss),
+                    }
     return loss_dict
 
 def getRNNSplit(x_data, y_data, lookback, train_val_ratio=5):

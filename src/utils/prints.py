@@ -62,7 +62,7 @@ def printHorizontalLine():
     print("-------------------------------------------")
 
 def printTrainingSummary(trainingSummary):
-    t = PrettyTable(['Model', 'Loss', 'Val loss', 'Epochs'])
+    t = PrettyTable(['Model', 'Min. loss', 'Chosen loss','Min. val loss', 'Epochs'])
     for name, summary in trainingSummary.items():
-        t.add_row([name, round(summary['loss_final'], 6), round(summary['val_loss_final'], 6), summary['length']])
+        t.add_row([name, round(summary['loss_final'], 6), round(summary['loss_actual'], 6), round(summary['val_loss_final'], 6), summary['length']])
     print(t)

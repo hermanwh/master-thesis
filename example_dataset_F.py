@@ -67,7 +67,7 @@ linear = mlApi.Linear('linear')
 linear_r = mlApi.Linear_Regularized('linear r')
 
 mlpd_1x_128 = mlApi.MLP('mlpd 1x 128', layers=[128], dropout=0.2)
-lstmd_1x_128 = mlApi.LSTM('lstmr 1x 128', layers=[128], dropout=0.2, recurrentDropout=0.2)
+lstmd_1x_128 = mlApi.LSTM('lstmr 1x 128', layers=[128], dropout=0.2, recurrentDropout=0.2, training=False, epochs=500, batchSize=128*2, enrolWindow=12)
 
 modelList = [
 	mlpd_1x_128,

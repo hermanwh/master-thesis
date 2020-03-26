@@ -5,10 +5,27 @@ import matplotlib.pyplot as pltt
 np.random.seed(100)
 
 def getPlotColors():
-    colors = ['blue', 'green', 'black', 'yellow']
+    #colors = ['blue', 'green', 'black', 'yellow']
     #colors = ['#92a8d1','#034f84','#f7cac9','#f7786b','#deeaee','#b1cbbb','#eea29a','#c94c4c']
-    #colors = ['#686256','#c1502e','#587e76','#a96e5b','#454140','#bd5734','#7a3b2e', '#92a8d1','#034f84','#f7cac9','#f7786b','#deeaee','#b1cbbb','#eea29a','#c94c4c']
     """
+    colors = [
+        '#686256',
+        '#c1502e',
+        '#454140',
+        '#587e76',
+        '#bd5734',
+        '#7a3b2e',
+        '#92a8d1',
+        '#034f84',
+        '#f7cac9',
+        '#a96e5b',
+        '#f7786b',
+        '#deeaee',
+        '#b1cbbb',
+        '#eea29a',
+        '#c94c4c',
+    ]
+
     colors = [
         '#0C0910',
         '#453750',
@@ -26,10 +43,26 @@ def getPlotColors():
         '#3C1518'
     ]
     """
+    colors = [
+        '#000080',
+        '#2ca25f',
+        '#8856a7',
+        '#43a2ca',
+        '#e34a33',
+        '#636363',
+        '#663300',
+        '#003300',
+        '#ff3399',
+        '#99d8c9',
+        '#9ebcda',
+        '#fdbb84',
+        '#c994c7',
+    ]
+    
     return colors
 
-def plotDataColumnSingle(df, plt, column, data, columnDescriptions=None, color='darkgreen', interpoldeg=3):
-    fig, ax = plt.subplots(1, 1, figsize=(8,6), dpi=100)
+def plotDataColumnSingle(dfindex, plt, column, data, columnDescriptions=None, color='darkgreen', interpoldeg=3):
+    fig, ax = plt.subplots(1, 1, figsize=(10,3), dpi=100)
     ax.set_xlabel('Date')
     if columnDescriptions:
         ax.set_ylabel(columnDescriptions[column])
@@ -37,26 +70,25 @@ def plotDataColumnSingle(df, plt, column, data, columnDescriptions=None, color='
     else:
         ax.set_ylabel(column)
         ax.set_title("Deviation for " + column)
-    ax.plot(df.index, data, color=color, label="Data")
-    ax.axvline(x=pd.to_datetime("2018-05-01 00:00:00", dayfirst=True), color='blue')
+    ax.plot(dfindex, data, color=color, label="Data")
     ax.tick_params(axis='y', labelcolor=color)
     ax.grid(1, axis='y')
 
     z = np.polyfit(range(len(data)), data, interpoldeg)
     p = np.poly1d(z)
     func = p(range(len(data)))
-    ax.plot(df.index, func, color='black', label="Pol.fit")
+    ax.plot(dfindex, func, color='black', label="Pol.fit")
 
     fig.subplots_adjust(right=0.7)
-
-    ax.legend(bbox_to_anchor=(1.05, 1), loc='upper left', borderaxespad=0.)
+ 
+    ax.legend(bbox_to_anchor=(1.05, 1), loc='upper left', borderaxespad=0., prop={'size': 10})
     fig.autofmt_xdate()
 
-def plotColumns(dfindex, plt, args, desc="", columnDescriptions=None, trainEndStr=None, columnUnits=None, interpol=False, interpoldeg=3):
+def plotColumns(dfindex, plt, args, desc="", columnDescriptions=None, trainEndStr=None, columnUnits=None, alpha=0.8, interpol=False, interpoldeg=3):
     fig,ax = plt.subplots(1, 1, figsize=(10,3), dpi=100)
     ax.set_xlabel('Date')
     for i, arg in enumerate(args):
-        label, column, data, color, alpha = arg
+        label, column, data, color = arg
         
         ax.set_title((desc + "\n" + columnDescriptions[column]) if columnDescriptions else (desc + "\n" + column))
         ax.set_ylabel(columnUnits[column] if columnUnits is not None else "")
@@ -105,8 +137,8 @@ def duoPlot(y1, y2, x, plt, columnDescriptions=None, relevantColumns=None, colum
 
 def plotTraining(history, plt):
     fig, ax = plt.subplots(1, 1, figsize=(8, 6), dpi=100)
-    plt.plot(history.history['mean_squared_error'], color='blue', label="Training loss")
-    plt.plot(history.history['val_mean_squared_error'], color="orange", label="Validation loss")
+    plt.plot(history.history['mean_squared_error'], color='blue', label="Training loss", alpha=0.8)
+    plt.plot(history.history['val_mean_squared_error'], color="orange", label="Validation loss", alpha=0.8)
     plt.xlabel('Epoch')
     plt.ylabel('Loss')
     plt.legend(loc="upper right")
@@ -122,8 +154,6 @@ def plotData(df, plt, columnDescriptions=None, relevantColumns=None, columnUnits
     columnDescKeys = list(columnDescriptions.keys())
     columnUnitKeys = list(columnUnits.keys()) if columnUnits is not None else []
     dfcolumns = df.columns
-
-    #duoPlot(df['TT0102_MA_Y'], df['TT0106_MA_Y'], df.index, plt, columnDescriptions=columnDescriptions, relevantColumns=relevantColumns, columnUnits=columnUnits)
 
     for column in columns:
         if column != "Date":
@@ -142,7 +172,7 @@ def plotData(df, plt, columnDescriptions=None, relevantColumns=None, columnUnits
                 plt.gca().spines["bottom"].set_alpha(.3)
                 plt.gca().spines["right"].set_alpha(.3)
                 plt.gca().spines["left"].set_alpha(.3)
-                plt.plot(df.index, df[column], label=column, lw=1.5, color=color)
+                plt.plot(df.index, df[column], label=column, lw=1.5, color=color, alpha=0.8)
                 plt.text(df.shape[0]+1, df[column].values[-1], column, fontsize=14, color=color)
                 plt.tick_params(axis="both", which="both", bottom=False, top=False, labelbottom=True, left=False, right=False, labelleft=True)
                 plt.grid(1, alpha=0.5)
@@ -165,7 +195,7 @@ def plotModelScores(plt, names, r2_train, r2_test):
 
     plt.show()
 
-def plotModelPredictions(plt, deviationsList, columnsList, indexList, labelNames, columnUnits, traintime, interpol=False, interpoldeg=3):
+def plotModelPredictions(plt, deviationsList, columnsList, indexList, labelNames, columnUnits, traintime, interpol=False, interpoldeg=10):
     for i in range(len(deviationsList)):
         plotColumns(
             indexList,
@@ -204,15 +234,16 @@ def plotTrainingSummary(trainingSummary):
     ax1.set_ylabel('Loss')
     ax1.set_xlabel('Epoch')
     ax2.set_title('Validation loss')
-    ax2.set_ylabel('Loss')
+    ax2.set_ylabel('Val. loss')
     ax2.set_xlabel('Epoch')
 
     i = 0
     for name, summary in trainingSummary.items():
-        ax1.plot(summary['loss'], color=colors[i], label=name)
-        ax1.plot(summary['loss_loc'], summary['loss_final'], color=colors[i], marker='x', markersize=10)
-        ax2.plot(summary['val_loss'], color=colors[i], label=name)
-        ax2.plot(summary['val_loss_loc'], summary['val_loss_final'], color=colors[i], marker='x', markersize=10)
+        ax1.plot(summary['loss'], color=colors[i], label=name, alpha=0.8)
+        ax2.plot(summary['val_loss'], color=colors[i], label=name, alpha=0.8)
+        #ax1.plot(summary['loss_loc'], summary['loss_final'], color=colors[i], marker='o', markersize=9, label="Min. loss", alpha=0.7)
+        ax1.plot(summary['val_loss_loc'], summary['loss_actual'], color=colors[i], marker='x', markersize=10, label="Chosen loss")
+        ax2.plot(summary['val_loss_loc'], summary['val_loss_final'], color=colors[i], marker='x', markersize=10, label="Min. val loss")
         i = i + 1
 
     ax1.legend(loc='upper right', prop={'size': 10})

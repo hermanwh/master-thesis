@@ -147,7 +147,6 @@ def predictWithModels(modelList, X_train, y_train, X_test, y_test, targetColumns
                 targetColumns[i],
                 y_test[:, i][maxEnrol:],
                 'red',
-                1.0,
             ]
         )
 
@@ -173,7 +172,6 @@ def predictWithModels(modelList, X_train, y_train, X_test, y_test, targetColumns
                     targetColumns[j],
                     pred_test[:, j][enrolDiff:],
                     colors[i],
-                    0.5,
                 ]
             )
             deviationsList[j].append(
@@ -182,7 +180,6 @@ def predictWithModels(modelList, X_train, y_train, X_test, y_test, targetColumns
                     targetColumns[j],
                     y_test[:, j][maxEnrol:] - pred_test[:, j][enrolDiff:],
                     colors[i],
-                    0.5,
                 ]
             )
 
@@ -206,8 +203,8 @@ def predictWithAutoencoderModels(modelList, df_test, X_test):
 
         for i in range(X_test.shape[1]):
             fig, ax = plt.subplots(1, 1, figsize=(8, 6), dpi=100)
-            ax.plot(indexx, pred_test[:, i], color='red')
-            ax.plot(indexx, X_test[:, i], color='blue')
+            ax.plot(indexx, pred_test[:, i], color='red', alpha=0.8)
+            ax.plot(indexx, X_test[:, i], color='blue', alpha=0.8)
             
             ax.set_xlabel('Date', fontsize=12)
             ax.tick_params(axis='x', rotation=45, labelsize=8)
@@ -219,7 +216,7 @@ def predictWithAutoencoderModels(modelList, df_test, X_test):
 
         for i in range(X_test.shape[1]):
             fig, ax = plt.subplots(1, 1, figsize=(8, 6), dpi=100)
-            ax.plot(indexx, X_test[:, i] - pred_test[:, i], color='red')
+            ax.plot(indexx, X_test[:, i] - pred_test[:, i], color='red', alpha=0.8)
             
             ax.set_xlabel('Date', fontsize=12)
             ax.tick_params(axis='x', rotation=45, labelsize=8)
@@ -230,7 +227,7 @@ def predictWithAutoencoderModels(modelList, df_test, X_test):
         plt.show()
 
         fig, ax = plt.subplots(1, 1, figsize=(8, 6), dpi=100)
-        ax.plot(indexx, np.average((X_test - pred_test)**2,axis=1), color='red')
+        ax.plot(indexx, np.average((X_test - pred_test)**2,axis=1), color='red', alpha=0.8)
         ax.set_xlabel('Date', fontsize=12)
         ax.tick_params(axis='x', rotation=45, labelsize=8)
         ax.set_ylabel('Error', fontsize=12)

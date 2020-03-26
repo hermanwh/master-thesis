@@ -5,10 +5,6 @@ import matplotlib.pyplot as plt
 
 colors = getPlotColors()
 
-targetColumns = [
-	'50TT002',
-]
-
 colList = []
 devList = []
 colTarget = None
@@ -16,20 +12,54 @@ names = []
 trainmetrics = []
 testmetrics = []
 
+targetColumns = [
+	'50TT002',
+]
+
 irrelevantColumnsList = [
-	[
-		'asd'
-	],
-	[
-		'20PT001',
-		'50PT001',
-	],
-	[
-		'20PT001',
-		'50PT001',
-		'20PDT001',
-		'50PDT001',
-	],
+	#[
+	#	''
+	#],
+	#[
+	#	'20PT001',
+	#	'50PT001',
+	#],
+	#[
+	#	'20PT001',
+	#	'50PT001',
+	#	'20PDT001',
+	#	'50PDT001',
+	#],
+	#[
+	#	'20PT001',
+	#	'50PT001',
+	#	'50FT001',
+	#],
+	#[
+	#	'20PT001',
+	#	'50PT001',
+	#	'50TV001',
+	#],
+	#[
+	#	'20PT001',
+	#	'50PT001',
+	#	'50FT001',
+	#	'50TV001',
+	#],
+	#[
+	#	'20PT001',
+	#	'50PT001',
+	#	'20PDT001',
+	#	'50PDT001',
+	#	'50FT001',
+	#],
+	#[
+	#	'20PT001',
+	#	'50PT001',
+	#	'20PDT001',
+	#	'50PDT001',
+	#	'50TV001',
+	#],
 	[
 		'20PT001',
 		'50PT001',
@@ -75,7 +105,7 @@ for i, irrelevantColumns in enumerate(irrelevantColumnsList):
 	X_train, y_train, X_test, y_test = mlApi.getFeatureTargetSplit(targetColumns)
 
 	linear_model = mlApi.Linear_Regularized("linear model " + str(i))
-	mlp_model = mlApi.MLP("mlp " + str(i), layers=[128], dropout=0.2, epochs=500, verbose=0)
+	mlp_model = mlApi.MLP("mlp " + str(i), layers=[64, 64], dropout=0.2, epochs=500, verbose=0)
 
 	modelList = [
 		mlp_model,
