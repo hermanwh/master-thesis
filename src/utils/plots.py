@@ -158,7 +158,7 @@ def plotData(df, plt, columnDescriptions=None, relevantColumns=None, columnUnits
     for column in columns:
         if column != "Date":
             if  column in df.columns:
-                fig, ax = plt.subplots(1, 1, figsize=(8, 6), dpi=100)
+                fig, ax = plt.subplots(1, 1, figsize=(10,3), dpi=100)
                 ax.set_xlabel('Date')
                 if columnDescriptions is not None and column in columnDescKeys:
                     ax.set_title(columnDescriptions[column] + " " + column)
@@ -185,13 +185,14 @@ def plotDataByTimeframe(df, plt, start, end, columnDescriptions=None, relevantCo
     plotData(df, plt, columnDescriptions=columnDescriptions, relevantColumns=relevantColumns)
 
 def plotModelScores(plt, names, r2_train, r2_test):
-    plt.ylabel('R2 score')
-    plt.xlabel('Model')
-    plt.title('Model metrics')
+    fig, ax = plt.subplots(1, 1, figsize=(10,3), dpi=100)
+    ax.set_ylabel('R2 score')
+    ax.set_xlabel('Model')
+    ax.set_title('Model metrics')
 
-    plt.plot(names, r2_train, marker='x', markersize=10, label="Training metrics")
-    plt.plot(names, r2_test, marker='x', markersize=10, label="Test metrics")
-    plt.legend()
+    ax.plot(names, r2_train, marker='x', markersize=10, label="Training metrics")
+    ax.plot(names, r2_test, marker='x', markersize=10, label="Test metrics")
+    ax.legend()
 
     plt.show()
 

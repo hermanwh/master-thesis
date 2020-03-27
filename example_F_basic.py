@@ -40,14 +40,13 @@ irrelevantColumns = [
 		'TIC0103_CA_Y',
 		'PIC0104_CA_YX',
 		'TIC0101_CA_Y',
-		'TIC0105_CA_Y',
 		'TT0102_MA_Y',
 		'TIC0101_CA_YX',
 		'TT0651_MA_Y',
 ]
 
 targetColumns = [
-    'TT0653_MA_Y'
+	'TT0653_MA_Y',
 ]
 
 traintime = [

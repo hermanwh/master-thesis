@@ -20,12 +20,13 @@ columns = [
 ]
 
 irrelevantColumns = [
-    '50PDT001',
-    '20PDT001',
+    '50TV001',
+    '50FT001',
+    '20FT001',
 ]
 
 targetColumns = [
-    '50TT002',
+    '50PDT001',
 ]
 
 traintime = [
@@ -49,13 +50,13 @@ linear_r = mlApi.Linear_Regularized('linear r')
 
 modelList = [
 	mlpd_1x_128,
-	lstmd_1x_128,
+	#lstmd_1x_128,
 	#linear,
 	linear_r,
 ]
 
 mlApi.initModels(modelList)
-retrain=False
+retrain=True
 mlApi.trainModels(retrain)
 modelNames, metrics_train, metrics_test, columnsList, deviationsList = mlApi.predictWithModels(
 	plot=True,

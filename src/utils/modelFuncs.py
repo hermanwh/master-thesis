@@ -6,6 +6,18 @@ module_path = os.path.abspath(os.path.join(ROOT_PATH+"/src/utils/"))
 if module_path not in sys.path:
     sys.path.append(module_path)
 
+import warnings
+# this disables a warning in sklearn for linear models:
+# FutureWarning: The default value of multioutput 
+# (not exposed in score method) will change from 
+# 'variance_weighted' to 'uniform_average' in 0.23 
+# to keep consistent with 'metrics.r2_score'. 
+# To specify the default value manually and avoid the warning, 
+# please either call 'metrics.r2_score' directly or make a 
+# custom scorer with 'metrics.make_scorer' 
+# (the built-in scorer 'r2' uses multioutput='uniform_average').
+warnings.simplefilter(action='ignore', category=FutureWarning)
+
 from keras.models import load_model
 from keras.callbacks.callbacks import EarlyStopping, ReduceLROnPlateau
 from keras.utils import plot_model

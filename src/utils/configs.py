@@ -368,16 +368,16 @@ def getConfigG():
 
 	columnDescriptions = {
 		'Date':'Date',
-		'PDI0064': 'Gas dP',
-		'TI0066': 'Gas Temperature out',
-		'TZI0012': 'Gas Temperature in',
-		'FI0010': 'Gas rate',
-		'TT0025': 'SW Temperature in',
-		'TT0026': 'SW Temperature out',
-		'PI0001': 'SW Pressure in',
-		'FI0027': 'SW rate',
-		'TIC0022U': 'SW valve',
-		'PDT0024': 'SW dP',
+		'PDI0064': 'Process side dP',
+		'TI0066': 'Process side Temperature out',
+		'TZI0012': 'Process side Temperature in',
+		'FI0010': 'Process side flow rate',
+		'TT0025': 'Cooling side Temperature in',
+		'TT0026': 'Cooling side Tmperature out',
+		'PI0001': 'Cooling side Pressure in',
+		'FI0027': 'Cooling side flow rate',
+		'TIC0022U': 'Cooling side valve opening',
+		'PDT0024': 'Cooling side dP',
 	}
 
 	irrelevantColumns = [
@@ -394,16 +394,16 @@ def getConfigG():
 		'FI0010': 'm3/h',
 		'TT0025': 'degrees',
 		'TT0026': 'degrees',
-		'PI0001': 'bar',
+		'PI0001': 'barG',
 		'FI0027': 'm3/h',
 		'TIC0022U': '%',
 		'PDT0024': 'bar',
 	}
 
 	traintime = [
-		["2011-06-01 00:00:00", "2013-06-01 00:00:00"]
+		["2019-04-10 00:00:00", "2019-06-10 00:00:00"]
 	]
-	testtime = ["2011-06-01 00:00:00", "2020-03-01 00:00:00"]
+	testtime = ["2017-01-01 00:00:00", "2020-03-01 00:00:00"]
 	validtime = ["2013-06-01 00:00:00", "2014-06-01 00:00:00"]
 
 	timestamps = [traintime, testtime, validtime]
