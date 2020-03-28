@@ -39,6 +39,12 @@ def scatterplot(df):
 def correlationPlot(df, title="Correlation plot"):
     return analysis.correlationPlot(df, title)
 
+def correlationDuoPlot(df1, df2, title1="Correlation plot 1", title2="Correlation plot 2"):
+    return analysis.correlationDuoPlot(df1, df2, title1, title2)
+
+def correlationDifferencePlot(df1, df2, title="Correlation difference plot"):
+    return analysis.correlationDifferencePlot(df1, df2, title)
+
 def valueDistribution(df, traintime, testtime):
     return analysis.valueDistribution(df, traintime, testtime)
 

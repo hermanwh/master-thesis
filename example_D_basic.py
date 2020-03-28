@@ -21,12 +21,12 @@ columns = [
 
 irrelevantColumns = [
     '50TV001',
-    '50FT001',
-    '20FT001',
+    '50PDT001',
+    '20PDT001',
 ]
 
 targetColumns = [
-    '50PDT001',
+    '50TT002',
 ]
 
 traintime = [

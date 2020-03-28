@@ -176,14 +176,78 @@ def correlationPlot(df, title="Correlation plot"):
     mask[np.triu_indices_from(mask)] = True
 
     # Set up the matplotlib figure
-    f, ax = plt.subplots(figsize=(8,6), dpi=100)
+    f, ax = plt.subplots(figsize=(5,5), dpi=100)
 
     # Generate a custom diverging colormap
     cmap = sns.diverging_palette(220, 10, as_cmap=True)
 
     # Draw the heatmap with the mask and correct aspect ratio
     sns.heatmap(corr, mask=mask, cmap=cmap,
-                square=True, linewidths=1, cbar_kws={"shrink": .6})
+                square=True, linewidths=1, cbar_kws={"shrink": .6}, vmin=-1, vmax=1)
+
+    ax.set_title(title)
+    
+    plt.show()
+
+def correlationDuoPlot(df1, df2, title1="Correlation plot", title2="Correlation plot"):
+    scaler1 = StandardScaler()
+    scaled1 = scaler1.fit_transform(df1.values)
+    scaled_df1 = pd.DataFrame(scaled1, index=df1.index, columns=df1.columns)
+    
+    scaler2 = StandardScaler()
+    scaled2 = scaler2.fit_transform(df2.values)
+    scaled_df2 = pd.DataFrame(scaled2, index=df2.index, columns=df2.columns)
+
+    corr1 = scaled_df1.corr()
+    corr2 = scaled_df2.corr()
+
+    mask = np.zeros_like(corr1, dtype=np.bool)
+    mask[np.triu_indices_from(mask)] = True
+
+    fig,axs = plt.subplots(nrows=1, ncols=2, figsize=(10, 5), dpi=100)
+    fig.tight_layout(w_pad=8.0)
+
+    ax1, ax2 = axs
+
+    # Generate a custom diverging colormap
+    cmap = sns.diverging_palette(220, 10, as_cmap=True)
+
+    # Draw the heatmap with the mask and correct aspect ratio
+    sns.heatmap(corr1, ax=ax1, mask=mask, cmap=cmap,
+                square=True, linewidths=1, cbar_kws={"shrink": .6}, vmin=-1, vmax=1)
+    sns.heatmap(corr1, ax=ax2, mask=mask, cmap=cmap,
+                square=True, linewidths=1, cbar_kws={"shrink": .6}, vmin=-1, vmax=1)
+
+    ax1.set_title(title1)
+    ax2.set_title(title2)
+    
+    plt.show()
+
+def correlationDifferencePlot(df1, df2, title="Correlation difference plot"):
+    scaler1 = StandardScaler()
+    scaled1 = scaler1.fit_transform(df1.values)
+    scaled_df1 = pd.DataFrame(scaled1, index=df1.index, columns=df1.columns)
+    #scaled2 = scaler1.transform(df2.values)
+    scaler2 = StandardScaler()
+    scaled2 = scaler2.fit_transform(df2.values)
+    scaled_df2 = pd.DataFrame(scaled2, index=df2.index, columns=df2.columns)
+
+    corr1 = scaled_df1.corr()
+    corr2 = scaled_df2.corr()
+    corr_diff = corr1.sub(corr2)
+
+    mask = np.zeros_like(corr_diff, dtype=np.bool)
+    mask[np.triu_indices_from(mask)] = True
+
+    # Set up the matplotlib figure
+    f, ax = plt.subplots(figsize=(5,5), dpi=100)
+
+    # Generate a custom diverging colormap
+    cmap = sns.diverging_palette(220, 10, as_cmap=True)
+
+    # Draw the heatmap with the mask and correct aspect ratio
+    sns.heatmap(corr_diff, mask=mask, cmap=cmap,
+                square=True, linewidths=1, cbar_kws={"shrink": .6}, vmin=-1, vmax=1)
 
     ax.set_title(title)
     
