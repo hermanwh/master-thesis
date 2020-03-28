@@ -3,7 +3,7 @@ from api import Api
 mlApi = Api()
 
 # define dataset specifics
-filename = "../master-thesis-db/datasets/G/data_30min.csv"
+filename = "../master-thesis-db/datasets/G/data_10min.csv"
 
 columns = [
 	['PDI0064', 'Process side dP', 'bar'],
@@ -19,16 +19,13 @@ columns = [
 ]
 
 irrelevantColumns = [
-	'TIC0022U',
 	'FI0027',
 	'PDT0024',
-	'PI0001',
-	'TT0025',
-	'TT0026',
+	'PDI0064',
 ]
 
 targetColumns = [
-    'PDI0064'
+    'TT0026',
 ]
 
 traintime = [
@@ -48,10 +45,10 @@ linear = mlApi.Linear('linear')
 linear_r = mlApi.Linear_Regularized('linear r')
 
 mlpd_1x_128 = mlApi.MLP('mlpd 128', layers=[128], dropout=0.2, epochs=1000)
-lstmd_1x_128 = mlApi.LSTM('lstmr 128', layers=[128], dropout=0.2, recurrentDropout=0.2, training=False, epochs=500, batchSize=128*2, enrolWindow=16)
+lstmd_1x_128 = mlApi.LSTM('lstmr 128', layers=[128], dropout=0.2, recurrentDropout=0.2, training=False, epochs=500, batchSize=128*2, enrolWindow=32)
 
 mlpd_2x_64 = mlApi.MLP('mlpd 2x 64', layers=[64, 64], dropout=0.2, epochs=1000)
-lstmd_2x_64 = mlApi.LSTM('lstmr 2x 64', layers=[64, 64], dropout=0.2, recurrentDropout=0.2, training=False, epochs=500, batchSize=128*2, enrolWindow=16)
+lstmd_2x_64 = mlApi.LSTM('lstmr 2x 64', layers=[64, 64], dropout=0.2, recurrentDropout=0.2, training=False, epochs=500, batchSize=128*2, enrolWindow=32)
 
 modelList = [
 	#linear_r,
@@ -63,7 +60,7 @@ modelList = [
 ]
 
 mlApi.initModels(modelList)
-retrain=True
+retrain=False
 mlApi.trainModels(retrain)
 modelNames, metrics_train, metrics_test, columnsList, deviationsList = mlApi.predictWithModels(
 	plot=True,

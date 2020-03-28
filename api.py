@@ -45,7 +45,7 @@ default_LSTM_args = {
     'epochs': 300,
     'batchSize': 128,
     'verbose': 1,
-    'callbacks': modelFuncs.getBasicCallbacks(patience_es=40, patience_rlr=15),
+    'callbacks': modelFuncs.getBasicCallbacks(patience_es=60, patience_rlr=15),
     'enrolWindow': 32,
     'validationSize': 0.2,
     'testSize': 0.2,
