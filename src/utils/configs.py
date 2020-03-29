@@ -360,11 +360,11 @@ def getConfigF():
 	return [columns, relevantColumns, columnDescriptions, columnUnits, timestamps]
 
 def getConfigG():
-	# G/data_60min.csv
-	#  startdate: 2011-06-11
+	# G/data_10min.csv
+	#  startdate: 2017-01-11
 	#    enddate: 2020-03-01
-	# resolution: 60min
-	# 		rows: 68807
+	# resolution: 10min
+	# 		rows: ?
 
 	columnDescriptions = {
 		'Date':'Date',
