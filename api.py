@@ -31,7 +31,7 @@ default_MLP_args = {
     'epochs': 900,
     'batchSize': 128,
     'verbose': 1,
-    'callbacks': modelFuncs.getBasicCallbacks(patience_es=300),
+    'callbacks': modelFuncs.getBasicCallbacks(patience_es=1000, patience_rlr=800),
     'enrolWindow': 0,
     'validationSize': 0.2,
     'testSize': 0.2,

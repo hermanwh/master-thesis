@@ -83,7 +83,7 @@ modelList = [
 ]
 
 # 4. Initiate and train models
-retrain=False
+retrain=True
 mlApi.initModels(modelList)
 mlApi.trainModels(retrain)
 
