@@ -1,5 +1,5 @@
 # local trained models
-src/ml/trained_models/*
+#src/ml/trained_models/*
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
