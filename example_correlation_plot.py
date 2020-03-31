@@ -1,5 +1,5 @@
 import pandas as pd
-import api as mlApi
+import src.core as mlApi
 
 # define dataset specifics
 filename = "../master-thesis-db/datasets/D/dataC.csv"

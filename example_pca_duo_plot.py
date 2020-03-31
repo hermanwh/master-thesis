@@ -1,4 +1,4 @@
-import api as mlApi
+import src.core as mlApi
 
 # 1. Define dataset specifics 
 

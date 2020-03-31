@@ -6,6 +6,10 @@ module_path = os.path.abspath(os.path.join(ROOT_PATH+"/src/utils/"))
 if module_path not in sys.path:
     sys.path.append(module_path)
 
+import pathlib
+print(pathlib.Path(__file__).parent.absolute())
+print(pathlib.Path().absolute())
+
 import warnings
 # this disables a warning in sklearn for linear models:
 # FutureWarning: The default value of multioutput 
@@ -136,11 +140,13 @@ def loadModel(modelname, filename, targetColumns, ensembleName=None):
     joinedColumns = "_".join(targetColumns)
     
     modName = "_".join(modelname.split(' '))
+    
     if ensembleName is None:
         directory = ROOT_PATH + '/src/ml/trained_models/' + subdir + '/' + datafile + '/' + modName + '_' + joinedColumns
     else:    
         ensName = "_".join(ensembleName.split(' '))
         directory = ROOT_PATH + '/src/ml/trained_models/' + subdir + '/' + datafile + '/' + ensName + '_' + joinedColumns + '/' + modName
+    
     if os.path.isfile((directory + ".h5")) and os.path.isfile((directory + ".h5")):
         model = load_model(directory + ".h5")
         history = pickle.load(open(directory + ".pickle", "rb"))

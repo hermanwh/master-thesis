@@ -1,4 +1,4 @@
-import api as mlApi
+import src.core as mlApi
 
 # define dataset specifics
 filename = "../master-thesis-db/datasets/G/data_10min.csv"
@@ -49,7 +49,7 @@ mlpd_2x_64 = mlApi.MLP('mlpd 2x 64', layers=[64, 64], dropout=0.2, epochs=1000)
 lstmd_2x_64 = mlApi.LSTM('lstmr 2x 64', layers=[64, 64], dropout=0.2, recurrentDropout=0.2, training=False, epochs=500, batchSize=128*2, enrolWindow=32)
 
 modelList = [
-	#linear_r,
+	linear_r,
 	#mlpd_1x_128,
 	lstmd_1x_128,
 	#mlpd_2x_64,

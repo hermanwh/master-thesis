@@ -1,4 +1,4 @@
-import api as mlApi
+import src.core as mlApi
 from src.utils.plots import (plotModelPredictions, plotModelScores, getPlotColors)
 from src.utils.prints import (printModelScores)
 import matplotlib.pyplot as plt

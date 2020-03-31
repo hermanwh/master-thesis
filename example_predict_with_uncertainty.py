@@ -1,4 +1,4 @@
-import api as mlApi
+import src.core as mlApi
 
 # 1. Define dataset spesifics
 
@@ -42,7 +42,6 @@ irrelevantColumns = [
 		'TIC0103_CA_Y',
 		'PIC0104_CA_YX',
 		'TIC0101_CA_Y',
-		'TIC0105_CA_Y',
 		'TT0102_MA_Y',
 		'TIC0101_CA_YX',
 		'TT0651_MA_Y',
@@ -102,12 +101,12 @@ for i in range(len(modelList)):
 
 	fig, ax = plt.subplots(1, 1, figsize=(10,3), dpi=100)
 	ax.set_xlabel('Date')
-	ax.set_ylabel(mlApi.columnDescriptions[targetColumns[0]])
+	ax.set_ylabel(mlApi._columnDescriptions[targetColumns[0]])
 	ax.set_title(modelList[i].name + "\nPredictions and targets")
-	ax.plot(df_test.iloc[mlApi.maxEnrolWindow:].index, y_test[mlApi.maxEnrolWindow:], color="red", alpha=0.5, label="targets")
-	ax.plot(df_test.iloc[mlApi.maxEnrolWindow:].index, upper, color="grey", alpha=0.7, label="+/- 1 std bounds")
-	ax.plot(df_test.iloc[mlApi.maxEnrolWindow:].index, lower, color="grey", alpha=0.7)
-	ax.plot(df_test.iloc[mlApi.maxEnrolWindow:].index, mean, color="blue", alpha=1.0, label="prediction")
+	ax.plot(df_test.iloc[mlApi._maxEnrolWindow:].index, y_test[mlApi._maxEnrolWindow:], color="red", alpha=0.5, label="targets")
+	ax.plot(df_test.iloc[mlApi._maxEnrolWindow:].index, upper, color="grey", alpha=0.7, label="+/- 1 std bounds")
+	ax.plot(df_test.iloc[mlApi._maxEnrolWindow:].index, lower, color="grey", alpha=0.7)
+	ax.plot(df_test.iloc[mlApi._maxEnrolWindow:].index, mean, color="blue", alpha=1.0, label="prediction")
 	ax.grid(1, axis='y')
 	ax.legend(bbox_to_anchor=(1.05, 1), loc='upper left', borderaxespad=0., prop={'size': 10})
     

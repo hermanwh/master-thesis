@@ -184,14 +184,15 @@ def plotDataByTimeframe(df, plt, start, end, columnDescriptions=None, relevantCo
     df = getDataByTimeframe(df, start, end)
     plotData(df, plt, columnDescriptions=columnDescriptions, relevantColumns=relevantColumns)
 
-def plotModelScores(plt, names, r2_train, r2_test):
+def plotModelScores(plt, names, r2_train, r2_test, test=False):
     fig, ax = plt.subplots(1, 1, figsize=(10,3), dpi=100)
     ax.set_ylabel('R2 score')
     ax.set_xlabel('Model')
     ax.set_title('Model metrics')
 
     ax.plot(names, r2_train, marker='x', markersize=10, label="Training metrics")
-    ax.plot(names, r2_test, marker='x', markersize=10, label="Test metrics")
+    if test:
+        ax.plot(names, r2_test, marker='x', markersize=10, label="Test metrics")
     ax.legend()
 
     plt.show()

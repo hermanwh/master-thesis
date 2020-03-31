@@ -1,4 +1,4 @@
-import api as mlApi
+import src.core as mlApi
 
 # define dataset specifics
 filename = "../master-thesis-db/datasets/F/data2_30min.csv"
@@ -74,7 +74,7 @@ modelList = [
 ]
 
 mlApi.initModels(modelList)
-retrain=True
+retrain=False
 mlApi.trainModels(retrain)
 modelNames, metrics_train, metrics_test, columnsList, deviationsList = mlApi.predictWithModels(
 	plot=True,
