@@ -1,6 +1,4 @@
-import statApi
-from api import Api
-mlApi = Api()
+import api as mlApi
 
 # define dataset specifics
 filename = "../master-thesis-db/datasets/F/data2_30min.csv"
@@ -82,4 +80,3 @@ modelNames, metrics_train, metrics_test, columnsList, deviationsList = mlApi.pre
 	plot=True,
 	interpol=False,
 )
-

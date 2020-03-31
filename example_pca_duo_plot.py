@@ -1,6 +1,4 @@
-import statApi
-from api import Api
-mlApi = Api()
+import api as mlApi
 
 # 1. Define dataset specifics 
 
@@ -82,13 +80,13 @@ df_train, df_test = mlApi.getTestTrainSplit(traintime, testtime)
 df_test_1, df_test_2 = mlApi.getTestTrainSplit([testtime1], testtime2)
 
 # 3. Plot scatter plot of training data with color scaling
-statApi.pcaPlot(df_train)
+mlApi.pcaPlot(df_train)
 
 # 4. Plot scatter plot of testing data
-statApi.pcaDuoPlot(df_train, df_test_1, df_test_2, datasetName)
+mlApi.pcaDuoPlot(df_train, df_test_1, df_test_2, datasetName)
 
 # Reset Api with default values
-mlApi = Api()
+mlApi.reset()
 
 filename = "../master-thesis-db/datasets/D/dataC.csv"
 datasetName = "D/dataC.csv"
@@ -141,6 +139,6 @@ df = mlApi.initDataframe(filename, columns, irrelevantColumns)
 df_train, df_test = mlApi.getTestTrainSplit(traintime, testtime)
 df_test_1, df_test_2 = mlApi.getTestTrainSplit([testtime1], testtime2)
 
-statApi.pcaPlot(df_train)
+mlApi.pcaPlot(df_train)
 
-statApi.pcaDuoPlot(df_train, df_test_1, df_test_2, datasetName)
+mlApi.pcaDuoPlot(df_train, df_test_1, df_test_2, datasetName)

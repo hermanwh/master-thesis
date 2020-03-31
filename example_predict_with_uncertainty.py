@@ -1,6 +1,4 @@
-import statApi
-from api import Api
-mlApi = Api()
+import api as mlApi
 
 # 1. Define dataset spesifics
 
@@ -83,7 +81,7 @@ modelList = [
 ]
 
 # 4. Initiate and train models
-retrain=True
+retrain=False
 mlApi.initModels(modelList)
 mlApi.trainModels(retrain)
 

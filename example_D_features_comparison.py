@@ -1,4 +1,4 @@
-from api import Api
+import api as mlApi
 from src.utils.plots import (plotModelPredictions, plotModelScores, getPlotColors)
 from src.utils.prints import (printModelScores)
 import matplotlib.pyplot as plt
@@ -75,7 +75,7 @@ irrelevantColumnsList = [
 ]
 
 for i, irrelevantColumns in enumerate(irrelevantColumnsList):
-    mlApi = Api()
+    mlApi.reset()
     df = mlApi.initDataframe(filename, columns, irrelevantColumns)
     df_train, df_test = mlApi.getTestTrainSplit(traintime, testtime)
     X_train, y_train, X_test, y_test = mlApi.getFeatureTargetSplit(targetColumns)
@@ -116,10 +116,10 @@ for i, irrelevantColumns in enumerate(irrelevantColumnsList):
     trainmetrics.append(metrics_train)
     testmetrics.append(metrics_test)
 
-indexColumn = mlApi.indexColumn
-columnDescriptions = mlApi.columnDescriptions
-columnUnits = mlApi.columnUnits
-traintime = mlApi.traintime
+indexColumn = mlApi._indexColumn
+columnDescriptions = mlApi._columnDescriptions
+columnUnits = mlApi._columnUnits
+traintime = mlApi._traintime
 
 for i in range(len(deviationsLists)):
 	for j in range(len(deviationsLists[i])):

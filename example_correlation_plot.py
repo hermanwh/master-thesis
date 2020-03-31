@@ -1,7 +1,5 @@
-import statApi
 import pandas as pd
-from api import Api
-mlApi = Api()
+import api as mlApi
 
 # define dataset specifics
 filename = "../master-thesis-db/datasets/D/dataC.csv"
@@ -49,16 +47,16 @@ df_train, df_test = mlApi.getTestTrainSplit(traintime, testtime)
 df_test_1, df_test_2 = mlApi.getTestTrainSplit([testtime1], testtime2)
 df_test_joined = pd.concat([df_test_1, df_test_2])
 
-covmat_train = statApi.correlationMatrix(df_train)
-covmat_test_1 = statApi.correlationMatrix(df_test_1)
-covmat_test_2 = statApi.correlationMatrix(df_test_2)
+covmat_train = mlApi.correlationMatrix(df_train)
+covmat_test_1 = mlApi.correlationMatrix(df_test_1)
+covmat_test_2 = mlApi.correlationMatrix(df_test_2)
 
 covmat_diff_1 = covmat_train - covmat_test_1
 covmat_diff_2 = covmat_train - covmat_test_2
 
-statApi.correlationPlot(df_train, "D train")
-statApi.correlationDuoPlot(df_test_1, df_test_2, "D test 1", "D test 2")
-statApi.correlationDifferencePlot(df_train, df_test_joined, "Difference, D train and D test")
+mlApi.correlationPlot(df_train, "D train")
+mlApi.correlationDuoPlot(df_test_1, df_test_2, "D test 1", "D test 2")
+mlApi.correlationDifferencePlot(df_train, df_test_joined, "Difference, D train and D test")
 
 
 
@@ -97,8 +95,8 @@ df = mlApi.initDataframe(filename, columns, irrelevantColumns)
 df_train, df_test = mlApi.getTestTrainSplit(traintime, testtime)
 df_train2, df_test2 = mlApi.getTestTrainSplit(traintime2, testtime)
 
-statApi.correlationDuoPlot(df_train, df_train2, "F train 1", "F train 2")
-statApi.correlationPlot(df_test, "F test")
-statApi.correlationDifferencePlot(df_train, df_test, "Difference, F train 1 and F test")
-statApi.correlationDifferencePlot(df_train2, df_test, "Difference, F train 2 and F test")
-statApi.correlationDifferencePlot(df_train, df_train2, "Difference, F train 1 and F train 2")
+mlApi.correlationDuoPlot(df_train, df_train2, "F train 1", "F train 2")
+mlApi.correlationPlot(df_test, "F test")
+mlApi.correlationDifferencePlot(df_train, df_test, "Difference, F train 1 and F test")
+mlApi.correlationDifferencePlot(df_train2, df_test, "Difference, F train 2 and F test")
+mlApi.correlationDifferencePlot(df_train, df_train2, "Difference, F train 1 and F train 2")

@@ -1,6 +1,4 @@
-import statApi
-from api import Api
-mlApi = Api()
+import api as mlApi
 
 # define dataset specifics
 filename = "../master-thesis-db/datasets/G/data_10min.csv"
