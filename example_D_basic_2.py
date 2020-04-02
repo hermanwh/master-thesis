@@ -18,17 +18,20 @@ columns = [
 ]
 
 irrelevantColumns = [
+    '20PT001',
+    '50PT001',
     '50FT001',
-    '50TV001',
     '50PDT001',
+    '50TV001',
 ]
 
 targetColumns = [
+    '50TT002',
     '20PDT001',
 ]
 
 traintime = [
-        ["2020-01-01 00:00:00", "2020-04-01 00:00:00"],
+        ["2020-01-01 00:00:00", "2020-03-20 00:00:00"],
     ]
 
 testtime = [
@@ -41,7 +44,7 @@ df_train, df_test = mlApi.getTestTrainSplit(traintime, testtime)
 X_train, y_train, X_test, y_test = mlApi.getFeatureTargetSplit(targetColumns)
 
 mlpd_1x_128 = mlApi.MLP('mlpd 1x 128', layers=[128], dropout=0.2)
-lstmd_1x_128 = mlApi.LSTM('lstmr 1x 128', layers=[128], dropout=0.2, recurrentDropout=0.2)
+lstmd_1x_128 = mlApi.LSTM('lstmr 1x 128', layers=[128], dropout=0.2, recurrentDropout=0.2, enrolWindow=4)
 
 linear = mlApi.Linear('linear')
 linear_r = mlApi.Linear_Regularized('linear r')

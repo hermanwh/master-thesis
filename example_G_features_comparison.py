@@ -122,7 +122,8 @@ for i in range(len(deviationsLists)):
 		deviationsLists[i][j][3] = colors[j]
 
 for i in range(len(columnsLists)):
-	for j in range(len(columnsLists[i])):
+    columnsList[i][0][3] = 'red'
+	for j in range(1, len(columnsLists[i])):
 		columnsLists[i][j][3] = colors[j]
 
 printModelScores(
