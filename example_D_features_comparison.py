@@ -39,37 +39,44 @@ testtime = [
 
 targetColumns = [
 	'50TT002',
+    '20PDT001',
 ]
 
-models = ['A', 'B', 'C']
+models = ['A', 'X', 'B', 'C']
 
 irrelevantColumnsList = [
 	# Model A:
-	#  Target: C T out
+	#  Target: C T out, P dP
 	#  Featers: P T in, P T out, P flow, C T in 
 	[
 		'20PT001',
-		'20PDT001',
 		'50PDT001',
 		'50FT001',
 		'50TV001',
 		'50PT001',
 	],
+	# Model X:
+	#  Target: C T out, P dP
+	#  Featers: P T in, P T out, P flow, C T in, C flow
+	[
+		'20PT001',
+		'50PDT001',
+		'50TV001',
+		'50PT001',
+	],
 	# Model B:
-	#  Target: C T out
+	#  Target: C T out, P dP
 	#  Featers: P T in, P T out, P flow, C T in, C P in, C valve
 	[
 		'20PT001',
-		'20PDT001',
 		'50PDT001',
 		'50FT001',
 	],
 	# Model C:
-	#  Target: C T out
+	#  Target: C T out, P dP
 	#  Featers: P T in, P T out, P flow, C T in, C P in, C valve, C flow
 	[
 		'20PT001',
-		'20PDT001',
 		'50PDT001',
 	],
 ]
@@ -80,8 +87,8 @@ for i, irrelevantColumns in enumerate(irrelevantColumnsList):
     df_train, df_test = mlApi.getTestTrainSplit(traintime, testtime)
     X_train, y_train, X_test, y_test = mlApi.getFeatureTargetSplit(targetColumns)
     linear_model = mlApi.Linear_Regularized("linear model " + models[i])
-    mlp_model = mlApi.MLP("mlp " + models[i], layers=[128], dropout=0.2, epochs=500, verbose=0)
-    lstm_model = mlApi.LSTM("lstm " + models[i], layers=[64, 64], dropout=0.2, recurrentDropout=0.2, epochs=250)
+    mlp_model = mlApi.MLP("mlp " + models[i], layers=[64, 64], dropout=0.2, epochs=500, verbose=0)
+    lstm_model = mlApi.LSTM("lstm " + models[i], layers=[64, 64], dropout=0.2, recurrentDropout=0.2, epochs=250, enrolWindow=3)
 
     modelList = [
         linear_model,
@@ -93,7 +100,7 @@ for i, irrelevantColumns in enumerate(irrelevantColumnsList):
     retrain=False
     mlApi.trainModels(retrain)
 
-    modelNames, metrics_train, metrics_test, columnsList, deviationsList = mlApi.predictWithModels(plot=False)
+    modelNames, metrics_train, metrics_test, columnsList, deviationsList = mlApi.predictWithModels(plot=True)
 
     if i < 1:
         columnsLists = columnsList
