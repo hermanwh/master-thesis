@@ -1,8 +1,11 @@
 import src.core as mlApi
 
-# define dataset specifics
+# 1. Define dataset specifics
+
+# File path to dataset .csv file
 filename = "../master-thesis-db/datasets/D/dataC.csv"
 
+# List of columns on form ['name', 'desc', 'unit']
 columns = [
     ['20TT001', 'Gas side inlet temperature', 'degrees'],
     ['20PT001', 'Gas side inlet pressure', 'barG'],
@@ -17,44 +20,58 @@ columns = [
     ['50TV001', 'Cooling side valve opening', '%'],
 ]
 
+# List of column names to ignore completely
 irrelevantColumns = [
+    '20PT001',
+    '50PT001',
     '50FT001',
-    '50TV001',
     '50PDT001',
+    '50TV001',
 ]
 
+# List of column names used a targets
 targetColumns = [
+    '50TT002',
     '20PDT001',
 ]
 
+# List of training periods on form ['start', 'end']
 traintime = [
-        ["2020-01-01 00:00:00", "2020-04-01 00:00:00"],
-    ]
+    ["2020-01-01 00:00:00", "2020-03-20 00:00:00"],
+]
 
+# Testing period, recommended: entire dataset
 testtime = [
     "2020-01-01 00:00:00",
     "2020-08-01 00:00:00"
 ]
 
+# 2. Initiate and divide data
+
 df = mlApi.initDataframe(filename, columns, irrelevantColumns)
 df_train, df_test = mlApi.getTestTrainSplit(traintime, testtime)
 X_train, y_train, X_test, y_test = mlApi.getFeatureTargetSplit(targetColumns)
 
-mlpd_1x_128 = mlApi.MLP('mlpd 1x 128', layers=[128], dropout=0.2)
-lstmd_1x_128 = mlApi.LSTM('lstmr 1x 128', layers=[128], dropout=0.2, recurrentDropout=0.2)
+# 3. Define models
 
-linear = mlApi.Linear('linear')
+mlpd_2x_64 = mlApi.MLP('mlpd 1x 128', layers=[64, 64], dropout=0.2)
+lstmd_2x_64 = mlApi.LSTM('lstmr 1x 128', layers=[64, 64], dropout=0.2, recurrentDropout=0.2)
 linear_r = mlApi.Linear_Regularized('linear r')
+ensemble = mlApi.Ensemble('lstm + mlp ensemble', [mlpd_2x_64, lstmd_2x_64])
 
 modelList = [
-	mlpd_1x_128,
-	#lstmd_1x_128,
-	#linear,
+	mlpd_2x_64,
+	lstmd_2x_64,
+    ensemble,
 	linear_r,
 ]
 
+# 4. Initiate and train models
+
+# Define whether to retrain models or not
+retrain=False
+
 mlApi.initModels(modelList)
-retrain=True
 mlApi.trainModels(retrain)
 modelNames, metrics_train, metrics_test, columnsList, deviationsList = mlApi.predictWithModels(
 	plot=True,

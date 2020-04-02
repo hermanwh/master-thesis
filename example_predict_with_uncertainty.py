@@ -1,6 +1,6 @@
 import src.core as mlApi
 
-# 1. Define dataset spesifics
+# 1. Define dataset specifics
 
 # File path to dataset .csv
 filename = "../master-thesis-db/datasets/F/data2_30min.csv"
@@ -69,14 +69,14 @@ df_train, df_test = mlApi.getTestTrainSplit(traintime, testtime)
 X_train, y_train, X_test, y_test = mlApi.getFeatureTargetSplit(targetColumns)
 
 # 3. Define models | NB: only RNN (LSTM/GRU) models
-lstmd_1x_128 = mlApi.LSTM('lstmr 1x 128', layers=[128], dropout=0.2, recurrentDropout=0.2, training=True, epochs=500)
-lstmd_2x_64 = mlApi.LSTM('lstmr 2x 64', layers=[64, 64], dropout=0.2, recurrentDropout=0.2, training=True, epochs=500)
-gru_1x_128 = mlApi.GRU('gru 1x 128', layers=[128], dropout=0.2, recurrentDropout=0.2, training=True, epochs=500)
+#lstmd_1x_128 = mlApi.LSTM('lstmr 1x 128', layers=[128], dropout=0.2, recurrentDropout=0.2, training=True, epochs=500)
+lstmd_2x_64 = mlApi.LSTM('lstmd 2x 64 training', layers=[64, 64], dropout=0.2, recurrentDropout=0.2, training=True, epochs=500)
+#gru_1x_128 = mlApi.GRU('gru 1x 128', layers=[128], dropout=0.2, recurrentDropout=0.2, training=True, epochs=500)
 
 modelList = [
-	lstmd_1x_128,
+	#lstmd_1x_128,
 	lstmd_2x_64,
-	gru_1x_128,
+	#gru_1x_128,
 ]
 
 # 4. Initiate and train models

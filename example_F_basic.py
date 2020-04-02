@@ -1,8 +1,11 @@
 import src.core as mlApi
 
-# define dataset specifics
+# 1. Define dataset specifics
+
+# File path to dataset .csv file
 filename = "../master-thesis-db/datasets/F/data2_30min.csv"
 
+# List of columns on form ['name', 'desc', 'unit']
 columns = [
 	['FYN0111', 'Gasseksport rate', 'MSm^3/d'],
 	['FT0111', 'Gasseksport molvekt','g/mole'],
@@ -26,6 +29,7 @@ columns = [
 	['TIC0105_CA_Y', 'Kald side C ventilåpning', '%'],
 ]
 
+# List of column names to ignore completely
 irrelevantColumns = [
 		'FT0111',
 		'PDT0108_MA_Y',
@@ -41,40 +45,52 @@ irrelevantColumns = [
 		'TT0102_MA_Y',
 		'TIC0101_CA_YX',
 		'TT0651_MA_Y',
+		'TIC0105_CA_Y',
 ]
 
+# List of column names used a targets
 targetColumns = [
 	'TT0653_MA_Y',
 ]
 
-traintime = [
-        ["2018-01-01 00:00:00", "2018-08-01 00:00:00"],
-    ]
 
+# List of training periods on form ['start', 'end']
+traintime = [
+	["2018-01-01 00:00:00", "2018-08-01 00:00:00"],
+]
+
+# Testing period, recommended: entire dataset
 testtime = [
     "2018-01-01 00:00:00",
     "2019-05-01 00:00:00"
 ]
 
+# 2. Initiate and divide data
+
 df = mlApi.initDataframe(filename, columns, irrelevantColumns)
 df_train, df_test = mlApi.getTestTrainSplit(traintime, testtime)
 X_train, y_train, X_test, y_test = mlApi.getFeatureTargetSplit(targetColumns)
 
-linear = mlApi.Linear('linear')
-linear_r = mlApi.Linear_Regularized('linear r')
+# 3. Define models
 
-mlpd_1x_128 = mlApi.MLP('mlpd 1x 128', layers=[128], dropout=0.2)
-lstmd_1x_128 = mlApi.LSTM('lstmr 1x 128', layers=[128], dropout=0.2, recurrentDropout=0.2, training=False, epochs=500, batchSize=128*2, enrolWindow=12)
+mlpd_2x_64 = mlApi.MLP('mlpd 1x 128', layers=[64, 64], dropout=0.2)
+lstmd_2x_64 = mlApi.LSTM('lstmr 1x 128', layers=[64, 64], dropout=0.2, recurrentDropout=0.2)
+linear_r = mlApi.Linear_Regularized('linear r')
+ensemble = mlApi.Ensemble('lstm + mlp ensemble', [mlpd_2x_64, lstmd_2x_64])
 
 modelList = [
-	mlpd_1x_128,
-	lstmd_1x_128,
-	#linear,
+	mlpd_2x_64,
+	lstmd_2x_64,
+    ensemble,
 	linear_r,
 ]
 
-mlApi.initModels(modelList)
+# 4. Initiate and train models
+
+# Define whether to retrain models or not
 retrain=False
+
+mlApi.initModels(modelList)
 mlApi.trainModels(retrain)
 modelNames, metrics_train, metrics_test, columnsList, deviationsList = mlApi.predictWithModels(
 	plot=True,
