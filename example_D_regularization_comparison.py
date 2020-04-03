@@ -47,7 +47,7 @@ mlpr4 = mlApi.MLP('MLPr 1x 64 0.05', layers=[64], l1_rate=0.05, l2_rate=0.05, ep
 mlpr5 = mlApi.MLP('MLPr 1x 64 0.01', layers=[64], l1_rate=0.01, l2_rate=0.01, epochs=2500)
 mlpr6 = mlApi.MLP('MLPr 1x 64 0.005', layers=[64], l1_rate=0.005, l2_rate=0.005, epochs=5000)
 mlpr7 = mlApi.MLP('MLPr 1x 64 0.001', layers=[64], l1_rate=0.001, l2_rate=0.001, epochs=5000)
-mlpd = mlApi.MLP('MLPd 1x 64', layers=[64], dropout=0.2, epochs=2500)
+mlpd = mlApi.MLP('MLPd 1x 64 0.2', layers=[64], dropout=0.2, epochs=2500)
 
 mlpr11 = mlApi.MLP('MLPr 2x 64 1.0', layers=[64, 64], l1_rate=1.0, l2_rate=1.0, epochs=5000)
 mlpr22 = mlApi.MLP('MLPr 2x 64 0.5', layers=[64, 64], l1_rate=0.5, l2_rate=0.5, epochs=5000)
@@ -56,7 +56,7 @@ mlpr44 = mlApi.MLP('MLPr 2x 64 0.05', layers=[64, 64], l1_rate=0.05, l2_rate=0.0
 mlpr55 = mlApi.MLP('MLPr 2x 64 0.01', layers=[64, 64], l1_rate=0.01, l2_rate=0.01, epochs=5000)
 mlpr66 = mlApi.MLP('MLPr 2x 64 0.005', layers=[64, 64], l1_rate=0.005, l2_rate=0.005, epochs=5000)
 mlpr77 = mlApi.MLP('MLPr 2x 64 0.001', layers=[64, 64], l1_rate=0.001, l2_rate=0.001, epochs=5000)
-mlpdd = mlApi.MLP('MLPd 2x 64', layers=[64, 64], dropout=0.2, epochs=5000)
+mlpdd = mlApi.MLP('MLPd 2x 64 0.2', layers=[64, 64], dropout=0.2, epochs=5000)
 
 linear_r = mlApi.Linear_Regularized('linear')
 

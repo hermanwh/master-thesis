@@ -54,11 +54,11 @@ X_train, y_train, X_test, y_test = mlApi.getFeatureTargetSplit(targetColumns)
 
 # 3. Define models
 mlpd_1x_128 = mlApi.MLP('mlpd 1x 128', layers=[128], dropout=0.2)
-lstmd_1x_128 = mlApi.LSTM('lstmd 1x 128', layers=[128], dropout=0.2, recurrentDropout=0.2, enrolWindow=4)
-mlpd_2x_64 = mlApi.MLP('mlpd 1x 128', layers=[64, 64], dropout=0.2)
-lstmd_2x_64 = mlApi.LSTM('lstmd 1x 128', layers=[64, 64], dropout=0.2, recurrentDropout=0.2)
+lstmd_1x_128 = mlApi.LSTM('lstmd 1x 128', layers=[128], dropout=0.2, recurrentDropout=0.2, enrolWindow=3)
+mlpd_2x_64 = mlApi.MLP('mlpd 2x 64', layers=[64, 64], dropout=0.2)
+lstmd_2x_64 = mlApi.LSTM('lstmd 2x 64', layers=[64, 64], dropout=0.2, recurrentDropout=0.2, enrolWindow=3)
 linear_r = mlApi.Linear_Regularized('linear r')
-ensemble1 = mlApi.Ensemble('lstm1 + mlp1 ensemble', [mlpd_1x_128, lstmd_1x_128])
+ensemble1 = mlApi.Ensemble('mlp2 + linear ensemble', [mlpd_2x_64, linear_r])
 ensemble2 = mlApi.Ensemble('lstm2 + mlp2 ensemble', [mlpd_2x_64, lstmd_2x_64])
 
 modelList = [

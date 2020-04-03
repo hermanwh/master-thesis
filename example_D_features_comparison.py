@@ -82,46 +82,46 @@ irrelevantColumnsList = [
 ]
 
 for i, irrelevantColumns in enumerate(irrelevantColumnsList):
-    mlApi.reset()
-    df = mlApi.initDataframe(filename, columns, irrelevantColumns)
-    df_train, df_test = mlApi.getTestTrainSplit(traintime, testtime)
-    X_train, y_train, X_test, y_test = mlApi.getFeatureTargetSplit(targetColumns)
-    linear_model = mlApi.Linear_Regularized("linear model " + models[i])
-    mlp_model = mlApi.MLP("mlp " + models[i], layers=[64, 64], dropout=0.2, epochs=500, verbose=0)
-    lstm_model = mlApi.LSTM("lstm " + models[i], layers=[64, 64], dropout=0.2, recurrentDropout=0.2, epochs=250, enrolWindow=3)
+	mlApi.reset()
+	df = mlApi.initDataframe(filename, columns, irrelevantColumns)
+	df_train, df_test = mlApi.getTestTrainSplit(traintime, testtime)
+	X_train, y_train, X_test, y_test = mlApi.getFeatureTargetSplit(targetColumns)
+	linear_model = mlApi.Linear_Regularized("linear model " + models[i])
+	mlp_model = mlApi.MLP("mlp " + models[i], layers=[64, 64], dropout=0.2, epochs=500, verbose=0)
+	lstm_model = mlApi.LSTM("lstm " + models[i], layers=[64, 64], dropout=0.2, recurrentDropout=0.2, epochs=250, enrolWindow=3)
 
-    modelList = [
-        linear_model,
-        mlp_model,
-        lstm_model,
-    ]
+	modelList = [
+		linear_model,
+		mlp_model,
+		lstm_model,
+	]
 
-    mlApi.initModels(modelList)
-    retrain=False
-    mlApi.trainModels(retrain)
+	mlApi.initModels(modelList)
+	retrain=False
+	mlApi.trainModels(retrain)
 
-    modelNames, metrics_train, metrics_test, columnsList, deviationsList = mlApi.predictWithModels(plot=True)
+	modelNames, metrics_train, metrics_test, columnsList, deviationsList = mlApi.predictWithModels(plot=True)
 
-    if i < 1:
-        columnsLists = columnsList
-        deviationsLists = deviationsList
-        all_names = modelNames
-        all_train_metrics = metrics_train
-        all_test_metrics = metrics_test
-    else:
-        for j_target in range(len(columnsList)):
-            for k_model in range(1, len(columnsList[j_target])):
-                columnsLists[j_target].append(columnsList[j_target][k_model])
-            for k_model in range(0, len(deviationsList[j_target])):
-                deviationsLists[j_target].append(deviationsList[j_target][k_model])
-        all_names = [*all_names, *modelNames]
-        all_train_metrics = [*all_train_metrics, *metrics_train]
-        all_test_metrics = [*all_test_metrics, *metrics_test]
+	if i < 1:
+		columnsLists = columnsList
+		deviationsLists = deviationsList
+		all_names = modelNames
+		all_train_metrics = metrics_train
+		all_test_metrics = metrics_test
+	else:
+		for j_target in range(len(columnsList)):
+			for k_model in range(1, len(columnsList[j_target])):
+				columnsLists[j_target].append(columnsList[j_target][k_model])
+			for k_model in range(0, len(deviationsList[j_target])):
+				deviationsLists[j_target].append(deviationsList[j_target][k_model])
+		all_names = [*all_names, *modelNames]
+		all_train_metrics = [*all_train_metrics, *metrics_train]
+		all_test_metrics = [*all_test_metrics, *metrics_test]
 
 
-    names.append(modelNames)
-    trainmetrics.append(metrics_train)
-    testmetrics.append(metrics_test)
+	names.append(modelNames)
+	trainmetrics.append(metrics_train)
+	testmetrics.append(metrics_test)
 
 indexColumn = mlApi._indexColumn
 columnDescriptions = mlApi._columnDescriptions
