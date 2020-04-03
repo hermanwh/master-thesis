@@ -1,8 +1,11 @@
 import src.core as mlApi
 
-# define dataset specifics
+# 1. Define dataset specifics
+
+# File path to dataset .csv file
 filename = "../master-thesis-db/datasets/G/data_10min.csv"
 
+# List of columns on form ['name', 'desc', 'unit']
 columns = [
 	['PDI0064', 'Process side dP', 'bar'],
 	['TI0066', 'Process side Temperature out','degrees'],
@@ -16,6 +19,7 @@ columns = [
 	['PDT0024', 'Cooling side dP', 'bar'],
 ]
 
+# List of column names to ignore completely
 irrelevantColumns = [
 	'PI0001',
 	'FI0027',
@@ -23,23 +27,30 @@ irrelevantColumns = [
 	'PDT0024',
 ]
 
+# List of column names used a targets
 targetColumns = [
 	'TT0026',
     'PDI0064',
 ]
 
+# List of training periods on form ['start', 'end']
 traintime = [
 	["2019-04-10 00:00:00", "2019-08-01 00:00:00"]
 ]
 
+# Testing period, recommended: entire dataset
 testtime = [
 	"2017-01-01 00:00:00",
 	"2020-03-01 00:00:00",
 ]
 
+# 2. Initiate and divide data
+
 df = mlApi.initDataframe(filename, columns, irrelevantColumns)
 df_train, df_test = mlApi.getTestTrainSplit(traintime, testtime)
 X_train, y_train, X_test, y_test = mlApi.getFeatureTargetSplit(targetColumns)
+
+# 3. Define models
 
 lstm_1x_128 = mlApi.LSTM('lstm 1x 128', layers=[128])
 
@@ -76,7 +87,13 @@ modelList = [
     linear_cv,
 ]
 
-mlApi.initModels(modelList)
+# 4. Initiate and train models
+
+# Define whether to retrain models or not
 retrain=False
+
+mlApi.initModels(modelList)
 mlApi.trainModels(retrain)
-modelNames, metrics_train, metrics_test, columnsList, deviationsList = mlApi.predictWithModels(plot=True)
+modelNames, metrics_train, metrics_test, columnsList, deviationsList = mlApi.predictWithModels(
+	plot=True,
+)

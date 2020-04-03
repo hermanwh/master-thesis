@@ -65,7 +65,7 @@ modelList = [
 # 4. Initiate and train models
 
 # Define whether to retrain models or not
-retrain=True
+retrain=False
 
 mlApi.initModels(modelList)
 mlApi.trainModels(retrain)
