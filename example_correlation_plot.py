@@ -6,6 +6,9 @@ import src.core as mlApi
 # File path to dataset .csv file
 filename = "../master-thesis-db/datasets/D/dataC.csv"
 
+# A desired name for the dataset, used as plot titles
+datasetName = "D - Simulated"
+
 # List of columns on form ['name', 'desc', 'unit']
 columns = [
     ['20TT001', 'Gas side inlet temperature', 'degrees'],
@@ -59,9 +62,9 @@ df_test_joined = pd.concat([df_test_1, df_test_2])
 
 # 3. Plot correlation plots
 
-mlApi.correlationPlot(df_train, "D train")
-mlApi.correlationDuoPlot(df_test_1, df_test_2, "D test 1", "D test 2")
-mlApi.correlationDifferencePlot(df_train, df_test_joined, "Difference, D train and D test")
+mlApi.correlationPlot(df_train, datasetName + " train")
+mlApi.correlationDuoPlot(df_test_1, df_test_2, datasetName + " test 1", datasetName + " test 2")
+mlApi.correlationDifferencePlot(df_train, df_test_joined, "Difference, " + datasetName + " train and test")
 
 # Reset to prepare for second dataset
 # -------------------------------------
@@ -70,7 +73,9 @@ mlApi.reset()
 
 # 1. 
 
-filename = "../master-thesis-db/datasets/F/data2_360min.csv"
+filename = "../master-thesis-db/datasets/F/data2_180min.csv"
+
+datasetName = "F - Real HX"
 
 columns = [
 	['FYN0111', 'Gasseksport rate', 'MSm^3/d'],
@@ -111,11 +116,11 @@ df_train2, df_test2 = mlApi.getTestTrainSplit(traintime2, testtime)
 
 # 3.
 
-mlApi.correlationDuoPlot(df_train, df_train2, "F train 1", "F train 2")
-mlApi.correlationPlot(df_test, "F test")
-mlApi.correlationDifferencePlot(df_train, df_test, "Difference, F train 1 and F test")
-mlApi.correlationDifferencePlot(df_train2, df_test, "Difference, F train 2 and F test")
-mlApi.correlationDifferencePlot(df_train, df_train2, "Difference, F train 1 and F train 2")
+mlApi.correlationDuoPlot(df_train, df_train2, datasetName +" train 1", datasetName + " train 2")
+mlApi.correlationPlot(df_test, datasetName + " test")
+mlApi.correlationDifferencePlot(df_train, df_test, "Difference, " + datasetName + " train 1 and test")
+mlApi.correlationDifferencePlot(df_train2, df_test, "Difference, " + datasetName + " train 2 and test")
+mlApi.correlationDifferencePlot(df_train, df_train2, "Difference, " + datasetName + " train 1 and train 2")
 
 # Reset to prepare for third dataset
 # -------------------------------------
@@ -124,7 +129,9 @@ mlApi.reset()
 
 # 1. 
 
-filename = "../master-thesis-db/datasets/G/data_10min.csv"
+filename = "../master-thesis-db/datasets/G/data_60min.csv"
+
+datasetName = "G - Real HX"
 
 columns = [
 	['PDI0064', 'Process side dP', 'bar'],
@@ -173,6 +180,6 @@ df_test_joined = pd.concat([df_test_1, df_test_2])
 
 # 3. Plot correlation plots
 
-mlApi.correlationPlot(df_train, "D train")
-mlApi.correlationDuoPlot(df_test_1, df_test_2, "D test 1", "D test 2")
-mlApi.correlationDifferencePlot(df_train, df_test_joined, "Difference, D train and D test")
+mlApi.correlationPlot(df_train, datasetName + " train")
+mlApi.correlationDuoPlot(df_test_1, df_test_2, datasetName +" test 1", datasetName + " test 2")
+mlApi.correlationDifferencePlot(df_train, df_test_joined, "Difference, " + datasetName + " train and test")

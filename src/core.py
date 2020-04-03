@@ -764,8 +764,8 @@ def correlationMatrix(df):
 def pca(df, numberOfComponents, relevantColumns=None, columnDescriptions=None):
     return analysis.pca(df, numberOfComponents, relevantColumns, columnDescriptions)
 
-def pcaPlot(df, timestamps=None):
-    return analysis.pcaPlot(df, timestamps)
+def pcaPlot(df, timestamps=None, plotTitle=None):
+    return analysis.pcaPlot(df, timestamps, plotTitle)
 
 def pcaDuoPlot(df_train, df_test_1, df_test_2, plotTitle=None):
     return analysis.pcaDuoPlot(df_train, df_test_1, df_test_2, plotTitle)

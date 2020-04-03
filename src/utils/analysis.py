@@ -50,7 +50,7 @@ def pca(df, numberOfComponents, relevantColumns=None, columnDescriptions=None):
 
     return pca
 
-def pcaPlot(df, timestamps=None):
+def pcaPlot(df, timestamps=None, plotTitle=None):
     if timestamps is not None:
         traintime, testtime, validtime = timestamps
         df_train, df_test = utilities.getTestTrainSplit(df, traintime, testtime)
@@ -80,7 +80,7 @@ def pcaPlot(df, timestamps=None):
     ax = fig.add_subplot(1, 1, 1)
     ax.set_xlabel('PCA 1', fontsize=10)
     ax.set_ylabel('PCA 2', fontsize=10)
-    ax.set_title('PCA plot', fontsize=12)
+    ax.set_title(((plotTitle + '\n') if plotTitle is not None else '') + 'PCA plot', fontsize=12)
     cmap = sns.cubehelix_palette(as_cmap=True)
     indexx = list(range(df_pca_test.shape[0]))
     if df_pca_train is not None:
