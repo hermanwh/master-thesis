@@ -3,7 +3,7 @@ import src.core as mlApi
 # 1. Define dataset specifics
 
 # File path to dataset .csv file
-filename = "../master-thesis-db/datasets/G/data_10min.csv"
+filename = "../master-thesis-db/datasets/G/data_30min.csv"
 
 # List of columns on form ['name', 'desc', 'unit']
 columns = [
@@ -52,21 +52,21 @@ X_train, y_train, X_test, y_test = mlApi.getFeatureTargetSplit(targetColumns)
 
 # 3. Define models
 
-mlpd_1x_128 = mlApi.MLP('mlpd 1x 128', layers=[128], dropout=0.2, epochs=1000)
-lstmd_1x_128 = mlApi.LSTM('lstmd 1x 128', layers=[128], dropout=0.2, recurrentDropout=0.2, training=False, epochs=500, batchSize=128*2*2, enrolWindow=16)
-
-mlpd_2x_64 = mlApi.MLP('mlpd 2x 64', layers=[64, 64], dropout=0.2, epochs=1000)
-lstmd_2x_64 = mlApi.LSTM('lstmd 2x 64', layers=[64, 64], dropout=0.2, recurrentDropout=0.2, training=False, epochs=500, batchSize=128*2*2, enrolWindow=16)
+mlpd_1x_128 = mlApi.MLP('mlpd 1x 128', layers=[128], dropout=0.2)
+lstmd_1x_128 = mlApi.LSTM('lstmd 1x 128', layers=[128], dropout=0.2, recurrentDropout=0.2, enrolWindow=16)
+mlpd_2x_64 = mlApi.MLP('mlpd 2x 64', layers=[64, 64], dropout=0.2)
+lstmd_2x_64 = mlApi.LSTM('lstmd 2x 64', layers=[64, 64], dropout=0.2, recurrentDropout=0.2, enrolWindow=16)
 linear_r = mlApi.Linear_Regularized('linear r')
-
-ensemble = mlApi.Ensemble('lstm + mlp ensemble', [lstmd_1x_128, mlpd_1x_128])
+ensemble1 = mlApi.Ensemble('mlp2 + linear ensemble', [mlpd_2x_64, linear_r])
+ensemble2 = mlApi.Ensemble('lstm2 + mlp2 ensemble', [mlpd_2x_64, lstmd_2x_64])
 
 modelList = [
-	mlpd_1x_128,
-	lstmd_1x_128,
-	#mlpd_2x_64,
-	#lstmd_2x_64,
-    #ensemble,
+    mlpd_1x_128,
+    lstmd_1x_128,
+	mlpd_2x_64,
+	lstmd_2x_64,
+    ensemble1,
+    ensemble2,
 	linear_r,
 ]
 
@@ -80,6 +80,5 @@ mlApi.trainModels(retrain)
 modelNames, metrics_train, metrics_test, columnsList, deviationsList = mlApi.predictWithModels(
 	plot=True,
 	interpol=False,
+	score=True,
 )
-
-#print(linear_r.model.coef_)

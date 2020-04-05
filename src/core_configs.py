@@ -170,7 +170,7 @@ def getConfigD_modelC(res):
 
 def getConfigF(res):
 	# File path to dataset .csv file
-	filename = "../master-thesis-db/datasets/F/data2_" + res + ".csv"
+	filename = "../master-thesis-db/datasets/F/data_" + res + ".csv"
 
 	# List of columns on form ['name', 'desc', 'unit']
 	columns = getConfigF_columns()
@@ -208,7 +208,7 @@ def getConfigF(res):
 
 def getConfigF_modelA(res):
 	# File path to dataset .csv file
-	filename = "../master-thesis-db/datasets/F/data2_" + res + ".csv"
+	filename = "../master-thesis-db/datasets/F/data_" + res + ".csv"
 
 	# List of columns on form ['name', 'desc', 'unit']
 	columns = getConfigF_columns()
@@ -254,7 +254,7 @@ def getConfigF_modelA(res):
 
 def getConfigF_modelB(res):
 	# File path to dataset .csv file
-	filename = "../master-thesis-db/datasets/F/data2_" + res + ".csv"
+	filename = "../master-thesis-db/datasets/F/data_" + res + ".csv"
 
 	# List of columns on form ['name', 'desc', 'unit']
 	columns = getConfigF_columns()

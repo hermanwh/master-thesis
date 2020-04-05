@@ -204,7 +204,7 @@ def trainModels(modelList, filename, targetColumns, retrain=False):
         retrain
     )
 
-def predictWithModels(modelList, X_train, y_train, X_test, y_test, targetColumns, indexColumn, columnDescriptions, columnUnits, traintime, plot=True, interpol=False):
+def predictWithModels(modelList, X_train, y_train, X_test, y_test, targetColumns, indexColumn, columnDescriptions, columnUnits, traintime, plot=True, interpol=False, score=True):
     """
     FUNCTION:
         Used to make predictions using previously defined models
@@ -229,12 +229,13 @@ def predictWithModels(modelList, X_train, y_train, X_test, y_test, targetColumns
         targetColumns 
     )
 
-    if plot:
+    if score:
         prints.printModelScores(
             modelNames,
             metrics_train,
             metrics_test
         )
+    if plot:
         plots.plotModelPredictions(
             plt,
             deviationsList,
@@ -245,6 +246,7 @@ def predictWithModels(modelList, X_train, y_train, X_test, y_test, targetColumns
             traintime,
             interpol=interpol,
         )
+    if score:
         plots.plotModelScores(
             plt,
             modelNames,

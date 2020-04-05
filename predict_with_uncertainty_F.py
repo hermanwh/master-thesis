@@ -3,7 +3,7 @@ import src.core as mlApi
 # 1. Define dataset specifics
 
 # File path to dataset .csv
-filename = "../master-thesis-db/datasets/F/data2_30min.csv"
+filename = "../master-thesis-db/datasets/F/data_30min.csv"
 
 # List of columns on form ['name', 'desc', 'unit']
 columns = [

@@ -76,7 +76,7 @@ mlApi.reset()
 
 # 1. 
 
-filename = "../master-thesis-db/datasets/F/data2_180min.csv"
+filename = "../master-thesis-db/datasets/F/data_180min.csv"
 
 datasetName = "F - Real HX"
 

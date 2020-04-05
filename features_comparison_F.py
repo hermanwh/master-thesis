@@ -12,7 +12,7 @@ trainmetrics = []
 testmetrics = []
 
 # define dataset specifics
-filename = "../master-thesis-db/datasets/F/data2_30min.csv"
+filename = "../master-thesis-db/datasets/F/data_30min.csv"
 
 columns = [
 	['FYN0111', 'Gasseksport rate', 'MSm^3/d'],

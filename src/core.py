@@ -275,7 +275,7 @@ def predictWithModelsUsingDropout(numberOfPredictions=20):
         numberOfPredictions,
     )
 
-def predictWithModels(plot=True, interpol=False):
+def predictWithModels(plot=True, interpol=False, score=True):
     """
     FUNCTION:
         Used to make predictions using previously defined models
@@ -301,12 +301,13 @@ def predictWithModels(plot=True, interpol=False):
         _targetColumns 
     )
 
-    if plot:
+    if score:
         prints.printModelScores(
             modelNames,
             metrics_train,
             metrics_test
         )
+    if plot:
         plots.plotModelPredictions(
             plt,
             deviationsList,
@@ -317,6 +318,7 @@ def predictWithModels(plot=True, interpol=False):
             _traintime,
             interpol=interpol,
         )
+    if score:
         plots.plotModelScores(
             plt,
             modelNames,
