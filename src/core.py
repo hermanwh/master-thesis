@@ -785,8 +785,8 @@ def correlationDuoPlot(df1, df2, title1="Correlation plot 1", title2="Correlatio
 def correlationDifferencePlot(df1, df2, title="Correlation difference plot"):
     return analysis.correlationDifferencePlot(df1, df2, title)
 
-def valueDistribution(df, traintime, testtime):
-    return analysis.valueDistribution(df, traintime, testtime)
+def valueDistribution(df, traintime, testtime, columnDescriptions, columnUnits):
+    return analysis.valueDistribution(df, traintime, testtime, columnDescriptions, columnUnits)
 
 def printCorrelationMatrix(covmat, df, columnNames=None):
     return prints.printCorrelationMatrix(covmat, df, columnNames)

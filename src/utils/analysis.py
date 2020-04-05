@@ -253,23 +253,24 @@ def correlationDifferencePlot(df1, df2, title="Correlation difference plot"):
     
     plt.show()
 
-def valueDistribution(df, traintime, testtime):
+def valueDistributionSingle(df, traintime, testtime):
     scaler = StandardScaler()
     scaled = scaler.fit_transform(df.values)
     scaled_df = pd.DataFrame(scaled, index=df.index, columns=df.columns)
 
     df_train, df_test = utilities.getTestTrainSplit(scaled_df, traintime, testtime)    
 
-    fig, axs = plt.subplots(nrows=df_train.shape[-1], ncols=2, figsize=(15,20), dpi=100)
+    height = df_train.shape[-1]*5
+    fig, axs = plt.subplots(nrows=df_train.shape[-1], ncols=2, figsize=(15,height), dpi=100)
     #fig.tight_layout()
     
     for k in range(df_train.shape[-1]):
         ax1, ax2 = axs[k, 0], axs[k, 1]
         
         ax1.plot(df_train.iloc[:,k], label="train",
-                marker="o", ms=.8, lw=0)
-        ax1.plot(df_test.iloc[:,k], label="valid",
-                marker="o", ms=.8, lw=0)
+                marker="o", ms=1.5, lw=0)
+        ax1.plot(df_test.iloc[:,k], label="test",
+                marker="o", ms=1.5, lw=0)
         
         ax1.set_xticks(ax1.get_xticks()[3::3])
         ax1.set_ylabel(df_train.columns[k])
@@ -281,3 +282,36 @@ def valueDistribution(df, traintime, testtime):
         ax2.legend(loc="upper right")
 
     plt.show()
+
+def valueDistribution(df, traintime, testtime, columnDescriptions, columnUnits):
+    scaler = StandardScaler()
+    scaled = scaler.fit_transform(df.values)
+    scaled_df = pd.DataFrame(scaled, index=df.index, columns=df.columns)
+
+    df_train, df_test = utilities.getTestTrainSplit(scaled_df, traintime, testtime)    
+
+    for k, column in enumerate(df_train.columns):
+        fig, axs = plt.subplots(nrows=1, ncols=2, figsize=(10,3.0), dpi=100)
+        #fig.tight_layout()
+        ax1, ax2 = axs[0], axs[1]
+        
+        fig.suptitle(column + " " + columnDescriptions[column])
+
+        ax1.plot(df_train.iloc[:,k], label="train",
+                marker="o", ms=1.5, lw=0)
+        ax1.plot(df_test.iloc[:,k], label="test",
+                marker="o", ms=1.5, lw=0)
+        
+        ax1.set_xticks(ax1.get_xticks()[3::3])
+        ax1.set_ylabel(columnUnits[column] + ", standardized")
+        ax1.set_xlabel('Date')
+        
+        sns.distplot(df_train.iloc[:,k], ax=ax2, label="train", kde=True, kde_kws={"lw":2.5})
+        sns.distplot(df_test.iloc[:,k], ax=ax2, label="test", kde=True, kde_kws={"lw":2.5})
+        
+        ax2.set_xlim((-3,3))
+        ax2.legend(loc="upper right")
+        ax2.set_ylabel('Ratio')
+        ax2.set_xlabel(columnUnits[column] + ", standardized")
+
+        plt.show()

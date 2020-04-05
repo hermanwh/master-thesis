@@ -23,7 +23,6 @@ def main(filename):
         df = utilities.dropIrrelevantColumns(df, [relevantColumns, labelNames])
 
     plots.plotData(df, plt, columnDescriptions=labelNames)
-    plt.show()
 
 pyName = "plotData.py"
 arguments = [

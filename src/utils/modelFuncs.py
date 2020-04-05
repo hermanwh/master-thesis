@@ -7,8 +7,8 @@ if module_path not in sys.path:
     sys.path.append(module_path)
 
 import pathlib
-print(pathlib.Path(__file__).parent.absolute())
-print(pathlib.Path().absolute())
+#print(pathlib.Path(__file__).parent.absolute())
+#print(pathlib.Path().absolute())
 
 import warnings
 # this disables a warning in sklearn for linear models:

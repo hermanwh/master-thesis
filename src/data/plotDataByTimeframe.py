@@ -24,7 +24,6 @@ def main(filename, start, end):
         df = utilities.dropIrrelevantColumns(df, [relevantColumns, labelNames])
 
     plots.plotData(df, plt, columnDescriptions=labelNames)
-    plt.show()
 
 pyName = "plotDataByTimeframe.py"
 arguments = [

@@ -32,19 +32,23 @@ def readDataFile(filename):
     if ext == '.csv':
         df = pd.read_csv(filename)
         if 'Date' in df.columns:
-            df['Date'] = df['Date'].apply(lambda x: x.split('+')[0])
+            if df.dtypes['Date'] not in [pd.np.dtype('object')]:
+                df['Date'] = df['Date'].apply(lambda x: x.split('+')[0])
             df['Date'] = pd.to_datetime(df['Date'], dayfirst=True)
         elif 'time' in df.columns:
-            df['Date'] = df['time'].apply(lambda x: x.split('+')[0])
+            if df.dtypes['Date'] not in [pd.np.dtype('object')]:
+                df['Date'] = df['time'].apply(lambda x: x.split('+')[0])
             df['Date'] = pd.to_datetime(df['Date'], dayfirst=True)
             df = df.drop('time', axis=1)
     elif ext == '.xls':
         df = pd.read_excel(filename)
         if 'Date' in df.columns:
-            df['Date'] = df['Date'].apply(lambda x: x.split('+')[0])
+            if df.dtypes['Date'] not in [pd.np.dtype('object')]:
+                df['Date'] = df['Date'].apply(lambda x: x.split('+')[0])
             df['Date'] = pd.to_datetime(df['Date'], dayfirst=True)
         elif 'time' in df.columns:
-            df['Date'] = df['time'].apply(lambda x: x.split('+')[0])
+            if df.dtypes['Date'] not in [pd.np.dtype('object')]:
+                df['Date'] = df['time'].apply(lambda x: x.split('+')[0])
             df['Date'] = pd.to_datetime(df['Date'], dayfirst=True)
             df = df.drop('time', axis=1)
     else:

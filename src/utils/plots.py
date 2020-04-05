@@ -145,7 +145,7 @@ def plotTraining(history, plt):
     plt.title('Training history')
     plt.show()
 
-def plotData(df, plt, columnDescriptions=None, relevantColumns=None, columnUnits=None, color='darkgreen'):
+def plotData(df, plt, columnDescriptions=None, relevantColumns=None, columnUnits=None, color=getPlotColors()[0]):
     if relevantColumns is not None:
         columns = relevantColumns
     else:
@@ -179,6 +179,7 @@ def plotData(df, plt, columnDescriptions=None, relevantColumns=None, columnUnits
                 plt.legend(loc=(1.01, 0.01), ncol=1)
             else:
                 print("Column " + column + "not in dataset")
+    plt.show()
 
 def plotDataByTimeframe(df, plt, start, end, columnDescriptions=None, relevantColumns=None):
     df = getDataByTimeframe(df, start, end)
