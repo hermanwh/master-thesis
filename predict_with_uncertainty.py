@@ -56,7 +56,7 @@ mlApi.initModels(modelList)
 mlApi.trainModels(retrain)
 
 # 5. Predict
-predictions, means, stds = mlApi.predictWithModelsUsingDropout()
+predictions, means, stds = mlApi.predictWithModelsUsingDropout(numberOfPredictions=30)
 
 plotDropoutPrediction(modelList, predictions, means, stds)
 
@@ -87,7 +87,7 @@ mlApi.initModels(modelList)
 mlApi.trainModels(retrain)
 
 # 5. Predict
-predictions, means, stds = mlApi.predictWithModelsUsingDropout()
+predictions, means, stds = mlApi.predictWithModelsUsingDropout(numberOfPredictions=30)
 
 plotDropoutPrediction(modelList, predictions, means, stds)
 
@@ -118,6 +118,6 @@ mlApi.initModels(modelList)
 mlApi.trainModels(retrain)
 
 # 5. Predict
-predictions, means, stds = mlApi.predictWithModelsUsingDropout()
+predictions, means, stds = mlApi.predictWithModelsUsingDropout(numberOfPredictions=30)
 
 plotDropoutPrediction(modelList, predictions, means, stds)

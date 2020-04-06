@@ -9,13 +9,13 @@ def getConfig(dirr, model, res):
 		'F': {
 			'A': getConfigF_modelA,
 			'B': getConfigF_modelB,
-			None: getConfigD,
+			None: getConfigF,
 		},
 		'G': {
 			'A': getConfigG_modelA,
 			'B': getConfigG_modelB,
 			'C': getConfigG_modelC,
-			None: getConfigD,
+			None: getConfigG,
 		},
 	}
 

@@ -57,6 +57,9 @@ def getPlotColors():
         '#9ebcda',
         '#fdbb84',
         '#c994c7',
+        'darkgreen',
+        'darkred',
+        'darkgrey',
     ]
     
     return colors
