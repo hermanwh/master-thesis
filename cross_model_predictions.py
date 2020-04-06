@@ -62,15 +62,16 @@ def predictWithConfig(modelList, dirr, mod, res):
 	)
 
 dirrs = ['D', 'F', 'G']
-mod = 'A'
+mods = ['A', 'B']
 res = '30min'
 
-allModels = []
-for dirr in dirrs:
-	modelList = trainModelsWithConfig(dirr, mod, res)
-	allModels.append(modelList)
-
-for i in range(len(allModels)):
-	modelsOfTypei = list(map(lambda x : x[i], allModels))
+for mod in mods:
+	allModels = []
 	for dirr in dirrs:
-		predictWithConfig(modelsOfTypei, dirr, mod, res)
+		modelList = trainModelsWithConfig(dirr, mod, res)
+		allModels.append(modelList)
+
+	for i in range(len(allModels)):
+		modelsOfTypei = list(map(lambda x : x[i], allModels))
+		for dirr in dirrs:
+			predictWithConfig(modelsOfTypei, dirr, mod, res)
