@@ -74,4 +74,9 @@ for mod in mods:
 	for i in range(len(allModels)):
 		modelsOfTypei = list(map(lambda x : x[i], allModels))
 		for dirr in dirrs:
+			print("")
+			print("Predictions for dataset " + dirr)
+			print("Model " + mod)
+			print("Resolution " + res)
+			print("")
 			predictWithConfig(modelsOfTypei, dirr, mod, res)
