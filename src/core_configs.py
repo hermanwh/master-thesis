@@ -26,19 +26,7 @@ def getConfigD(res):
 	filename = "../master-thesis-db/datasets/D/dataC.csv"
 
 	# List of columns on form ['name', 'desc', 'unit']
-	columns = [
-		['20TT001', 'Gas side inlet temperature', 'degrees'],
-		['20PT001', 'Gas side inlet pressure', 'barG'],
-		['20FT001', 'Gas side flow', 'M^3/s'],
-		['20TT002', 'Gas side outlet temperature', 'degrees'],
-		['20PDT001', 'Gas side pressure difference', 'bar'],
-		['50TT001', 'Cooling side inlet temperature', 'degrees'],
-		['50PT001', 'Cooling side inlet pressure', 'barG'],
-		['50FT001', 'Cooling side flow', 'M^3/s'],
-		['50TT002', 'Cooling side outlet temperature', 'degrees'],
-		['50PDT001', 'Cooling side pressure differential', 'bar'],
-		['50TV001', 'Cooling side valve opening', '%'],
-	]
+	columns = getConfigD_columns()
 
 	# List of column names to ignore completely
 	irrelevantColumns = [
@@ -56,7 +44,9 @@ def getConfigD(res):
 		"2020-08-01 00:00:00"
 	]
 
-	return [filename, columns, irrelevantColumns, None, traintime, testtime, None]
+	columnOrder = ['20TT001', '20TT002', '20FT001', '50TT001', '50TT002', '50TV001', '50FT001', '20PDT001', '50PDT001', '20PT001', '50PT001']
+
+	return [filename, columns, irrelevantColumns, None, traintime, testtime, columnOrder]
 
 def getConfigD_modelA(res):
 	# File path to dataset .csv file
@@ -203,8 +193,10 @@ def getConfigF(res):
 		"2018-01-01 00:00:00",
 		"2019-05-01 00:00:00"
 	]
+	
+	columnOrder = ['TT0106_MA_Y', 'TIC0105_CA_YX', 'FYN0111', 'TIC0425_CA_YX', 'TT0653_MA_Y', 'TIC0105_CA_Y']
 
-	return [filename, columns, irrelevantColumns, None, traintime, testtime, None]
+	return [filename, columns, irrelevantColumns, None, traintime, testtime, columnOrder]
 
 def getConfigF_modelA(res):
 	# File path to dataset .csv file
@@ -319,8 +311,10 @@ def getConfigG(res):
 		"2017-01-01 00:00:00",
 		"2020-03-01 00:00:00",
 	]
+	
+	columnOrder = ['TZI0012', 'TI0066', 'FI0010', 'TT0025', 'TT0026', 'TIC0022U', 'FI0027', 'PDI0064', 'PDT0024', 'PI0001']
 
-	return [filename, columns, irrelevantColumns, None, traintime, testtime, None]
+	return [filename, columns, irrelevantColumns, None, traintime, testtime, columnOrder]
 
 def getConfigG_modelA(res):
 	# File path to dataset .csv file
