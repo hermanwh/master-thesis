@@ -236,9 +236,14 @@ def plotTrainingSummary(trainingSummary):
 
     ax1, ax2 = axs
 
+    max_y = 5.0 *  np.mean(list(map(lambda x: x['loss_actual'], trainingSummary.values())))
+    max_yval = 5.0 * np.mean(list(map(lambda x: x['val_loss_final'], trainingSummary.values())))
+
+    ax1.set_ylim([0, max_y])
     ax1.set_title('Loss')
     ax1.set_ylabel('Loss')
     ax1.set_xlabel('Epoch')
+    ax2.set_ylim([0, max_yval])
     ax2.set_title('Validation loss')
     ax2.set_ylabel('Val. loss')
     ax2.set_xlabel('Epoch')
