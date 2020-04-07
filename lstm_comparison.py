@@ -1,4 +1,5 @@
 import src.core as mlApi
+import src.core_configs as configs
 
 # 1. Define dataset specifics
 
@@ -12,17 +13,17 @@ X_train, y_train, X_test, y_test = mlApi.getFeatureTargetSplit(targetColumns)
 
 # 3. Define models
 
-lstm_1x_128 = mlApi.LSTM('lstm 1x 128', layers=[128])
+lstm_1x_128 = mlApi.LSTM('lstm 1x 128', layers=[128], enrolWindow=16)
 
-lstmd_1x_16 = mlApi.LSTM('lstmd 1x 16', layers=[16], dropout=0.3)
-lstmd_1x_32 = mlApi.LSTM('lstmd 1x 32', layers=[32], dropout=0.3)
-lstmd_1x_64 = mlApi.LSTM('lstmd 1x 64', layers=[64], dropout=0.3)
-lstmd_1x_128 = mlApi.LSTM('lstmd 1x 128', layers=[128], dropout=0.3)
+lstmd_1x_16 = mlApi.LSTM('lstmd 1x 16', layers=[16], dropout=0.3, enrolWindow=16)
+lstmd_1x_32 = mlApi.LSTM('lstmd 1x 32', layers=[32], dropout=0.3, enrolWindow=16)
+lstmd_1x_64 = mlApi.LSTM('lstmd 1x 64', layers=[64], dropout=0.3, enrolWindow=16)
+lstmd_1x_128 = mlApi.LSTM('lstmd 1x 128', layers=[128], dropout=0.3, enrolWindow=16)
 
-lstmd_2x_16 = mlApi.LSTM('lstmd 2x 16', layers=[16, 16], dropout=0.3)
-lstmd_2x_32 = mlApi.LSTM('lstmd 2x 32', layers=[32, 32], dropout=0.3)
-lstmd_2x_64 = mlApi.LSTM('lstmd 2x 64', layers=[64, 64], dropout=0.3)
-lstmd_2x_128 = mlApi.LSTM('lstmd 2x 128', layers=[128, 128], dropout=0.3)
+lstmd_2x_16 = mlApi.LSTM('lstmd 2x 16', layers=[16, 16], dropout=0.3, enrolWindow=16)
+lstmd_2x_32 = mlApi.LSTM('lstmd 2x 32', layers=[32, 32], dropout=0.3, enrolWindow=16)
+lstmd_2x_64 = mlApi.LSTM('lstmd 2x 64', layers=[64, 64], dropout=0.3, enrolWindow=16)
+lstmd_2x_128 = mlApi.LSTM('lstmd 2x 128', layers=[128, 128], dropout=0.3, enrolWindow=16)
 
 linear_cv = mlApi.Linear_Regularized('linear r')
 
@@ -33,17 +34,17 @@ ensemble2 = mlApi.Ensemble('lstmd2 + linear', [lstmd_1x_128, linear_cv])
 ensemble3 = mlApi.Ensemble('lstm + mlp', [lstmd_2x_64, mlp_d])
 
 modelList = [
-    #lstmd_1x_16,
-    #lstmd_1x_32,
-    #lstmd_1x_64,
-    #lstmd_1x_128,
-    #lstmd_2x_16,
-    #lstmd_2x_32,
-    #lstmd_2x_64,
+    lstmd_1x_16,
+    lstmd_1x_32,
+    lstmd_1x_64,
+    lstmd_1x_128,
+    lstmd_2x_16,
+    lstmd_2x_32,
+    lstmd_2x_64,
     lstmd_2x_128,
-    #ensemble,
-    #ensemble2,
-	#ensemble3,
+    ensemble,
+    ensemble2,
+	ensemble3,
     linear_cv,
 ]
 
