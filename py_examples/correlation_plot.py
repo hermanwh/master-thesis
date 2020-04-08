@@ -1,8 +1,14 @@
+import sys, os
+ROOT_PATH = os.path.abspath(".").split("src")[0]
+if ROOT_PATH not in sys.path:
+    sys.path.append(ROOT_PATH)
+
+import pandas as pd
 import src.core as mlApi
 
-# 1. Define dataset specifics 
+# 1. Define dataset specifics
 
-# File path to dataset .csv
+# File path to dataset .csv file
 filename = "../master-thesis-db/datasets/D/dataC.csv"
 
 # A desired name for the dataset, used as plot titles
@@ -25,49 +31,45 @@ columns = [
 
 # List of column names to ignore completely
 irrelevantColumns = [
-    '50FT001',
-    '20PT001',
-    '50PT001',
-    '20PDT001',
-    '50PDT001',
+
 ]
 
 # List of training periods on form ['start', 'end']
 traintime = [
-        ["2020-01-01 00:00:00", "2020-04-01 00:00:00"],
-    ]
+    ["2020-01-01 00:00:00", "2020-04-01 00:00:00"],
+]
 
-# Entire testing period
+# In this case, two separate testing phases are used
+# This testtime parameter should cover the entire dataset
 testtime = [
     "2020-01-01 00:00:00",
     "2020-08-01 00:00:00"
 ]
 
-# Part 1 of the testing period
+# This testtime1 parameter should cover the first testing phase
 testtime1 = [
-    "2020-04-01 00:00:00",
-    "2020-05-05 00:00:00"
+    "2020-04-15 00:00:00",
+    "2020-05-04 00:00:00"
 ]
 
-# Part 2 of the testing period
+# This testtime2 parameter should cover the second testing phase
 testtime2 = [
-    "2020-05-06 00:00:00",
-    "2020-08-01 00:00:00",
+    "2020-06-01 00:00:00",
+    "2020-06-16 00:00:00"
 ]
-
-print("Finding PCA plot for dataset "+datasetName)
-print(" ")
 
 # 2. Initiate and divide data
+
 df = mlApi.initDataframe(filename, columns, irrelevantColumns)
 df_train, df_test = mlApi.getTestTrainSplit(traintime, testtime)
 df_test_1, df_test_2 = mlApi.getTestTrainSplit([testtime1], testtime2)
+df_test_joined = pd.concat([df_test_1, df_test_2])
 
-# 3. Plot scatter plot of training data with color scaling
-mlApi.pcaPlot(df_train, plotTitle=datasetName)
+# 3. Plot correlation plots
 
-# 4. Plot scatter plot of testing data
-mlApi.pcaDuoPlot(df_train, df_test_1, df_test_2, plotTitle=datasetName)
+mlApi.correlationPlot(df_train, datasetName + " train")
+mlApi.correlationDuoPlot(df_test_1, df_test_2, datasetName + " test 1", datasetName + " test 2")
+mlApi.correlationDifferencePlot(df_train, df_test_joined, "Difference, " + datasetName + " train and test")
 
 # Reset to prepare for second dataset
 # -------------------------------------
@@ -95,47 +97,44 @@ irrelevantColumns = [
 
 ]
 
-
+# In this case, two training phases are used
+# This should be the first training phase
 traintime = [
         ["2018-01-01 00:00:00", "2018-08-01 00:00:00"],
     ]
 
+# This should be the second training phase
+traintime2 = [
+	["2019-02-20 00:00:00", "2019-03-20 00:00:00"]
+]
+
 testtime = [
-    ["2018-01-01 00:00:00", "2019-05-01 00:00:00"]
+    "2018-12-01 00:00:00",
+    "2019-02-01 00:00:00"
 ]
 
-testtime1 = [
-    "2018-09-25 00:00:00",
-    "2018-12-10 00:00:00"
-]
+# 2.
 
-testtime2 = [
-    "2019-02-15 00:00:00",
-    "2019-05-01 00:00:00",
-]
-
-print("Finding PCA plot for dataset "+datasetName)
-print(" ")
-
-# 2. 
 df = mlApi.initDataframe(filename, columns, irrelevantColumns)
 df_train, df_test = mlApi.getTestTrainSplit(traintime, testtime)
-df_test_1, df_test_2 = mlApi.getTestTrainSplit([testtime1], testtime2)
+df_train2, df_test2 = mlApi.getTestTrainSplit(traintime2, testtime)
 
-# 3. 
-mlApi.pcaPlot(df_train, plotTitle=datasetName)
+# 3.
 
-# 4. 
-mlApi.pcaDuoPlot(df_train, df_test_1, df_test_2, datasetName)
+mlApi.correlationDuoPlot(df_train, df_train2, datasetName +" train 1", datasetName + " train 2")
+mlApi.correlationPlot(df_test, datasetName + " test")
+mlApi.correlationDifferencePlot(df_train, df_test, "Difference, " + datasetName + " train 1 and test")
+mlApi.correlationDifferencePlot(df_train2, df_test, "Difference, " + datasetName + " train 2 and test")
+mlApi.correlationDifferencePlot(df_train, df_train2, "Difference, " + datasetName + " train 1 and train 2")
 
-# Reset to prepare for second dataset
+# Reset to prepare for third dataset
 # -------------------------------------
 mlApi.reset()
 # -------------------------------------
 
 # 1. 
 
-filename = "../master-thesis-db/datasets/G/data_180min.csv"
+filename = "../master-thesis-db/datasets/G/data_60min.csv"
 
 datasetName = "G - Real HX"
 
@@ -153,11 +152,10 @@ columns = [
 ]
 
 irrelevantColumns = [
-    'PDI0064',
-    'PDT0024',
-    'FI0027',
-    'PI0001',
+
 ]
+
+# As done for dataset D, two test phases are chosen
 
 traintime = [
 	["2019-04-10 00:00:00", "2019-08-01 00:00:00"]
@@ -168,28 +166,25 @@ testtime = [
 	"2020-03-01 00:00:00",
 ]
 
-
 testtime1 = [
-    "2019-02-01 00:00:00",
-    "2019-04-01 00:00:00",
+    "2019-01-10 00:00:00",
+    "2019-04-10 00:00:00"
 ]
 
 testtime2 = [
-    "2019-09-01 00:00:00",
-    "2019-11-10 00:00:00",
+    "2019-08-01 00:00:00",
+    "2020-06-16 00:00:00"
 ]
 
-print("Finding PCA plot for dataset "+datasetName)
-print(" ")
+# 2. Initiate and divide data
 
-# 2. 
 df = mlApi.initDataframe(filename, columns, irrelevantColumns)
 df_train, df_test = mlApi.getTestTrainSplit(traintime, testtime)
 df_test_1, df_test_2 = mlApi.getTestTrainSplit([testtime1], testtime2)
+df_test_joined = pd.concat([df_test_1, df_test_2])
 
-# 3. 
-mlApi.pcaPlot(df_train, plotTitle=datasetName)
+# 3. Plot correlation plots
 
-# 4. 
-mlApi.pcaDuoPlot(df_train, df_test_1, df_test_2, datasetName)
-
+mlApi.correlationPlot(df_train, datasetName + " train")
+mlApi.correlationDuoPlot(df_test_1, df_test_2, datasetName +" test 1", datasetName + " test 2")
+mlApi.correlationDifferencePlot(df_train, df_test_joined, "Difference, " + datasetName + " train and test")

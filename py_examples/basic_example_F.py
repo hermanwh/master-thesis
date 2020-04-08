@@ -1,3 +1,8 @@
+import sys, os
+ROOT_PATH = os.path.abspath(".").split("src")[0]
+if ROOT_PATH not in sys.path:
+    sys.path.append(ROOT_PATH)
+
 import src.core as mlApi
 
 # 1. Define dataset specifics
