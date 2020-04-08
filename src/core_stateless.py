@@ -568,6 +568,58 @@ def Ensemble(
 
     return model
 
+def getCallbacks(patience_es, patience_rlr):
+    """
+    FUNCTION:
+        Returns a list of callbacks with the provided properties
+    
+    PARAMS:
+        patience_es: int
+            Number of iterations to wait before EarlyStopping is performed
+        patience_rlr: int
+            Number of iterations to wait before ReduceLearningRate is performed
+    
+    RETURNS:
+        List of callbacks
+    """
+    return modelFuncs.getBasicCallbacks(patience_es=patience_es, patience_rlr=patience_rlr)
+
+def setMLPCallbacks(patience_es, patience_rlr):
+    """
+    FUNCTION:
+        Redefines the default MLP callbacks
+        NB: only for current state
+    
+    PARAMS:
+        patience_es: int
+            Number of iterations to wait before EarlyStopping is performed
+        patience_rlr: int
+            Number of iterations to wait before ReduceLearningRate is performed
+    
+    RETURNS:
+        None
+    """
+    global _default_MLP_args
+    _default_MLP_args['callbacks'] = modelFuncs.getBasicCallbacks(patience_es=patience_es, patience_rlr=patrience_rlr)
+
+def setLSTMCallbacks(patience_es, patience_rlr):
+    """
+    FUNCTION:
+        Redefines the default LSTM callbacks
+        NB: only for current state
+    
+    PARAMS:
+        patience_es: int
+            Number of iterations to wait before EarlyStopping is performed
+        patience_rlr: int
+            Number of iterations to wait before ReduceLearningRate is performed
+    
+    RETURNS:
+        None
+    """
+    global _default_LSTM_args
+    _default_LSTM_args['callbacks'] = modelFuncs.getBasicCallbacks(patience_es=patience_es, patience_rlr=patrience_rlr)
+
 def correlationMatrix(df):
     return analysis.correlationMatrix(df)
 
@@ -603,14 +655,3 @@ def printCorrelationMatrix(covmat, df, columnNames=None):
 
 def printExplainedVarianceRatio(pca):
     return prints.printExplainedVarianceRatio(pca)
-
-def getCallbacks(patience_es, patience_rlr):
-    return modelFuncs.getBasicCallbacks(patience_es=patience_es, patience_rlr=patience_rlr)
-
-def setMLPCallbacks(patience_es, patience_rlr):
-    global _default_MLP_args
-    _default_MLP_args['callbacks'] = modelFuncs.getBasicCallbacks(patience_es=patience_es, patience_rlr=patrience_rlr)
-
-def setLSTMCallbacks(patience_es, patience_rlr):
-    global _default_LSTM_args
-    _default_LSTM_args['callbacks'] = modelFuncs.getBasicCallbacks(patience_es=patience_es, patience_rlr=patrience_rlr)
