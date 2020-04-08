@@ -169,20 +169,38 @@ def predictWithModels(modelList, X_train, y_train, X_test, y_test, targetColumns
         train_metrics = metrics.calculateMetrics(y_train[enrol:], pred_train)
         test_metrics = metrics.calculateMetrics(y_test[enrol:], pred_test)
         
-        for j in range(y_train.shape[1]):
-            columnsList[j].append(
+        if len(pred_test.shape) > 1:
+            for j in range(y_train.shape[1]):
+                columnsList[j].append(
+                    [
+                        mod.name,
+                        targetColumns[j],
+                        pred_test[:, j][enrolDiff:],
+                        colors[i],
+                    ]
+                )
+                deviationsList[j].append(
+                    [
+                        mod.name,
+                        targetColumns[j],
+                        y_test[:, j][maxEnrol:] - pred_test[:, j][enrolDiff:],
+                        colors[i],
+                    ]
+                )
+        else:
+            columnsList[0].append(
                 [
                     mod.name,
-                    targetColumns[j],
-                    pred_test[:, j][enrolDiff:],
+                    targetColumns[0],
+                    pred_test[:][enrolDiff:],
                     colors[i],
                 ]
             )
-            deviationsList[j].append(
+            deviationsList[0].append(
                 [
                     mod.name,
-                    targetColumns[j],
-                    y_test[:, j][maxEnrol:] - pred_test[:, j][enrolDiff:],
+                    targetColumns[0],
+                    y_test[:, 0][maxEnrol:] - pred_test[:][enrolDiff:],
                     colors[i],
                 ]
             )

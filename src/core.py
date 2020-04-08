@@ -558,7 +558,9 @@ def GRU(
     
     return model
 
-def Linear(name):
+def Linear(
+    name,
+    ):
     """
     FUNCTION:
         Used to create a Linear Machine Learning model
@@ -583,12 +585,84 @@ def Linear(name):
 
     return model
 
-def Linear_Regularized(name):
+def Linear_Regularized(
+    name,
+    alphas=(0.1, 1.0, 10.0),
+    folds=10,
+    ):
     """
     FUNCTION:
         Used to create a Linear Machine Learning model with built-in
         regularization and cross validation
     
+    PARAMS:
+        name: str
+            A name/alias given to the model by the user
+        alphas: tuple of floats
+            Set of regluarization strenght parameters to try
+        folds: int
+            Number of cross validation folds
+    
+    RETURNS:
+        model: MachineLearningModel
+            Object with typical machine learning methods like train, predict etc.
+    """
+    global _X_train, _y_train
+
+    model = models.sklearnRidgeCV(
+        params={
+            'name': name,
+            'X_train': _X_train,
+            'y_train': _y_train,
+        },
+        alphas = alphas,
+        folds = folds,
+    )
+
+    return model
+
+def ElasticNet(
+    name,
+    alphas=(0.1, 1.0, 10.0),
+    l1_ratio=0.5,
+    ):
+    """
+    FUNCTION:
+        Used to create a iterative regularization path fitting Machine Learning model
+    
+    PARAMS:
+        name: str
+            A name/alias given to the model by the user
+        alphas: tuple of floats
+            Set of regluarization strenght parameters to try
+        l1_ratio: float
+            ratio between L1 and L2 regularization
+    
+    RETURNS:
+        model: MachineLearningModel
+            Object with typical machine learning methods like train, predict etc.
+    """
+    global _X_train, _y_train
+
+    model = models.sklearnElasticNetCV(
+        params={
+            'name': name,
+            'X_train': _X_train,
+            'y_train': _y_train,
+        },
+        alphas = alphas,
+        l1_ratio = l1_ratio,
+    )
+
+    return model
+
+def DecisionTree(
+    name,
+    ):
+    """
+    FUNCTION:
+        Used to create a decision tree regressor
+
     PARAMS:
         name: str
             A name/alias given to the model by the user
@@ -599,7 +673,117 @@ def Linear_Regularized(name):
     """
     global _X_train, _y_train
 
-    model = models.sklearnRidgeCV(
+    model = models.sklearnDecisionTree(
+        params={
+            'name': name,
+            'X_train': _X_train,
+            'y_train': _y_train,
+        },
+    )
+
+    return model
+
+def RandomForest(
+    name,
+    ):
+    """
+    FUNCTION:
+        Used to create a random forest (decision) tree regressor
+
+    PARAMS:
+        name: str
+            A name/alias given to the model by the user
+    
+    RETURNS:
+        model: MachineLearningModel
+            Object with typical machine learning methods like train, predict etc.
+    """
+    global _X_train, _y_train
+
+    model = models.sklearnRandomForest(
+        params={
+            'name': name,
+            'X_train': _X_train,
+            'y_train': _y_train,
+        },
+    )
+
+    return model
+
+def BaggingRegressor(
+    name,
+    ):
+    """
+    FUNCTION:
+        Used to create a bagging regressor model, which aggregates base regressors
+        a achieve a final prediction
+
+    PARAMS:
+        name: str
+            A name/alias given to the model by the user
+    
+    RETURNS:
+        model: MachineLearningModel
+            Object with typical machine learning methods like train, predict etc.
+    """
+    global _X_train, _y_train
+
+    model = models.sklearnBagging(
+        params={
+            'name': name,
+            'X_train': _X_train,
+            'y_train': _y_train,
+        },
+    )
+
+    return model
+
+def AdaBoostRegressor(
+    name,
+    ):
+    """
+    FUNCTION:
+        Used to create an AdaBoost regressor, which fits additional regressor
+        copies with different weights according to previous predictions
+
+    PARAMS:
+        name: str
+            A name/alias given to the model by the user
+    
+    RETURNS:
+        model: MachineLearningModel
+            Object with typical machine learning methods like train, predict etc.
+    """
+    global _X_train, _y_train
+
+    model = models.sklearnAdaBoost(
+        params={
+            'name': name,
+            'X_train': _X_train,
+            'y_train': _y_train,
+        },
+    )
+
+    return model
+
+def SupportVectorMachine(
+    name,
+    ):
+    """
+    FUNCTION:
+        Used to create a Support Vector Machine regressor
+
+    PARAMS:
+        name: str
+            A name/alias given to the model by the user
+    
+    RETURNS:
+        model: MachineLearningModel
+            Object with typical machine learning methods like train, predict etc.
+    """
+    global _X_train, _y_train
+
+    model = models.sklearnSVM(
         params={
             'name': name,
             'X_train': _X_train,

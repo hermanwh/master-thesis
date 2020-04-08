@@ -611,7 +611,7 @@ def sklearnElasticNet(params, alpha=1.0, l1_ratio=0.5):
     model = ElasticNet(alpha=alpha, l1_ratio=l1_ratio)
     return MachinLearningModel(model, X, Y, modelType="Linear", name=name)
 
-def sklearnElasticNetCV(params, alphas=None, l1_ratio=0.5, folds=10):
+def sklearnElasticNetCV(params, alphas=(0.1, 1.0, 10.0), l1_ratio=0.5, folds=10):
     X = params['X_train']
     Y = params['y_train']
     name = params['name']
