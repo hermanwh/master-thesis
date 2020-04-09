@@ -91,6 +91,8 @@ def getTestTrainSplit(df, traintime, testtime):
         Used to split training and testing rows into separate data frames
     
     PARAMS:
+        df: Pandas dataframe
+            e.g. as returned from the initDataframe method
         traintime: List of list of string pairs
             start and end times indicating periods used for training
         testtime: List of string pair
@@ -116,6 +118,10 @@ def getFeatureTargetSplit(df_train, df_test, targetColumns):
         Used to split feature and target columns into separate arrays
     
     PARAMS:
+        df_train: Pandas dataframe of training data
+            e.g. as returned from the getTestTrainSplit method
+        df_est: Pandas dataframe of testing data
+            e.g. as returned from the getTestTrainSplit method
         targetColumns: List of strings
             names of columns present in the dataset used as output(target) values
     
@@ -132,40 +138,6 @@ def getFeatureTargetSplit(df_train, df_test, targetColumns):
 
     return [X_train, y_train, X_test, y_test]
 
-def prepareDataframe(df, traintime, testtime, targetColumns):
-    """
-    FUNCTION:
-        Combination of getTestTrainingSplit and getFeatureTargetSplit
-        Used for even higher level programs where df_train and df_test are not needed
-    
-    PARAMS:
-        df: Pandas dataframe
-            dataframe generated from provided metadata
-        traintime: List of list of string pairs
-            start and end times indicating periods used for training
-        testtime: List of string pair
-            start and end time indicating period used for testing
-            preferably the entire period of the dataset
-        targetColumns: List of strings
-            names of columns present in the dataset used as output(target) values
-    
-    RETURNS:
-        List[X_train, y_train, X_test, y_test]: [Numpy array, Numpy array, Numpy array, Numpy array]
-            Arrays of feature and target values for training and testing
-    """
-
-    df_train, df_test = getTestTrainSplit(
-        df,
-        traintime,
-        testtime,
-    )
-
-    return getFeatureTargetSplit(
-        df_train,
-        df_test,
-        targetColumns,
-    )
-
 def initModels(modelList, df_test):
     """
     FUNCTION:
@@ -174,6 +146,8 @@ def initModels(modelList, df_test):
     PARAMS:
         modelList: list of MachineLearningModel/EnsembleModel objects
             The models used to make predictions
+        df_test: Pandas dataframe
+            e.g. as returned from the getTestTrainSplit method
     
     RETURNS:
         None
@@ -190,6 +164,13 @@ def trainModels(modelList, filename, targetColumns, retrain=False):
         Used to train the models previously provided in the initModels method
     
     PARAMS:
+        modelList: list of MachineLearningModel/EnsembleModel objects
+            The models used to make predictions
+        filename: str
+            location of dataset file on disk in .csv format
+        targetColumns: List of strings
+            names of columns present in the dataset used as output(target) values
+            Same as for the getFeatureTargetSplit method
         retrain: boolean
             Indicates if the program should prefer to load existing models where possible
     
@@ -210,6 +191,21 @@ def predictWithModels(modelList, X_train, y_train, X_test, y_test, targetColumns
         Used to make predictions using previously defined models
     
     PARAMS:
+        modelList: list of MachineLearningModel/EnsembleModel objects
+            The models used to make predictions
+        X_train, y_train, X_test, y_test: Numpy arrays
+            e.g. as returned by the getFeatureTarget method
+        targetColumns: List of strings
+            names of columns present in the dataset used as output(target) values
+            Same as for the getFeatureTargetSplit method
+        indexColumn: Pandas index column
+            e.g. as returned by the initModels method
+        columnDescriptions: Dict of (str, str)
+            e.g. as returned bu the initDataframe method
+        columnUnits: Dict of (str, str)
+            e.g. as returned bu the initDataframe method
+        traintime: list of list of strings
+            defined by the user
         plot: boolean
             Indicates if plots of the calculated predictions are desired
         interpol: boolean
@@ -282,6 +278,10 @@ def MLP(
     PARAMS:
         name: str
             A name/alias given to the model by the user
+        X_train: Numpy array
+            Values for the training features
+        y_train: Numpy array
+            Values for the training targets
         layers: list of integers
             List of neuron size for each layer
         dropout: float
@@ -358,6 +358,10 @@ def LSTM(
     PARAMS:
         name: str
             A name/alias given to the model by the user
+        X_train: Numpy array
+            Values for the training features
+        y_train: Numpy array
+            Values for the training targets
         layers: list of integers
             List of neuron size for each layer
         dropout: float
@@ -433,6 +437,10 @@ def GRU(
     PARAMS:
         name: str
             A name/alias given to the model by the user
+        X_train: Numpy array
+            Values for the training features
+        y_train: Numpy array
+            Values for the training targets
         layers: list of integers
             List of neuron size for each layer
         dropout: float
@@ -490,6 +498,10 @@ def Linear(
     PARAMS:
         name: str
             A name/alias given to the model by the user
+        X_train: Numpy array
+            Values for the training features
+        y_train: Numpy array
+            Values for the training targets
     
     RETURNS:
         model: MachineLearningModel
@@ -519,6 +531,10 @@ def Linear_Regularized(
     PARAMS:
         name: str
             A name/alias given to the model by the user
+        X_train: Numpy array
+            Values for the training features
+        y_train: Numpy array
+            Values for the training targets
     
     RETURNS:
         model: MachineLearningModel
@@ -526,6 +542,208 @@ def Linear_Regularized(
     """
 
     model = models.sklearnRidgeCV(
+        params={
+            'name': name,
+            'X_train': X_train,
+            'y_train': y_train,
+        },
+    )
+
+    return model
+
+def ElasticNet(
+    name,
+    X_train,
+    y_train,
+    alphas=(0.1, 1.0, 10.0),
+    l1_ratio=0.5,
+    ):
+    """
+    FUNCTION:
+        Used to create a iterative regularization path fitting Machine Learning model
+    
+    PARAMS:
+        name: str
+            A name/alias given to the model by the user
+        X_train: Numpy array
+            Values for the training features
+        y_train: Numpy array
+            Values for the training targets
+        alphas: tuple of floats
+            Set of regluarization strenght parameters to try
+        l1_ratio: float
+            ratio between L1 and L2 regularization
+    
+    RETURNS:
+        model: MachineLearningModel
+            Object with typical machine learning methods like train, predict etc.
+    """
+
+    model = models.sklearnElasticNetCV(
+        params={
+            'name': name,
+            'X_train': X_train,
+            'y_train': y_train,
+        },
+        alphas = alphas,
+        l1_ratio = l1_ratio,
+    )
+
+    return model
+
+def DecisionTree(
+    name,
+    X_train,
+    y_train,
+    ):
+    """
+    FUNCTION:
+        Used to create a decision tree regressor
+
+    PARAMS:
+        name: str
+            A name/alias given to the model by the user
+        X_train: Numpy array
+            Values for the training features
+        y_train: Numpy array
+            Values for the training targets
+    
+    RETURNS:
+        model: MachineLearningModel
+            Object with typical machine learning methods like train, predict etc.
+    """
+
+    model = models.sklearnDecisionTree(
+        params={
+            'name': name,
+            'X_train': X_train,
+            'y_train': y_train,
+        },
+    )
+
+    return model
+
+def RandomForest(
+    name,
+    X_train,
+    y_train,
+    ):
+    """
+    FUNCTION:
+        Used to create a random forest (decision) tree regressor
+
+    PARAMS:
+        name: str
+            A name/alias given to the model by the user
+        X_train: Numpy array
+            Values for the training features
+        y_train: Numpy array
+            Values for the training targets
+    
+    RETURNS:
+        model: MachineLearningModel
+            Object with typical machine learning methods like train, predict etc.
+    """
+
+    model = models.sklearnRandomForest(
+        params={
+            'name': name,
+            'X_train': X_train,
+            'y_train': y_train,
+        },
+    )
+
+    return model
+
+def BaggingRegressor(
+    name,
+    X_train,
+    y_train,
+    ):
+    """
+    FUNCTION:
+        Used to create a bagging regressor model, which aggregates base regressors
+        a achieve a final prediction
+
+    PARAMS:
+        name: str
+            A name/alias given to the model by the user
+        X_train: Numpy array
+            Values for the training features
+        y_train: Numpy array
+            Values for the training targets
+    
+    RETURNS:
+        model: MachineLearningModel
+            Object with typical machine learning methods like train, predict etc.
+    """
+
+    model = models.sklearnBagging(
+        params={
+            'name': name,
+            'X_train': X_train,
+            'y_train': y_train,
+        },
+    )
+
+    return model
+
+def AdaBoostRegressor(
+    name,
+    X_train,
+    y_train,
+    ):
+    """
+    FUNCTION:
+        Used to create an AdaBoost regressor, which fits additional regressor
+        copies with different weights according to previous predictions
+
+    PARAMS:
+        name: str
+            A name/alias given to the model by the user
+        X_train: Numpy array
+            Values for the training features
+        y_train: Numpy array
+            Values for the training targets
+    
+    RETURNS:
+        model: MachineLearningModel
+            Object with typical machine learning methods like train, predict etc.
+    """
+
+    model = models.sklearnAdaBoost(
+        params={
+            'name': name,
+            'X_train': X_train,
+            'y_train': y_train,
+        },
+    )
+
+    return model
+
+def SupportVectorMachine(
+    name,
+    X_train,
+    y_train,
+    ):
+    """
+    FUNCTION:
+        Used to create a Support Vector Machine regressor
+
+    PARAMS:
+        name: str
+            A name/alias given to the model by the user
+        X_train: Numpy array
+            Values for the training features
+        y_train: Numpy array
+            Values for the training targets
+    
+    RETURNS:
+        model: MachineLearningModel
+            Object with typical machine learning methods like train, predict etc.
+    """
+
+    model = models.sklearnSVM(
         params={
             'name': name,
             'X_train': X_train,
@@ -549,6 +767,10 @@ def Ensemble(
     PARAMS:
         name: str
             A name/alias given to the model by the user
+        X_train: Numpy array
+            Values for the training features
+        y_train: Numpy array
+            Values for the training targets
         modelList: list of MachineLearningModel objects
             A list of machine learning models used to construct the Ensemble model
     
