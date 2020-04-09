@@ -88,21 +88,28 @@ def plotColumns(dfindex, plt, args, desc="", columnDescriptions=None, trainEndSt
     fig.autofmt_xdate()
 
 # Plots two columns in the same figure with two different axes
-def duoPlot(y1, y2, x, plt, columnDescriptions=None, relevantColumns=None, columnUnits=None, color1='darkgreen', color2='red'):
-    fig, ax1 = plt.subplots(1, 1, figsize=(8,6), dpi=100)
-    ax1.plot(x, y1, color=color1, alpha=1.0)
-    ax2 = ax1.twinx()
-    ax2.plot(x, y2, color=color2, alpha=0.5)
+def duoPlot(y1, y2, x, plt, columnDescriptions=None, relevantColumns=None, columnUnits=None, color1=getPlotColors()[0], color2=getPlotColors()[1], y2lim=None, textArgs=['Duo plot', 'Date', 'Label 1', 'Label 2']):
+    
+    title, xaxis, y1axis, y2axis = textArgs
 
-    ax1.set_xlabel('x axis', fontsize=20)
-    ax1.tick_params(axis='x', rotation=0, labelsize=12)
-    ax1.set_ylabel('Label 1', color=color1, fontsize=20)
-    ax1.tick_params(axis='y', rotation=0, labelcolor='tab:red' )
-    ax2.set_ylabel("Label 2", color=color2, fontsize=20)
-    ax2.tick_params(axis='y', labelcolor='tab:blue')
+    fig, ax1 = plt.subplots(1, 1, figsize=(10,3), dpi=100)
+    ax1.plot(x, y1, color=color1, alpha=0.8)
+    ax2 = ax1.twinx()
+    ax2.plot(x, y2, color=color2, alpha=0.8)
+
+    if y2lim is not  None:
+        (ymin, ymax) = y2lim
+        ax2.set_ylim([ymin, ymax])
+
+    ax1.set_xlabel(xaxis)
+    ax1.tick_params(axis='x', rotation=0)
+    ax1.set_ylabel(y1axis, color=color1)
+    ax1.tick_params(axis='y', rotation=0)
+    ax2.set_ylabel(y2axis, color=color2)
+    ax2.tick_params(axis='y')
 
     ax1.grid(alpha=.4)
-    ax2.set_title("Plot", fontsize=22)
+    ax2.set_title(title)
     plt.show()
 
 # Plots the training history of a set of models
@@ -117,7 +124,7 @@ def plotTraining(history, plt):
     plt.show()
 
 # Plots the columns of a pandas dataframe
-def plotData(df, plt, columnDescriptions=None, relevantColumns=None, columnUnits=None, color=getPlotColors()[0]):
+def plotData(df, plt, columnDescriptions={}, relevantColumns=None, columnUnits=None, color=getPlotColors()[0]):
     if relevantColumns is not None:
         columns = relevantColumns
     else:
@@ -130,7 +137,7 @@ def plotData(df, plt, columnDescriptions=None, relevantColumns=None, columnUnits
     for column in columns:
         if column != "Date":
             if  column in df.columns:
-                fig, ax = plt.subplots(1, 1, figsize=(10,3), dpi=100)
+                fig, ax = plt.subplots()
                 ax.set_xlabel('Date')
                 if columnDescriptions is not None and column in columnDescKeys:
                     ax.set_title(columnDescriptions[column] + " " + column)
@@ -140,17 +147,17 @@ def plotData(df, plt, columnDescriptions=None, relevantColumns=None, columnUnits
                     ax.set_ylabel(columnUnits[column])
                 else:
                     ax.set_ylabel(column)
-                plt.gca().spines["top"].set_alpha(.3)
-                plt.gca().spines["bottom"].set_alpha(.3)
-                plt.gca().spines["right"].set_alpha(.3)
-                plt.gca().spines["left"].set_alpha(.3)
+                #plt.gca().spines["top"].set_alpha(.3)
+                #plt.gca().spines["bottom"].set_alpha(.3)
+                #plt.gca().spines["right"].set_alpha(.3)
+                #plt.gca().spines["left"].set_alpha(.3)
                 plt.plot(df.index, df[column], label=column, lw=1.5, color=color, alpha=0.8)
-                plt.text(df.shape[0]+1, df[column].values[-1], column, fontsize=14, color=color)
-                plt.tick_params(axis="both", which="both", bottom=False, top=False, labelbottom=True, left=False, right=False, labelleft=True)
+                #plt.text(df.shape[0]+1, df[column].values[-1], column, fontsize=14, color=color)
+                #plt.tick_params(axis="both", which="both", bottom=False, top=False, labelbottom=True, left=False, right=False, labelleft=True)
                 plt.grid(1, alpha=0.5)
                 plt.legend(loc=(1.01, 0.01), ncol=1)
             else:
-                print("Column " + column + "not in dataset")
+                print("Column " + column + " not in dataset")
     plt.show()
 
 # Plots the columns of a pandas dataframe based on provided timeframe
