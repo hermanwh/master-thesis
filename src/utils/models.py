@@ -79,8 +79,8 @@ class EnsembleModel():
         for pred in preds[1:]:
             train = np.concatenate((train, pred), axis=1)
         self.MLmodel = sklearnLinear(
-            params = {
-                'name': 'ML model of ensemble',
+            params = {  
+                'name': 'Linear model of ensemble',
                 'X_train': train,
                 'y_train': self.y_train[self.maxEnrol:],
             },
@@ -101,7 +101,7 @@ class EnsembleModel():
             train = np.concatenate((train, pred), axis=1)
         self.MLmodel = sklearnLinear(
             params = {
-                'name': 'ML model of ensemble',
+                'name': 'Linear model of ensemble',
                 'X_train': train,
                 'y_train': self.y_train[self.maxEnrol:],
             },
@@ -171,6 +171,7 @@ class MachinLearningModel():
             NB: not suitable for heat exchanger data,
                 because the validation data will not have
                 the same properties as the training data
+                See thesis for details
 
             X_t, X_v, y_t, y_v = train_test_split(self.X_train, self.y_train, test_size=0.2, shuffle=False)
             validation_generator = TimeseriesGenerator(
@@ -246,6 +247,9 @@ class MachinLearningModel():
                 self.inputScaler.transform(self.X_train),
                 self.outputScaler.transform(self.y_train),
             )
+            if hasattr(self.model, 'coef_'):
+                print("    Trained weights for " + self.name + ":")
+                print(str(self.model.coef_))
             self.history = None
 
     def predict(self, X, y=None):

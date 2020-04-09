@@ -33,6 +33,8 @@ import numpy as np
 
 np.random.seed(100)
 
+# Prints the model summary of a machine learning model
+# The model summary is a list of structure and number of parameters
 def printModelSummary(model):
     if hasattr(model, "summary"):
         # Keras Model object
@@ -53,6 +55,8 @@ def printModelSummary(model):
     else:
         print("Simple models have no summary")
     
+# Prints the model weights of a machine learning model
+# The model weights combined with the model architecture is what calculates the output
 def printModelWeights(model):
     if hasattr(model, "summary"):
         # Keras Model object
@@ -61,7 +65,7 @@ def printModelWeights(model):
         # MachineLearningModel object
         if hasattr(model.model, "summary"):
             # MachineLearningModel.model will be a Keras Model object
-            printModelSummary(model.model)
+            printModelWeights(model.model)
     elif hasattr(model, "models"):
         # EnsembleModel object
         print("Model is of type Ensemble Model")
@@ -69,16 +73,20 @@ def printModelWeights(model):
         print("-------------------------------")
         for mod in model.models:
             # EnsembleModel.models will be a list of MachineLearningModels
-            printModelSummary(mod)
+            printModelWeights(mod)
     else:
         if hasattr(model, "get_params"):
             print(model.get_params())
         else:
             print("No weights found")
 
+# Plots models using the built-in Keras plotting function
 def plotKerasModel(model):
     plot_model(model.model)
 
+# Two callbacks are used by default for all models:
+# - EarlyStopping (stop training when validation loss increases)
+# - ReduceLROnPlateau (reduce learning rate to facilitate continued learning)
 def getBasicCallbacks(monitor="val_loss", patience_es=200, patience_rlr=80):
     return [
         EarlyStopping(
@@ -89,6 +97,7 @@ def getBasicCallbacks(monitor="val_loss", patience_es=200, patience_rlr=80):
         )
     ]
 
+# Some default hyperparameters used
 def getBasicHyperparams():
     return {
         'activation': 'relu',
@@ -97,6 +106,7 @@ def getBasicHyperparams():
         'metrics': ['mean_squared_error'],
     }
 
+# Trains or loads each model of a provided list of models
 def trainModels(modelList, filename, targetColumns, retrain=False, save=True):
     if retrain:
         for mod in modelList:
@@ -133,7 +143,8 @@ def trainModels(modelList, filename, targetColumns, retrain=False, save=True):
     if trainingSummary:
         prints.printTrainingSummary(trainingSummary)
         plots.plotTrainingSummary(trainingSummary)
-              
+
+# Loads a single model based on a defined modelname-filename-targetColumns combination
 def loadModel(modelname, filename, targetColumns, ensembleName=None):
     subdir = filename.split('/')[-2]
     datafile = filename.split('/')[-1].split('.')[0]
@@ -155,6 +166,7 @@ def loadModel(modelname, filename, targetColumns, ensembleName=None):
         history = None
     return [model, history]
 
+# Saves each model of a provided list of models
 def saveModels(modelList, filename, targetColumns):
     subdir = filename.split('/')[-2]
     datafile = filename.split('/')[-1].split('.')[0]
@@ -170,6 +182,7 @@ def saveModels(modelList, filename, targetColumns):
         metricsPath = directory + modName + '_' + joinedColumns + ".txt"
         model.save(modelPath, modelName)
 
+# Calculates relevant metrics such as validation loss, loss and length of model training
 def getTrainingSummary(modelList):
     loss_dict = {}
     modelNames = list(map(lambda mod: mod.name, modelList))
@@ -215,6 +228,8 @@ def getTrainingSummary(modelList):
                     }
     return loss_dict
 
+# Splits a dataset into training and validation data for use in RNN networks
+# By default, 20% of data is used for validation (1/5)
 def getRNNSplit(x_data, y_data, lookback, train_val_ratio=5):
     num_x_signals = x_data.shape[1]
     num_y_signals = y_data.shape[1]

@@ -19,6 +19,7 @@ colors = list(utilities.getColorScheme().values())
 sns.set(context='paper', style='whitegrid', palette=sns.color_palette(colors))
 plt.style.use(ROOT_PATH + '/src/utils/matplotlib_params.rc')
 
+# Calculates correlation matrix of a pandas dataframe
 def correlationMatrix(df):
     if 'Date' in df.columns:
         df = df.drop('Date', axis=1, inplace=False)
@@ -32,6 +33,7 @@ def correlationMatrix(df):
 
     return covMat
 
+# Calculates Principal Component Analysis of a pandas dataframe
 def pca(df, numberOfComponents, relevantColumns=None, columnDescriptions=None):
     if 'Date' in df.columns:
         df = df.drop('Date', axis=1, inplace=False)
@@ -50,6 +52,7 @@ def pca(df, numberOfComponents, relevantColumns=None, columnDescriptions=None):
 
     return pca
 
+# Calculates and plots a 2D Principal Component Analysis decomposition of a pandas dataframe
 def pcaPlot(df, timestamps=None, plotTitle=None):
     if timestamps is not None:
         traintime, testtime, validtime = timestamps
@@ -89,6 +92,8 @@ def pcaPlot(df, timestamps=None, plotTitle=None):
     fig.colorbar(points)
     plt.show()
 
+# Calculates and plots a 2D Principal Component Analysis decomposition
+#   based on one training and two testing pandas dataframes
 def pcaDuoPlot(df_1_train, df_1_test, df_2_test, plotTitle=None):
     train_vals = df_1_train.values
 
@@ -132,7 +137,6 @@ def pcaDuoPlot(df_1_train, df_1_test, df_2_test, plotTitle=None):
     index2 = list(range(df_test2.shape[0]))
     ax.scatter(df_train1['pca1'], df_train1['pca2'], c = 'red', alpha=0.3)
     points1 = ax.scatter(df_test1['pca1'], df_test1['pca2'], c = index1, cmap = cmap1, alpha=1.0)
-    #points2 = ax.scatter(df_test2['pca1'], df_test2['pca2'], c = index2, cmap = cmap2, alpha=1.0)
     
     fig.colorbar(points1, ax=ax)
 
@@ -144,13 +148,12 @@ def pcaDuoPlot(df_1_train, df_1_test, df_2_test, plotTitle=None):
     index1 = list(range(df_test1.shape[0]))
     index2 = list(range(df_test2.shape[0]))
     ax2.scatter(df_train1['pca1'], df_train1['pca2'], c = 'red', alpha=0.3)
-    #points1 = ax2.scatter(df_test1['pca1'], df_test1['pca2'], c = index1, cmap = cmap1, alpha=1.0)
     points2 = ax2.scatter(df_test2['pca1'], df_test2['pca2'], c = index2, cmap = cmap2, alpha=1.0)
     
     fig.colorbar(points2, ax=ax2)
     plt.show()
 
-
+# Plots 2D pair plots of all columns in a pandas dataframe
 def pairplot(df):
     scaler = StandardScaler()
     scaled = scaler.fit_transform(df.values)
@@ -161,10 +164,12 @@ def pairplot(df):
     sns.pairplot(scaled_df, vars=scaled_df.columns, height=1.1)
     plt.show()
 
+# Plots 2D scatter plots of all columns in a pandas dataframe
 def scatterplot(df):
     pd.plotting.scatter_matrix(df, alpha=0.2, figsize=(6, 6), diagonal='kde')
     plt.show()
 
+# Plots the correlation matrix of a pandas dataframe
 def correlationPlot(df, title="Correlation plot"):
     scaler = StandardScaler()
     scaled = scaler.fit_transform(df.values)
@@ -175,13 +180,10 @@ def correlationPlot(df, title="Correlation plot"):
     mask = np.zeros_like(corr, dtype=np.bool)
     mask[np.triu_indices_from(mask)] = True
 
-    # Set up the matplotlib figure
     f, ax = plt.subplots(figsize=(5,5), dpi=100)
 
-    # Generate a custom diverging colormap
     cmap = sns.diverging_palette(220, 10, as_cmap=True)
 
-    # Draw the heatmap with the mask and correct aspect ratio
     sns.heatmap(corr, mask=mask, cmap=cmap,
                 square=True, linewidths=1, cbar_kws={"shrink": .6}, vmin=-1, vmax=1)
 
@@ -189,6 +191,7 @@ def correlationPlot(df, title="Correlation plot"):
     
     plt.show()
 
+# Plots the correlation matrix of two pandas dataframes side by side
 def correlationDuoPlot(df1, df2, title1="Correlation plot", title2="Correlation plot"):
     scaler1 = StandardScaler()
     scaled1 = scaler1.fit_transform(df1.values)
@@ -209,10 +212,8 @@ def correlationDuoPlot(df1, df2, title1="Correlation plot", title2="Correlation 
 
     ax1, ax2 = axs
 
-    # Generate a custom diverging colormap
     cmap = sns.diverging_palette(220, 10, as_cmap=True)
 
-    # Draw the heatmap with the mask and correct aspect ratio
     sns.heatmap(corr1, ax=ax1, mask=mask, cmap=cmap,
                 square=True, linewidths=1, cbar_kws={"shrink": .6}, vmin=-1, vmax=1)
     sns.heatmap(corr1, ax=ax2, mask=mask, cmap=cmap,
@@ -223,11 +224,11 @@ def correlationDuoPlot(df1, df2, title1="Correlation plot", title2="Correlation 
     
     plt.show()
 
+# Plots the correlation matrix difference between two pandas dataframes
 def correlationDifferencePlot(df1, df2, title="Correlation difference plot"):
     scaler1 = StandardScaler()
     scaled1 = scaler1.fit_transform(df1.values)
     scaled_df1 = pd.DataFrame(scaled1, index=df1.index, columns=df1.columns)
-    #scaled2 = scaler1.transform(df2.values)
     scaler2 = StandardScaler()
     scaled2 = scaler2.fit_transform(df2.values)
     scaled_df2 = pd.DataFrame(scaled2, index=df2.index, columns=df2.columns)
@@ -239,13 +240,10 @@ def correlationDifferencePlot(df1, df2, title="Correlation difference plot"):
     mask = np.zeros_like(corr_diff, dtype=np.bool)
     mask[np.triu_indices_from(mask)] = True
 
-    # Set up the matplotlib figure
     f, ax = plt.subplots(figsize=(5,5), dpi=100)
 
-    # Generate a custom diverging colormap
     cmap = sns.diverging_palette(220, 10, as_cmap=True)
 
-    # Draw the heatmap with the mask and correct aspect ratio
     sns.heatmap(corr_diff, mask=mask, cmap=cmap,
                 square=True, linewidths=1, cbar_kws={"shrink": .6}, vmin=-1, vmax=1)
 
@@ -253,6 +251,8 @@ def correlationDifferencePlot(df1, df2, title="Correlation difference plot"):
     
     plt.show()
 
+# Plots values and value distributions for a pandas dataframe
+# NB: all plots are put in a single figure with n rows
 def valueDistributionSingle(df, traintime, testtime):
     scaler = StandardScaler()
     scaled = scaler.fit_transform(df.values)
@@ -267,6 +267,10 @@ def valueDistributionSingle(df, traintime, testtime):
     for k in range(df_train.shape[-1]):
         ax1, ax2 = axs[k, 0], axs[k, 1]
         
+        trainEndStr=[item for sublist in traintime for item in sublist]
+        for i, trainEndString in enumerate(trainEndStr):
+            ax1.axvline(x=pd.to_datetime(trainEndString, dayfirst=True), color='black' if i % 2 == 0 else 'blue', label='start training' if i % 2 == 0 else 'end training')
+    
         ax1.plot(df_train.iloc[:,k], label="train",
                 marker="o", ms=1.5, lw=0)
         ax1.plot(df_test.iloc[:,k], label="test",
@@ -283,6 +287,8 @@ def valueDistributionSingle(df, traintime, testtime):
 
     plt.show()
 
+# Plots values and value distributions for a pandas dataframe
+# NB: all columns are plotted in separate figures
 def valueDistribution(df, traintime, testtime, columnDescriptions, columnUnits):
     scaler = StandardScaler()
     scaled = scaler.fit_transform(df.values)
@@ -296,6 +302,11 @@ def valueDistribution(df, traintime, testtime, columnDescriptions, columnUnits):
         ax1, ax2 = axs[0], axs[1]
         
         fig.suptitle(column + " " + columnDescriptions[column])
+
+        trainEndStr=[item for sublist in traintime for item in sublist]
+        for i, trainEndString in enumerate(trainEndStr):
+            ax1.axvline(x=pd.to_datetime(trainEndString, dayfirst=True), color='black' if i % 2 == 0 else 'blue', label='start training' if i % 2 == 0 else 'end training')
+    
 
         ax1.plot(df_train.iloc[:,k], label="train",
                 marker="o", ms=1.5, lw=0)

@@ -27,15 +27,18 @@ def initDataframe(filename, relevantColumns, labelNames):
 
     return df
 
+# Reads a provided filename string
+# NB1: requires .csv or .xls format
+# NB2: date column must be named 'Date' or 'time'
 def readDataFile(filename):
     ext = filename[-4:]
     if ext == '.csv':
         df = pd.read_csv(filename)
-        if 'Date' in df.columns:
+        if 'Date' in df.columns or 'date' in df.columns:
             if df.dtypes['Date'] not in [pd.np.dtype('object')]:
                 df['Date'] = df['Date'].apply(lambda x: x.split('+')[0])
             df['Date'] = pd.to_datetime(df['Date'], dayfirst=True)
-        elif 'time' in df.columns:
+        elif 'Time' in df.columns or 'time' in df.columns:
             if df.dtypes['Date'] not in [pd.np.dtype('object')]:
                 df['Date'] = df['time'].apply(lambda x: x.split('+')[0])
             df['Date'] = pd.to_datetime(df['Date'], dayfirst=True)
@@ -81,11 +84,15 @@ def dropIrrelevantColumns(df, args):
     return df
 
 def getTestTrainSplit(df, traintime, testtime):
-    start_train, end_train = traintime[0]
-    df_train = getDataByTimeframe(df, start_train, end_train)
-    for start_train, end_train in traintime[1:]:
-        nextDf = getDataByTimeframe(df, start_train, end_train)
-        df_train = pd.concat([df_train, nextDf])
+    if isinstance(traintime[0], str):
+        start_train, end_train = traintime
+        df_train = getDataByTimeframe(df, start_train, end_train)
+    else:
+        start_train, end_train = traintime[0]
+        df_train = getDataByTimeframe(df, start_train, end_train)
+        for start_train, end_train in traintime[1:]:
+            nextDf = getDataByTimeframe(df, start_train, end_train)
+            df_train = pd.concat([df_train, nextDf])
 
     if isinstance(testtime[0], str):
         start_test, end_test = testtime
@@ -275,9 +282,9 @@ def findMaxEnrolWindow(modelList):
 
 def getColorScheme():
     return {
-        'b1':"#0051FF",
-        'b2':"#007CFF",
-        'b3':"#4DA3FE",
+        'b1':"#0800ff",
+        'b2':"#52a6ff",
+        'b3':"#99cbff",
         'r1':"#FF0101",
         'r2':"#FF3B3B",
         'r3':"#EB7D00",

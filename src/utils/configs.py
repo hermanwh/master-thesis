@@ -1,3 +1,6 @@
+# NB: This file is primarily used for low-level development purposes
+# 	  Not of particular interest for the average user and/or viewer
+
 class Config():
     def __init__(self, config):
         self.columns = config['columns']
