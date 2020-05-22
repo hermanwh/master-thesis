@@ -29,7 +29,7 @@ arguments = [
     "- file name (string)",
 ]
 
-# usage: python ml/plotDataByTimeframe.py datasets/filename.csv relevantColumns(bool) start end
+# usage: python ml/plotDataByTimeframe.py datasets/filename.csv
 if __name__ == "__main__":
     start_time = time.time()
     prints.printEmptyLine()
