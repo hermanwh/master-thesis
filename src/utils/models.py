@@ -201,13 +201,12 @@ class MachinLearningModel():
                 validation_data = validation_generator,
             )
             """
-            # Own implementation of train-val split
-            #     for RNN data. Uses every n'th sample
-            #     of data for validation
+            # Own implementation of train-val split for RNN data
             X_t, X_v, y_t, y_v = getRNNSplit(
                 self.inputScaler.transform(self.X_train),
                 self.outputScaler.transform(self.y_train),
                 self.args.enrolWindow,
+                validation_split=0.2,
             )
             self.model.compile(
                 loss = self.args.loss,

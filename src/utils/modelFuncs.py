@@ -31,6 +31,10 @@ import prints
 import pickle
 import numpy as np
 
+import math
+import random
+
+random.seed(100)
 np.random.seed(100)
 
 # Prints the model summary of a machine learning model
@@ -229,17 +233,15 @@ def getTrainingSummary(modelList):
     return loss_dict
 
 # Splits a dataset into training and validation data for use in RNN networks
-# By default, 20% of data is used for validation (1/5)
-def getRNNSplit(x_data, y_data, lookback, train_val_ratio=5):
+# By default, 20% of data is used for validation
+def getRNNSplit(x_data, y_data, lookback, validation_split=0.2):
     num_x_signals = x_data.shape[1]
     num_y_signals = y_data.shape[1]
 
     num_x_samples = x_data.shape[0]
     num_y_samples = y_data.shape[0]
 
-    import math
-
-    length_valid = math.ceil(num_x_samples / train_val_ratio)
+    length_valid = math.ceil(num_x_samples * validation_split)
     length_train = num_x_samples - length_valid
 
     x_shape_train = (length_train, lookback, num_x_signals)
@@ -254,19 +256,16 @@ def getRNNSplit(x_data, y_data, lookback, train_val_ratio=5):
     Y = np.zeros(shape=y_shape_train, dtype=np.float16)
     Y_val = np.zeros(shape=y_shape_val, dtype=np.float16)
 
+    train_samples = random.sample(range(num_x_samples-lookback), length_train)
+    samples = list(range(num_x_samples-lookback))
+    valid_samples = list(set(samples)-set(train_samples))    
+
     # Fill the batch with random sequences of data.
-    index_train = 0
-    index_val = 0
-    for i in range(num_x_samples - 2*lookback - 1):
-        if i % train_val_ratio == 0:
-            # validation sample
-            X[index_train] = x_data[i:i+lookback]
-            Y[index_train] = y_data[i+lookback]
-            index_val += 1
-        else:
-            # training sample
-            X_val[index_val] = x_data[i:i+lookback]
-            Y_val[index_val] = y_data[i+lookback]
-            index_train += 1
-    
+    for i, sample in enumerate(train_samples):
+        X[i] = x_data[sample:sample+lookback]
+        Y[i] = y_data[sample+lookback]
+    for i, sample in enumerate(valid_samples):
+        X_val[i] = x_data[sample:sample+lookback]
+        Y_val[i] = y_data[sample+lookback]
+
     return [X, X_val, Y, Y_val]

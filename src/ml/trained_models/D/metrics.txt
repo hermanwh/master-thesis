@@ -1,4 +1,0 @@
-Train metrics: [0.9983610766760953, 0.00939136663085007, 0.07500900523931897, 0.3190956115722656]
-Test metrics: [0.7409179678119, 1.555373239950109, 0.7810804587750395, 3.269104385375975]
-Input columns: ['Gas side inlet temperature', 'Gas side inlet pressure', 'Gas side flow', 'Gas side outlet temperature', 'Cooling side inlet temperature']
-Output columns: ['Cooling side outlet temperature']

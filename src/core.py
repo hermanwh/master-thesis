@@ -47,13 +47,13 @@ _indexColumn = None
 
 _default_MLP_args = {
     'activation': 'relu',
-    'loss': 'mean_squared_error',
+    'loss': 'mean_absolute_error',
     'optimizer': 'adam',
-    'metrics': ['mean_squared_error'],
-    'epochs': 2000,
-    'batchSize': 64,
+    'metrics': ['mean_absolute_error'],
+    'epochs': 500,
+    'batchSize': 128*2,
     'verbose': 1,
-    'callbacks': modelFuncs.getBasicCallbacks(patience_es=300, patience_rlr=150),
+    'callbacks': modelFuncs.getBasicCallbacks(patience_es=60, patience_rlr=40),
     'enrolWindow': 0,
     'validationSize': 0.2,
     'testSize': 0.2,
@@ -61,14 +61,14 @@ _default_MLP_args = {
 
 _default_LSTM_args = {
     'activation': 'tanh',
-    'loss': 'mean_squared_error',
+    'loss': 'mean_absolute_error',
     'optimizer': 'adam',
-    'metrics': ['mean_squared_error'],
+    'metrics': ['mean_absolute_error'],
     'epochs': 500,
-    'batchSize': 128,
+    'batchSize': 128*2,
     'verbose': 1,
-    'callbacks': modelFuncs.getBasicCallbacks(patience_es=75, patience_rlr=50),
-    'enrolWindow': 32,
+    'callbacks': modelFuncs.getBasicCallbacks(patience_es=60, patience_rlr=40),
+    'enrolWindow': 12,
     'validationSize': 0.2,
     'testSize': 0.2,
 }

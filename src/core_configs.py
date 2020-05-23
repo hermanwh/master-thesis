@@ -303,7 +303,7 @@ def getConfigG(res):
 
 	# List of training periods on form ['start', 'end']
 	traintime = [
-		["2019-04-10 00:00:00", "2019-08-01 00:00:00"]
+		["2019-04-24 00:00:00", "2019-08-01 00:00:00"]
 	]
 
 	# Testing period, recommended: entire dataset
@@ -321,7 +321,7 @@ def getConfigG_modelA(res):
 	filename = "../master-thesis-db/datasets/G/data_" + res + ".csv"
 
 	# List of columns on form ['name', 'desc', 'unit']
-	columns = columns = getConfigG_columns()
+	columns = getConfigG_columns()
 
 	# List of column names to ignore completely
 	irrelevantColumns = [
@@ -339,7 +339,7 @@ def getConfigG_modelA(res):
 
 	# List of training periods on form ['start', 'end']
 	traintime = [
-		["2019-04-10 00:00:00", "2019-08-01 00:00:00"]
+		["2019-04-24 00:00:00", "2019-08-01 00:00:00"]
 	]
 
 	# Testing period, recommended: entire dataset
@@ -357,7 +357,7 @@ def getConfigG_modelB(res):
 	filename = "../master-thesis-db/datasets/G/data_" + res + ".csv"
 
 	# List of columns on form ['name', 'desc', 'unit']
-	columns = columns = getConfigG_columns()
+	columns = getConfigG_columns()
 
 	# List of column names to ignore completely
 	irrelevantColumns = [
@@ -374,7 +374,7 @@ def getConfigG_modelB(res):
 
 	# List of training periods on form ['start', 'end']
 	traintime = [
-		["2019-04-10 00:00:00", "2019-08-01 00:00:00"]
+		["2019-04-24 00:00:00", "2019-08-01 00:00:00"]
 	]
 
 	# Testing period, recommended: entire dataset
@@ -392,7 +392,7 @@ def getConfigG_modelC(res):
 	filename = "../master-thesis-db/datasets/G/data_" + res + ".csv"
 
 	# List of columns on form ['name', 'desc', 'unit']
-	columns = columns = getConfigG_columns()
+	columns = getConfigG_columns()
 
 	# List of column names to ignore completely
 	irrelevantColumns = [
@@ -410,7 +410,7 @@ def getConfigG_modelC(res):
 
 	# List of training periods on form ['start', 'end']
 	traintime = [
-		["2019-04-10 00:00:00", "2019-08-01 00:00:00"]
+		["2019-04-24 00:00:00", "2019-08-01 00:00:00"]
 	]
 
 	# Testing period, recommended: entire dataset
