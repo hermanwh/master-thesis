@@ -14,7 +14,7 @@ from sklearn.tree import DecisionTreeRegressor
 from keras.models import Sequential, Model
 from keras.layers import Dense, Activation, Dropout
 from keras.engine.input_layer import Input
-from keras.regularizers import l2, l1
+from keras.regularizers import l2, l1, l1_l2
 from keras.preprocessing.sequence import TimeseriesGenerator
 from sklearn.preprocessing import MinMaxScaler, StandardScaler
 from sklearn.model_selection import train_test_split
@@ -490,8 +490,7 @@ def kerasMLP(
             firstLayerNeurons,
             input_dim=X_train.shape[1],
             activation=firstLayerActivation,
-            kernel_regularizer=l2(l2_rate),
-            activity_regularizer=l1(l1_rate),
+            kernel_regularizer=l1_l2(l1=l1_rate, l2=l2_rate),
         )
     )
     if dropout is not None:
@@ -502,6 +501,7 @@ def kerasMLP(
             Dense(
                 neurons,
                 activation=activation,
+                kernel_regularizer=l2(l1=l1_rate, l2=l2_rate),
             )
         )
         if dropout is not None:
