@@ -4,7 +4,7 @@
 import src.core as mlModule
 import src.core_configs as configs
 
-def initAndPredict(modelList, retrain=False, plot=True, interpol=False):
+def initTrainPredict(modelList, retrain=False, plot=True, interpol=False):
     # 4. Initiate and train models
     mlModule.initModels(modelList)
     mlModule.trainModels(retrain)
@@ -33,11 +33,11 @@ def pred(facility, model, resolution):
 
     linear_r = mlModule.Linear_Regularized('Linear rCV'+' mod'+model)
 
-    initAndPredict([
+    initTrainPredict([
             mlpr_1_1, mlpr_1_2, mlpr_1_3, mlpr_1_4, mlpr_1_5, mlpr_1_6, mlpr_1_7, mlpd_1_8, linear_r,
         ])
 
-    initAndPredict([
+    initTrainPredict([
             mlpr_1_6, mlpr_1_7, mlpd_1_8, linear_r,
         ])
  
