@@ -11,76 +11,78 @@ colors = getPlotColors()
 models = ['A', 'B', 'C', 'D', 'E']
 
 def featureComparison(
-    irrelevantColumnsList,
-    filename,
-    columns,
-    traintime,
-    testtime,
-    targetColumns,
-    enrolWindow,
-    ):
-    global colors, models
+	irrelevantColumnsList,
+	filename,
+	columns,
+	traintime,
+	testtime,
+	targetColumns,
+	enrolWindow,
+	):
+	global colors, models
 
-    columnsLists = []
-    deviationsLists= []
-    names = []
-    trainmetrics = []
-    testmetrics = []
+	columnsLists = []
+	deviationsLists= []
+	names = []
+	trainmetrics = []
+	testmetrics = []
 
-    for i, irrelevantColumns in enumerate(irrelevantColumnsList):
-        mlModule.reset()
-        df = mlModule.initDataframe(filename, columns, irrelevantColumns)
-        df_train, df_test = mlModule.getTestTrainSplit(traintime, testtime)
-        X_train, y_train, X_test, y_test = mlModule.getFeatureTargetSplit(targetColumns)
+	for i, irrelevantColumns in enumerate(irrelevantColumnsList):
+		mlModule.reset()
 
-        mlp_1 = mlModule.MLP('MLP 1x64 d0.2 mod'+models[i], layers=[64], dropout=0.2)
-        mlp_2 = mlModule.MLP('MLP 1x128 d0.2 mod'+models[i], layers=[128], dropout=0.2)
-        mlp_3 = mlModule.MLP('MLP 2x64 d0.2 mod'+models[i], layers=[64, 64], dropout=0.2)
-        mlp_4 = mlModule.MLP('MLP 2x128 d0.2 mod'+models[i], layers=[128, 128], dropout=0.2)
-        lstm_1 = mlModule.LSTM('LSTM 1x64 d0.2 mod'+models[i], layers=[64], dropout=0.2, recurrentDropout=0.2, enrolWindow=12)
-        lstm_2 = mlModule.LSTM('LSTM 1x128 d0.2 mod'+models[i], layers=[128], dropout=0.2, recurrentDropout=0.2, enrolWindow=12)
-        lstm_3 = mlModule.LSTM('LSTM 2x64 d0.2 mod'+models[i], layers=[64, 64], dropout=0.2, recurrentDropout=0.2, enrolWindow=12)
-        lstm_4 = mlModule.LSTM('LSTM 2x128 d0.2 mod'+models[i], layers=[128, 128], dropout=0.2, recurrentDropout=0.2, enrolWindow=12)
-        linear = mlModule.Linear_Regularized('Linear rCV mod' + mod)
+		df = mlModule.initDataframe(filename, columns, irrelevantColumns)
+		df_train, df_test = mlModule.getTestTrainSplit(traintime, testtime)
 
-        modelList = [
-            mlp_1,
-            mlp_2,
-            mlp_3,
-            mlp_4,
-            lstm_1,
-            lstm_2,
-            lstm_3,
-            lstm_4,
-            linear,
-        ]
+		X_train, y_train, X_test, y_test = mlModule.getFeatureTargetSplit(targetColumns)
 
-        mlModule.initModels(modelList)
-        retrain=False
-        mlModule.trainModels(retrain)
-    
-        modelNames, metrics_train, metrics_test, columnsList, deviationsList = mlModule.predictWithModels(plot=True, score=True)
+		mlp_1 = mlModule.MLP('MLP 1x64 d0.2 mod'+models[i], layers=[64], dropout=0.2)
+		mlp_2 = mlModule.MLP('MLP 1x128 d0.2 mod'+models[i], layers=[128], dropout=0.2)
+		mlp_3 = mlModule.MLP('MLP 2x64 d0.2 mod'+models[i], layers=[64, 64], dropout=0.2)
+		mlp_4 = mlModule.MLP('MLP 2x128 d0.2 mod'+models[i], layers=[128, 128], dropout=0.2)
+		lstm_1 = mlModule.LSTM('LSTM 1x64 d0.2 mod'+models[i], layers=[64], dropout=0.2, recurrentDropout=0.2, enrolWindow=12)
+		lstm_2 = mlModule.LSTM('LSTM 1x128 d0.2 mod'+models[i], layers=[128], dropout=0.2, recurrentDropout=0.2, enrolWindow=12)
+		lstm_3 = mlModule.LSTM('LSTM 2x64 d0.2 mod'+models[i], layers=[64, 64], dropout=0.2, recurrentDropout=0.2, enrolWindow=12)
+		lstm_4 = mlModule.LSTM('LSTM 2x128 d0.2 mod'+models[i], layers=[128, 128], dropout=0.2, recurrentDropout=0.2, enrolWindow=12)
+		linear = mlModule.Linear_Regularized('Linear rCV mod'+models[i])
 
-        if i < 1:
-            columnsLists = columnsList
-            deviationsLists = deviationsList
-            all_names = modelNames
-            all_train_metrics = metrics_train
-            all_test_metrics = metrics_test
-        else:
-            for j_target in range(len(columnsList)):
-                for k_model in range(1, len(columnsList[j_target])):
-                    columnsLists[j_target].append(columnsList[j_target][k_model])
-                for k_model in range(0, len(deviationsList[j_target])):
-                    deviationsLists[j_target].append(deviationsList[j_target][k_model])
-            all_names = [*all_names, *modelNames]
-            all_train_metrics = [*all_train_metrics, *metrics_train]
-            all_test_metrics = [*all_test_metrics, *metrics_test]
+		modelList = [
+			mlp_1,
+			mlp_2,
+			mlp_3,
+			mlp_4,
+			lstm_1,
+			lstm_2,
+			lstm_3,
+			lstm_4,
+			linear,
+		]
 
-        names.append(modelNames)
-        trainmetrics.append(metrics_train)
-        testmetrics.append(metrics_test)
-    
+		mlModule.initModels(modelList)
+		retrain=False
+		mlModule.trainModels(retrain)
+
+		modelNames, metrics_train, metrics_test, columnsList, deviationsList = mlModule.predictWithModels(plot=True, score=True)
+
+		if i < 1:
+			columnsLists = columnsList
+			deviationsLists = deviationsList
+			all_names = modelNames
+			all_train_metrics = metrics_train
+			all_test_metrics = metrics_test
+		else:
+			for j_target in range(len(columnsList)):
+				for k_model in range(1, len(columnsList[j_target])):
+					columnsLists[j_target].append(columnsList[j_target][k_model])
+				for k_model in range(0, len(deviationsList[j_target])):
+					deviationsLists[j_target].append(deviationsList[j_target][k_model])
+		all_names = [*all_names, *modelNames]
+		all_train_metrics = [*all_train_metrics, *metrics_train]
+		all_test_metrics = [*all_test_metrics, *metrics_test]
+
+		names.append(modelNames)
+		trainmetrics.append(metrics_train)
+		testmetrics.append(metrics_test)
+
 	indexColumn = mlModule._indexColumn
 	columnDescriptions = mlModule._columnDescriptions
 	columnUnits = mlModule._columnUnits
