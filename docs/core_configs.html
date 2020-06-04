@@ -1,0 +1,1185 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+<meta name="generator" content="pdoc 0.8.1" />
+<title>src.core_configs API documentation</title>
+<meta name="description" content="" />
+<link href='https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.0/normalize.min.css' rel='stylesheet'>
+<link href='https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/8.0.0/sanitize.min.css' rel='stylesheet'>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css" rel="stylesheet">
+<style>.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>src.core_configs</code></h1>
+</header>
+<section id="section-intro">
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def getConfig(dirr, model, res):
+        dirrs = {
+                &#39;D&#39;: {
+                        &#39;A&#39;: getConfigD_modelA,
+                        &#39;B&#39;: getConfigD_modelB,
+                        &#39;C&#39;: getConfigD_modelC,
+                        None: getConfigD,
+                },
+                &#39;F&#39;: {
+                        &#39;A&#39;: getConfigF_modelA,
+                        &#39;B&#39;: getConfigF_modelB,
+                        None: getConfigF,
+                },
+                &#39;G&#39;: {
+                        &#39;A&#39;: getConfigG_modelA,
+                        &#39;B&#39;: getConfigG_modelB,
+                        &#39;C&#39;: getConfigG_modelC,
+                        None: getConfigG,
+                },
+        }
+
+        return dirrs[dirr][model](res)
+
+def getConfigD(res):
+        # File path to dataset .csv file
+        filename = &#34;../master-thesis-db/datasets/D/dataC.csv&#34;
+
+        # List of columns on form [&#39;name&#39;, &#39;desc&#39;, &#39;unit&#39;]
+        columns = getConfigD_columns()
+
+        # List of column names to ignore completely
+        irrelevantColumns = [
+
+        ]
+
+        # List of training periods on form [&#39;start&#39;, &#39;end&#39;]
+        traintime = [
+                [&#34;2020-01-01 00:00:00&#34;, &#34;2020-03-20 00:00:00&#34;],
+        ]
+
+        # Testing period, recommended: entire dataset
+        testtime = [
+                &#34;2020-01-01 00:00:00&#34;,
+                &#34;2020-08-01 00:00:00&#34;
+        ]
+
+        columnOrder = [&#39;20TT001&#39;, &#39;20TT002&#39;, &#39;20FT001&#39;, &#39;50TT001&#39;, &#39;50TT002&#39;, &#39;50TV001&#39;, &#39;50FT001&#39;, &#39;20PDT001&#39;, &#39;50PDT001&#39;, &#39;20PT001&#39;, &#39;50PT001&#39;]
+
+        return [filename, columns, irrelevantColumns, None, traintime, testtime, columnOrder]
+
+def getConfigD_modelA(res):
+        # File path to dataset .csv file
+        filename = &#34;../master-thesis-db/datasets/D/dataC.csv&#34;
+
+        # List of columns on form [&#39;name&#39;, &#39;desc&#39;, &#39;unit&#39;]
+        columns = getConfigD_columns()
+
+        # List of column names to ignore completely
+        irrelevantColumns = [
+                &#39;20PT001&#39;,
+                &#39;50PT001&#39;,
+                &#39;50FT001&#39;,
+                &#39;50PDT001&#39;,
+                &#39;50TV001&#39;,
+                &#39;20PDT001&#39;,
+        ]
+
+        # List of column names used a targets
+        targetColumns = [
+                &#39;50TT002&#39;,
+        ]
+
+        # List of training periods on form [&#39;start&#39;, &#39;end&#39;]
+        traintime = [
+                [&#34;2020-01-01 00:00:00&#34;, &#34;2020-03-20 00:00:00&#34;],
+        ]
+
+        # Testing period, recommended: entire dataset
+        testtime = [
+                &#34;2020-01-01 00:00:00&#34;,
+                &#34;2020-08-01 00:00:00&#34;
+        ]
+
+        columnOrder = [&#39;20FT001&#39;, &#39;20TT001&#39;, &#39;20TT002&#39;, &#39;50TT001&#39;, &#39;50TT002&#39;]
+
+        return [filename, columns, irrelevantColumns, targetColumns, traintime, testtime, columnOrder]
+
+def getConfigD_modelB(res):
+        # File path to dataset .csv file
+        filename = &#34;../master-thesis-db/datasets/D/dataC.csv&#34;
+
+        # List of columns on form [&#39;name&#39;, &#39;desc&#39;, &#39;unit&#39;]
+        columns = getConfigD_columns()
+
+        # List of column names to ignore completely
+        irrelevantColumns = [
+                &#39;20PT001&#39;,
+                &#39;50PT001&#39;,
+                &#39;50FT001&#39;,
+                &#39;50PDT001&#39;,
+                &#39;20PDT001&#39;,
+        ]
+
+        # List of column names used a targets
+        targetColumns = [
+                &#39;50TT002&#39;,
+        ]
+
+        # List of training periods on form [&#39;start&#39;, &#39;end&#39;]
+        traintime = [
+                [&#34;2020-01-01 00:00:00&#34;, &#34;2020-03-20 00:00:00&#34;],
+        ]
+
+        # Testing period, recommended: entire dataset
+        testtime = [
+                &#34;2020-01-01 00:00:00&#34;,
+                &#34;2020-08-01 00:00:00&#34;
+        ]
+
+        columnOrder = [&#39;20FT001&#39;, &#39;20TT001&#39;, &#39;20TT002&#39;, &#39;50TT001&#39;, &#39;50TV001&#39;, &#39;50TT002&#39;]
+
+        return [filename, columns, irrelevantColumns, targetColumns, traintime, testtime, columnOrder]
+
+def getConfigD_modelC(res):
+        # File path to dataset .csv file
+        filename = &#34;../master-thesis-db/datasets/D/dataC.csv&#34;
+
+        # List of columns on form [&#39;name&#39;, &#39;desc&#39;, &#39;unit&#39;]
+        columns = getConfigD_columns()
+
+        # List of column names to ignore completely
+        irrelevantColumns = [
+                &#39;20PT001&#39;,
+                &#39;50PT001&#39;,
+                &#39;50FT001&#39;,
+                &#39;50PDT001&#39;,
+                &#39;50TV001&#39;,
+        ]
+
+        # List of column names used a targets
+        targetColumns = [
+                &#39;50TT002&#39;,
+                &#39;20PDT001&#39;,
+        ]
+
+        # List of training periods on form [&#39;start&#39;, &#39;end&#39;]
+        traintime = [
+                [&#34;2020-01-01 00:00:00&#34;, &#34;2020-03-20 00:00:00&#34;],
+        ]
+
+        # Testing period, recommended: entire dataset
+        testtime = [
+                &#34;2020-01-01 00:00:00&#34;,
+                &#34;2020-08-01 00:00:00&#34;
+        ]
+
+        columnOrder = [&#39;20FT001&#39;, &#39;20TT001&#39;, &#39;20TT002&#39;, &#39;50TT001&#39;, &#39;50TT002&#39;, &#39;20PDT001&#39;]
+
+        return [filename, columns, irrelevantColumns, targetColumns, traintime, testtime, columnOrder]
+
+def getConfigF(res):
+        # File path to dataset .csv file
+        filename = &#34;../master-thesis-db/datasets/F/data_&#34; + res + &#34;.csv&#34;
+
+        # List of columns on form [&#39;name&#39;, &#39;desc&#39;, &#39;unit&#39;]
+        columns = getConfigF_columns()
+
+        # List of column names to ignore completely
+        irrelevantColumns = [
+                        &#39;FT0111&#39;,
+                        &#39;PDT0108_MA_Y&#39;,
+                        &#39;PDT0119_MA_Y&#39;,
+                        &#39;PDT0118_MA_Y&#39;,
+                        &#39;TT0104_MA_Y&#39;,
+                        &#39;TIC0103_CA_YX&#39;,
+                        &#39;TI0115_MA_Y&#39;,
+                        &#39;TT0652_MA_Y&#39;,
+                        &#39;TIC0103_CA_Y&#39;,
+                        &#39;PIC0104_CA_YX&#39;,
+                        &#39;TIC0101_CA_Y&#39;,
+                        &#39;TT0102_MA_Y&#39;,
+                        &#39;TIC0101_CA_YX&#39;,
+                        &#39;TT0651_MA_Y&#39;,
+        ]
+
+        # List of training periods on form [&#39;start&#39;, &#39;end&#39;]
+        traintime = [
+                [&#34;2018-01-01 00:00:00&#34;, &#34;2018-08-01 00:00:00&#34;],
+        ]
+
+        # Testing period, recommended: entire dataset
+        testtime = [
+                &#34;2018-01-01 00:00:00&#34;,
+                &#34;2019-05-01 00:00:00&#34;
+        ]
+        
+        columnOrder = [&#39;TT0106_MA_Y&#39;, &#39;TIC0105_CA_YX&#39;, &#39;FYN0111&#39;, &#39;TIC0425_CA_YX&#39;, &#39;TT0653_MA_Y&#39;, &#39;TIC0105_CA_Y&#39;]
+
+        return [filename, columns, irrelevantColumns, None, traintime, testtime, columnOrder]
+
+def getConfigF_modelA(res):
+        # File path to dataset .csv file
+        filename = &#34;../master-thesis-db/datasets/F/data_&#34; + res + &#34;.csv&#34;
+
+        # List of columns on form [&#39;name&#39;, &#39;desc&#39;, &#39;unit&#39;]
+        columns = getConfigF_columns()
+
+        # List of column names to ignore completely
+        irrelevantColumns = [
+                        &#39;FT0111&#39;,
+                        &#39;PDT0108_MA_Y&#39;,
+                        &#39;PDT0119_MA_Y&#39;,
+                        &#39;PDT0118_MA_Y&#39;,
+                        &#39;TT0104_MA_Y&#39;,
+                        &#39;TIC0103_CA_YX&#39;,
+                        &#39;TI0115_MA_Y&#39;,
+                        &#39;TT0652_MA_Y&#39;,
+                        &#39;TIC0103_CA_Y&#39;,
+                        &#39;PIC0104_CA_YX&#39;,
+                        &#39;TIC0101_CA_Y&#39;,
+                        &#39;TT0102_MA_Y&#39;,
+                        &#39;TIC0101_CA_YX&#39;,
+                        &#39;TT0651_MA_Y&#39;,
+                        &#39;TIC0105_CA_Y&#39;,
+        ]
+
+        # List of column names used a targets
+        targetColumns = [
+                &#39;TT0653_MA_Y&#39;,
+        ]
+
+        # List of training periods on form [&#39;start&#39;, &#39;end&#39;]
+        traintime = [
+                [&#34;2018-01-01 00:00:00&#34;, &#34;2018-08-01 00:00:00&#34;],
+        ]
+
+        # Testing period, recommended: entire dataset
+        testtime = [
+                &#34;2018-01-01 00:00:00&#34;,
+                &#34;2019-05-01 00:00:00&#34;
+        ]
+
+        columnOrder = [&#39;FYN0111&#39;, &#39;TT0106_MA_Y&#39;, &#39;TIC0105_CA_YX&#39;, &#39;TIC0425_CA_YX&#39;, &#39;TT0653_MA_Y&#39;]
+
+        return [filename, columns, irrelevantColumns, targetColumns, traintime, testtime, columnOrder]
+
+def getConfigF_modelB(res):
+        # File path to dataset .csv file
+        filename = &#34;../master-thesis-db/datasets/F/data_&#34; + res + &#34;.csv&#34;
+
+        # List of columns on form [&#39;name&#39;, &#39;desc&#39;, &#39;unit&#39;]
+        columns = getConfigF_columns()
+
+        # List of column names to ignore completely
+        irrelevantColumns = [
+                        &#39;FT0111&#39;,
+                        &#39;PDT0108_MA_Y&#39;,
+                        &#39;PDT0119_MA_Y&#39;,
+                        &#39;PDT0118_MA_Y&#39;,
+                        &#39;TT0104_MA_Y&#39;,
+                        &#39;TIC0103_CA_YX&#39;,
+                        &#39;TI0115_MA_Y&#39;,
+                        &#39;TT0652_MA_Y&#39;,
+                        &#39;TIC0103_CA_Y&#39;,
+                        &#39;PIC0104_CA_YX&#39;,
+                        &#39;TIC0101_CA_Y&#39;,
+                        &#39;TT0102_MA_Y&#39;,
+                        &#39;TIC0101_CA_YX&#39;,
+                        &#39;TT0651_MA_Y&#39;,
+        ]
+
+        # List of column names used a targets
+        targetColumns = [
+                &#39;TT0653_MA_Y&#39;,
+        ]
+
+        # List of training periods on form [&#39;start&#39;, &#39;end&#39;]
+        traintime = [
+                [&#34;2018-01-01 00:00:00&#34;, &#34;2018-08-01 00:00:00&#34;],
+        ]
+
+        # Testing period, recommended: entire dataset
+        testtime = [
+                &#34;2018-01-01 00:00:00&#34;,
+                &#34;2019-05-01 00:00:00&#34;
+        ]
+
+        columnOrder = [&#39;FYN0111&#39;, &#39;TT0106_MA_Y&#39;, &#39;TIC0105_CA_YX&#39;, &#39;TIC0425_CA_YX&#39;, &#39;TIC0105_CA_Y&#39;, &#39;TT0653_MA_Y&#39;]
+
+        return [filename, columns, irrelevantColumns, targetColumns, traintime, testtime, columnOrder]
+
+def getConfigG(res):
+        # File path to dataset .csv file
+        filename = &#34;../master-thesis-db/datasets/G/data_&#34; + res + &#34;.csv&#34;
+
+        # List of columns on form [&#39;name&#39;, &#39;desc&#39;, &#39;unit&#39;]
+        columns = getConfigG_columns()
+
+        # List of column names to ignore completely
+        irrelevantColumns = [
+
+        ]
+
+        # List of training periods on form [&#39;start&#39;, &#39;end&#39;]
+        traintime = [
+                [&#34;2019-04-24 00:00:00&#34;, &#34;2019-08-01 00:00:00&#34;]
+        ]
+
+        # Testing period, recommended: entire dataset
+        testtime = [
+                &#34;2017-01-01 00:00:00&#34;,
+                &#34;2020-03-01 00:00:00&#34;,
+        ]
+        
+        columnOrder = [&#39;TZI0012&#39;, &#39;TI0066&#39;, &#39;FI0010&#39;, &#39;TT0025&#39;, &#39;TT0026&#39;, &#39;TIC0022U&#39;, &#39;FI0027&#39;, &#39;PDI0064&#39;, &#39;PDT0024&#39;, &#39;PI0001&#39;]
+
+        return [filename, columns, irrelevantColumns, None, traintime, testtime, columnOrder]
+
+def getConfigG_modelA(res):
+        # File path to dataset .csv file
+        filename = &#34;../master-thesis-db/datasets/G/data_&#34; + res + &#34;.csv&#34;
+
+        # List of columns on form [&#39;name&#39;, &#39;desc&#39;, &#39;unit&#39;]
+        columns = getConfigG_columns()
+
+        # List of column names to ignore completely
+        irrelevantColumns = [
+                &#39;PI0001&#39;,
+                &#39;FI0027&#39;,
+                &#39;TIC0022U&#39;,
+                &#39;PDT0024&#39;,
+                &#39;PDI0064&#39;,
+        ]
+
+        # List of column names used a targets
+        targetColumns = [
+                &#39;TT0026&#39;,
+        ]
+
+        # List of training periods on form [&#39;start&#39;, &#39;end&#39;]
+        traintime = [
+                [&#34;2019-04-24 00:00:00&#34;, &#34;2019-08-01 00:00:00&#34;]
+        ]
+
+        # Testing period, recommended: entire dataset
+        testtime = [
+                &#34;2017-01-01 00:00:00&#34;,
+                &#34;2020-03-01 00:00:00&#34;,
+        ]
+
+        columnOrder = [&#39;FI0010&#39;, &#39;TZI0012&#39;, &#39;TI0066&#39;, &#39;TT0025&#39;, &#39;TT0026&#39;]
+
+        return [filename, columns, irrelevantColumns, targetColumns, traintime, testtime, columnOrder]
+
+def getConfigG_modelB(res):
+        # File path to dataset .csv file
+        filename = &#34;../master-thesis-db/datasets/G/data_&#34; + res + &#34;.csv&#34;
+
+        # List of columns on form [&#39;name&#39;, &#39;desc&#39;, &#39;unit&#39;]
+        columns = getConfigG_columns()
+
+        # List of column names to ignore completely
+        irrelevantColumns = [
+                &#39;PI0001&#39;,
+                &#39;FI0027&#39;,
+                &#39;PDI0064&#39;,
+                &#39;PDT0024&#39;,
+        ]
+
+        # List of column names used a targets
+        targetColumns = [
+                &#39;TT0026&#39;,
+        ]
+
+        # List of training periods on form [&#39;start&#39;, &#39;end&#39;]
+        traintime = [
+                [&#34;2019-04-24 00:00:00&#34;, &#34;2019-08-01 00:00:00&#34;]
+        ]
+
+        # Testing period, recommended: entire dataset
+        testtime = [
+                &#34;2017-01-01 00:00:00&#34;,
+                &#34;2020-03-01 00:00:00&#34;,
+        ]
+
+        columnOrder = [&#39;FI0010&#39;, &#39;TZI0012&#39;, &#39;TI0066&#39;, &#39;TT0025&#39;, &#39;TIC0022U&#39;,&#39;TT0026&#39;]
+
+        return [filename, columns, irrelevantColumns, targetColumns, traintime, testtime, columnOrder]
+
+def getConfigG_modelC(res):
+        # File path to dataset .csv file
+        filename = &#34;../master-thesis-db/datasets/G/data_&#34; + res + &#34;.csv&#34;
+
+        # List of columns on form [&#39;name&#39;, &#39;desc&#39;, &#39;unit&#39;]
+        columns = getConfigG_columns()
+
+        # List of column names to ignore completely
+        irrelevantColumns = [
+                &#39;PI0001&#39;,
+                &#39;FI0027&#39;,
+                &#39;TIC0022U&#39;,
+                &#39;PDT0024&#39;,
+        ]
+
+        # List of column names used a targets
+        targetColumns = [
+                &#39;TT0026&#39;,
+                &#39;PDI0064&#39;,
+        ]
+
+        # List of training periods on form [&#39;start&#39;, &#39;end&#39;]
+        traintime = [
+                [&#34;2019-04-24 00:00:00&#34;, &#34;2019-08-01 00:00:00&#34;]
+        ]
+
+        # Testing period, recommended: entire dataset
+        testtime = [
+                &#34;2017-01-01 00:00:00&#34;,
+                &#34;2020-03-01 00:00:00&#34;,
+        ]
+
+        columnOrder = [&#39;FI0010&#39;, &#39;TZI0012&#39;, &#39;TI0066&#39;, &#39;TT0025&#39;, &#39;TT0026&#39;, &#39;PDI0064&#39;]
+
+        return [filename, columns, irrelevantColumns, targetColumns, traintime, testtime, columnOrder]
+
+def getConfigD_columns():
+        return [
+                [&#39;20TT001&#39;, &#39;Process Inlet Temperature&#39;, &#39;Degrees&#39;],
+                [&#39;20PT001&#39;, &#39;Process Inlet Pressure&#39;, &#39;Bar&#39;],
+                [&#39;20FT001&#39;, &#39;Process Flow Rate&#39;, &#39;kg/hour&#39;],
+                [&#39;20TT002&#39;, &#39;Process Outlet Temperature&#39;, &#39;Degrees&#39;],
+                [&#39;20PDT001&#39;, &#39;Process Pressure Difference&#39;, &#39;Bar&#39;],
+                [&#39;50TT001&#39;, &#39;Coolant Inlet Temperature&#39;, &#39;Degrees&#39;],
+                [&#39;50PT001&#39;, &#39;Coolant Inlet Pressure&#39;, &#39;Bar&#39;],
+                [&#39;50FT001&#39;, &#39;Coolant Flow Rate&#39;, &#39;kg/hour&#39;],
+                [&#39;50TT002&#39;, &#39;Coolant Outlet Temperature&#39;, &#39;Degrees&#39;],
+                [&#39;50PDT001&#39;, &#39;Coolant Pressure Difference&#39;, &#39;Bar&#39;],
+                [&#39;50TV001&#39;, &#39;Coolant Valve Opening&#39;, &#39;%&#39;],
+        ]
+
+def getConfigF_columns():
+        return [
+                [&#39;FYN0111&#39;, &#39;Process Flow Rate&#39;, &#39;MSm^3/day&#39;],
+                [&#39;FT0111&#39;, &#39;Process Flow Molecular Weight&#39;,&#39;g/mole&#39;],
+                [&#39;TT0102_MA_Y&#39;, &#39;Process Inlet Temperature A&#39;, &#39;Degrees&#39;],
+                [&#39;TIC0101_CA_YX&#39;, &#39;Process Outlet Temperature A&#39;, &#39;Degrees&#39;],
+                [&#39;TT0104_MA_Y&#39;, &#39;Process Inlet Temperature B&#39;, &#39;Degrees&#39;],
+                [&#39;TIC0103_CA_YX&#39;, &#39;Process Outlet Temperature B&#39;, &#39;Degrees&#39;],
+                [&#39;TT0106_MA_Y&#39;, &#39;Process Inlet Temperature C&#39;, &#39;Degrees&#39;],
+                [&#39;TIC0105_CA_YX&#39;, &#39;Process Outlet Temperature C&#39;, &#39;Degrees&#39;],
+                [&#39;TI0115_MA_Y&#39;, &#39;Scrubber Outlet Temperature&#39;, &#39;Degrees&#39;],
+                [&#39;PDT0108_MA_Y&#39;, &#39;Process A Pressure Difference&#39;, &#39;Bar&#39;],
+                [&#39;PDT0119_MA_Y&#39;, &#39;Process B Pressure Difference&#39;, &#39;Bar&#39;],
+                [&#39;PDT0118_MA_Y&#39;, &#39;Process C Pressure Difference&#39;, &#39;Bar&#39;],
+                [&#39;PIC0104_CA_YX&#39;, &#39;Separator Inlet Pressure&#39;, &#39;Bar&#39;],
+                [&#39;TIC0425_CA_YX&#39;, &#39;Coolant Inlet Temperature&#39;, &#39;Degrees&#39;],
+                [&#39;TT0651_MA_Y&#39;, &#39;Coolant Outlet Temperature A&#39;, &#39;Degrees&#39;],
+                [&#39;TT0652_MA_Y&#39;, &#39;Coolant Outlet Temperature B&#39;, &#39;Degrees&#39;],
+                [&#39;TT0653_MA_Y&#39;, &#39;Coolant Outlet Temperature C&#39;, &#39;Degrees&#39;],
+                [&#39;TIC0101_CA_Y&#39;, &#39;Coolant Valve Opening A&#39;, &#39;%&#39;],
+                [&#39;TIC0103_CA_Y&#39;, &#39;Coolant Valve Opening B&#39;, &#39;%&#39;],
+                [&#39;TIC0105_CA_Y&#39;, &#39;Coolant Valve Opening C&#39;, &#39;%&#39;],
+        ]
+
+def getConfigG_columns():
+        return [
+                [&#39;PDI0064&#39;, &#39;Process Pressure Difference&#39;, &#39;Bar&#39;],
+                [&#39;TI0066&#39;, &#39;Process Outlet Temperature&#39;,&#39;Degrees&#39;],
+                [&#39;TZI0012&#39;, &#39;Process Inlet Temperature&#39;, &#39;Degrees&#39;],
+                [&#39;FI0010&#39;, &#39;Process Flow Rate&#39;, &#39;M^3/day&#39;],
+                [&#39;TT0025&#39;, &#39;Coolant Inlet Temperature&#39;, &#39;Degrees&#39;],
+                [&#39;TT0026&#39;, &#39;Coolant Outlet Temperature&#39;, &#39;Degrees&#39;],
+                [&#39;PI0001&#39;, &#39;Coolant Inlet Pressure&#39;, &#39;Bar&#39;],
+                [&#39;FI0027&#39;, &#39;Coolant Flow Rate&#39;, &#39;M^3/day&#39;],
+                [&#39;TIC0022U&#39;, &#39;Coolant Valve Opening&#39;, &#39;%&#39;],
+                [&#39;PDT0024&#39;, &#39;Coolant Pressure Difference&#39;, &#39;Bar&#39;],
+        ]</code></pre>
+</details>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-functions">Functions</h2>
+<dl>
+<dt id="src.core_configs.getConfig"><code class="name flex">
+<span>def <span class="ident">getConfig</span></span>(<span>dirr, model, res)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def getConfig(dirr, model, res):
+        dirrs = {
+                &#39;D&#39;: {
+                        &#39;A&#39;: getConfigD_modelA,
+                        &#39;B&#39;: getConfigD_modelB,
+                        &#39;C&#39;: getConfigD_modelC,
+                        None: getConfigD,
+                },
+                &#39;F&#39;: {
+                        &#39;A&#39;: getConfigF_modelA,
+                        &#39;B&#39;: getConfigF_modelB,
+                        None: getConfigF,
+                },
+                &#39;G&#39;: {
+                        &#39;A&#39;: getConfigG_modelA,
+                        &#39;B&#39;: getConfigG_modelB,
+                        &#39;C&#39;: getConfigG_modelC,
+                        None: getConfigG,
+                },
+        }
+
+        return dirrs[dirr][model](res)</code></pre>
+</details>
+</dd>
+<dt id="src.core_configs.getConfigD"><code class="name flex">
+<span>def <span class="ident">getConfigD</span></span>(<span>res)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def getConfigD(res):
+        # File path to dataset .csv file
+        filename = &#34;../master-thesis-db/datasets/D/dataC.csv&#34;
+
+        # List of columns on form [&#39;name&#39;, &#39;desc&#39;, &#39;unit&#39;]
+        columns = getConfigD_columns()
+
+        # List of column names to ignore completely
+        irrelevantColumns = [
+
+        ]
+
+        # List of training periods on form [&#39;start&#39;, &#39;end&#39;]
+        traintime = [
+                [&#34;2020-01-01 00:00:00&#34;, &#34;2020-03-20 00:00:00&#34;],
+        ]
+
+        # Testing period, recommended: entire dataset
+        testtime = [
+                &#34;2020-01-01 00:00:00&#34;,
+                &#34;2020-08-01 00:00:00&#34;
+        ]
+
+        columnOrder = [&#39;20TT001&#39;, &#39;20TT002&#39;, &#39;20FT001&#39;, &#39;50TT001&#39;, &#39;50TT002&#39;, &#39;50TV001&#39;, &#39;50FT001&#39;, &#39;20PDT001&#39;, &#39;50PDT001&#39;, &#39;20PT001&#39;, &#39;50PT001&#39;]
+
+        return [filename, columns, irrelevantColumns, None, traintime, testtime, columnOrder]</code></pre>
+</details>
+</dd>
+<dt id="src.core_configs.getConfigD_columns"><code class="name flex">
+<span>def <span class="ident">getConfigD_columns</span></span>(<span>)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def getConfigD_columns():
+        return [
+                [&#39;20TT001&#39;, &#39;Process Inlet Temperature&#39;, &#39;Degrees&#39;],
+                [&#39;20PT001&#39;, &#39;Process Inlet Pressure&#39;, &#39;Bar&#39;],
+                [&#39;20FT001&#39;, &#39;Process Flow Rate&#39;, &#39;kg/hour&#39;],
+                [&#39;20TT002&#39;, &#39;Process Outlet Temperature&#39;, &#39;Degrees&#39;],
+                [&#39;20PDT001&#39;, &#39;Process Pressure Difference&#39;, &#39;Bar&#39;],
+                [&#39;50TT001&#39;, &#39;Coolant Inlet Temperature&#39;, &#39;Degrees&#39;],
+                [&#39;50PT001&#39;, &#39;Coolant Inlet Pressure&#39;, &#39;Bar&#39;],
+                [&#39;50FT001&#39;, &#39;Coolant Flow Rate&#39;, &#39;kg/hour&#39;],
+                [&#39;50TT002&#39;, &#39;Coolant Outlet Temperature&#39;, &#39;Degrees&#39;],
+                [&#39;50PDT001&#39;, &#39;Coolant Pressure Difference&#39;, &#39;Bar&#39;],
+                [&#39;50TV001&#39;, &#39;Coolant Valve Opening&#39;, &#39;%&#39;],
+        ]</code></pre>
+</details>
+</dd>
+<dt id="src.core_configs.getConfigD_modelA"><code class="name flex">
+<span>def <span class="ident">getConfigD_modelA</span></span>(<span>res)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def getConfigD_modelA(res):
+        # File path to dataset .csv file
+        filename = &#34;../master-thesis-db/datasets/D/dataC.csv&#34;
+
+        # List of columns on form [&#39;name&#39;, &#39;desc&#39;, &#39;unit&#39;]
+        columns = getConfigD_columns()
+
+        # List of column names to ignore completely
+        irrelevantColumns = [
+                &#39;20PT001&#39;,
+                &#39;50PT001&#39;,
+                &#39;50FT001&#39;,
+                &#39;50PDT001&#39;,
+                &#39;50TV001&#39;,
+                &#39;20PDT001&#39;,
+        ]
+
+        # List of column names used a targets
+        targetColumns = [
+                &#39;50TT002&#39;,
+        ]
+
+        # List of training periods on form [&#39;start&#39;, &#39;end&#39;]
+        traintime = [
+                [&#34;2020-01-01 00:00:00&#34;, &#34;2020-03-20 00:00:00&#34;],
+        ]
+
+        # Testing period, recommended: entire dataset
+        testtime = [
+                &#34;2020-01-01 00:00:00&#34;,
+                &#34;2020-08-01 00:00:00&#34;
+        ]
+
+        columnOrder = [&#39;20FT001&#39;, &#39;20TT001&#39;, &#39;20TT002&#39;, &#39;50TT001&#39;, &#39;50TT002&#39;]
+
+        return [filename, columns, irrelevantColumns, targetColumns, traintime, testtime, columnOrder]</code></pre>
+</details>
+</dd>
+<dt id="src.core_configs.getConfigD_modelB"><code class="name flex">
+<span>def <span class="ident">getConfigD_modelB</span></span>(<span>res)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def getConfigD_modelB(res):
+        # File path to dataset .csv file
+        filename = &#34;../master-thesis-db/datasets/D/dataC.csv&#34;
+
+        # List of columns on form [&#39;name&#39;, &#39;desc&#39;, &#39;unit&#39;]
+        columns = getConfigD_columns()
+
+        # List of column names to ignore completely
+        irrelevantColumns = [
+                &#39;20PT001&#39;,
+                &#39;50PT001&#39;,
+                &#39;50FT001&#39;,
+                &#39;50PDT001&#39;,
+                &#39;20PDT001&#39;,
+        ]
+
+        # List of column names used a targets
+        targetColumns = [
+                &#39;50TT002&#39;,
+        ]
+
+        # List of training periods on form [&#39;start&#39;, &#39;end&#39;]
+        traintime = [
+                [&#34;2020-01-01 00:00:00&#34;, &#34;2020-03-20 00:00:00&#34;],
+        ]
+
+        # Testing period, recommended: entire dataset
+        testtime = [
+                &#34;2020-01-01 00:00:00&#34;,
+                &#34;2020-08-01 00:00:00&#34;
+        ]
+
+        columnOrder = [&#39;20FT001&#39;, &#39;20TT001&#39;, &#39;20TT002&#39;, &#39;50TT001&#39;, &#39;50TV001&#39;, &#39;50TT002&#39;]
+
+        return [filename, columns, irrelevantColumns, targetColumns, traintime, testtime, columnOrder]</code></pre>
+</details>
+</dd>
+<dt id="src.core_configs.getConfigD_modelC"><code class="name flex">
+<span>def <span class="ident">getConfigD_modelC</span></span>(<span>res)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def getConfigD_modelC(res):
+        # File path to dataset .csv file
+        filename = &#34;../master-thesis-db/datasets/D/dataC.csv&#34;
+
+        # List of columns on form [&#39;name&#39;, &#39;desc&#39;, &#39;unit&#39;]
+        columns = getConfigD_columns()
+
+        # List of column names to ignore completely
+        irrelevantColumns = [
+                &#39;20PT001&#39;,
+                &#39;50PT001&#39;,
+                &#39;50FT001&#39;,
+                &#39;50PDT001&#39;,
+                &#39;50TV001&#39;,
+        ]
+
+        # List of column names used a targets
+        targetColumns = [
+                &#39;50TT002&#39;,
+                &#39;20PDT001&#39;,
+        ]
+
+        # List of training periods on form [&#39;start&#39;, &#39;end&#39;]
+        traintime = [
+                [&#34;2020-01-01 00:00:00&#34;, &#34;2020-03-20 00:00:00&#34;],
+        ]
+
+        # Testing period, recommended: entire dataset
+        testtime = [
+                &#34;2020-01-01 00:00:00&#34;,
+                &#34;2020-08-01 00:00:00&#34;
+        ]
+
+        columnOrder = [&#39;20FT001&#39;, &#39;20TT001&#39;, &#39;20TT002&#39;, &#39;50TT001&#39;, &#39;50TT002&#39;, &#39;20PDT001&#39;]
+
+        return [filename, columns, irrelevantColumns, targetColumns, traintime, testtime, columnOrder]</code></pre>
+</details>
+</dd>
+<dt id="src.core_configs.getConfigF"><code class="name flex">
+<span>def <span class="ident">getConfigF</span></span>(<span>res)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def getConfigF(res):
+        # File path to dataset .csv file
+        filename = &#34;../master-thesis-db/datasets/F/data_&#34; + res + &#34;.csv&#34;
+
+        # List of columns on form [&#39;name&#39;, &#39;desc&#39;, &#39;unit&#39;]
+        columns = getConfigF_columns()
+
+        # List of column names to ignore completely
+        irrelevantColumns = [
+                        &#39;FT0111&#39;,
+                        &#39;PDT0108_MA_Y&#39;,
+                        &#39;PDT0119_MA_Y&#39;,
+                        &#39;PDT0118_MA_Y&#39;,
+                        &#39;TT0104_MA_Y&#39;,
+                        &#39;TIC0103_CA_YX&#39;,
+                        &#39;TI0115_MA_Y&#39;,
+                        &#39;TT0652_MA_Y&#39;,
+                        &#39;TIC0103_CA_Y&#39;,
+                        &#39;PIC0104_CA_YX&#39;,
+                        &#39;TIC0101_CA_Y&#39;,
+                        &#39;TT0102_MA_Y&#39;,
+                        &#39;TIC0101_CA_YX&#39;,
+                        &#39;TT0651_MA_Y&#39;,
+        ]
+
+        # List of training periods on form [&#39;start&#39;, &#39;end&#39;]
+        traintime = [
+                [&#34;2018-01-01 00:00:00&#34;, &#34;2018-08-01 00:00:00&#34;],
+        ]
+
+        # Testing period, recommended: entire dataset
+        testtime = [
+                &#34;2018-01-01 00:00:00&#34;,
+                &#34;2019-05-01 00:00:00&#34;
+        ]
+        
+        columnOrder = [&#39;TT0106_MA_Y&#39;, &#39;TIC0105_CA_YX&#39;, &#39;FYN0111&#39;, &#39;TIC0425_CA_YX&#39;, &#39;TT0653_MA_Y&#39;, &#39;TIC0105_CA_Y&#39;]
+
+        return [filename, columns, irrelevantColumns, None, traintime, testtime, columnOrder]</code></pre>
+</details>
+</dd>
+<dt id="src.core_configs.getConfigF_columns"><code class="name flex">
+<span>def <span class="ident">getConfigF_columns</span></span>(<span>)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def getConfigF_columns():
+        return [
+                [&#39;FYN0111&#39;, &#39;Process Flow Rate&#39;, &#39;MSm^3/day&#39;],
+                [&#39;FT0111&#39;, &#39;Process Flow Molecular Weight&#39;,&#39;g/mole&#39;],
+                [&#39;TT0102_MA_Y&#39;, &#39;Process Inlet Temperature A&#39;, &#39;Degrees&#39;],
+                [&#39;TIC0101_CA_YX&#39;, &#39;Process Outlet Temperature A&#39;, &#39;Degrees&#39;],
+                [&#39;TT0104_MA_Y&#39;, &#39;Process Inlet Temperature B&#39;, &#39;Degrees&#39;],
+                [&#39;TIC0103_CA_YX&#39;, &#39;Process Outlet Temperature B&#39;, &#39;Degrees&#39;],
+                [&#39;TT0106_MA_Y&#39;, &#39;Process Inlet Temperature C&#39;, &#39;Degrees&#39;],
+                [&#39;TIC0105_CA_YX&#39;, &#39;Process Outlet Temperature C&#39;, &#39;Degrees&#39;],
+                [&#39;TI0115_MA_Y&#39;, &#39;Scrubber Outlet Temperature&#39;, &#39;Degrees&#39;],
+                [&#39;PDT0108_MA_Y&#39;, &#39;Process A Pressure Difference&#39;, &#39;Bar&#39;],
+                [&#39;PDT0119_MA_Y&#39;, &#39;Process B Pressure Difference&#39;, &#39;Bar&#39;],
+                [&#39;PDT0118_MA_Y&#39;, &#39;Process C Pressure Difference&#39;, &#39;Bar&#39;],
+                [&#39;PIC0104_CA_YX&#39;, &#39;Separator Inlet Pressure&#39;, &#39;Bar&#39;],
+                [&#39;TIC0425_CA_YX&#39;, &#39;Coolant Inlet Temperature&#39;, &#39;Degrees&#39;],
+                [&#39;TT0651_MA_Y&#39;, &#39;Coolant Outlet Temperature A&#39;, &#39;Degrees&#39;],
+                [&#39;TT0652_MA_Y&#39;, &#39;Coolant Outlet Temperature B&#39;, &#39;Degrees&#39;],
+                [&#39;TT0653_MA_Y&#39;, &#39;Coolant Outlet Temperature C&#39;, &#39;Degrees&#39;],
+                [&#39;TIC0101_CA_Y&#39;, &#39;Coolant Valve Opening A&#39;, &#39;%&#39;],
+                [&#39;TIC0103_CA_Y&#39;, &#39;Coolant Valve Opening B&#39;, &#39;%&#39;],
+                [&#39;TIC0105_CA_Y&#39;, &#39;Coolant Valve Opening C&#39;, &#39;%&#39;],
+        ]</code></pre>
+</details>
+</dd>
+<dt id="src.core_configs.getConfigF_modelA"><code class="name flex">
+<span>def <span class="ident">getConfigF_modelA</span></span>(<span>res)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def getConfigF_modelA(res):
+        # File path to dataset .csv file
+        filename = &#34;../master-thesis-db/datasets/F/data_&#34; + res + &#34;.csv&#34;
+
+        # List of columns on form [&#39;name&#39;, &#39;desc&#39;, &#39;unit&#39;]
+        columns = getConfigF_columns()
+
+        # List of column names to ignore completely
+        irrelevantColumns = [
+                        &#39;FT0111&#39;,
+                        &#39;PDT0108_MA_Y&#39;,
+                        &#39;PDT0119_MA_Y&#39;,
+                        &#39;PDT0118_MA_Y&#39;,
+                        &#39;TT0104_MA_Y&#39;,
+                        &#39;TIC0103_CA_YX&#39;,
+                        &#39;TI0115_MA_Y&#39;,
+                        &#39;TT0652_MA_Y&#39;,
+                        &#39;TIC0103_CA_Y&#39;,
+                        &#39;PIC0104_CA_YX&#39;,
+                        &#39;TIC0101_CA_Y&#39;,
+                        &#39;TT0102_MA_Y&#39;,
+                        &#39;TIC0101_CA_YX&#39;,
+                        &#39;TT0651_MA_Y&#39;,
+                        &#39;TIC0105_CA_Y&#39;,
+        ]
+
+        # List of column names used a targets
+        targetColumns = [
+                &#39;TT0653_MA_Y&#39;,
+        ]
+
+        # List of training periods on form [&#39;start&#39;, &#39;end&#39;]
+        traintime = [
+                [&#34;2018-01-01 00:00:00&#34;, &#34;2018-08-01 00:00:00&#34;],
+        ]
+
+        # Testing period, recommended: entire dataset
+        testtime = [
+                &#34;2018-01-01 00:00:00&#34;,
+                &#34;2019-05-01 00:00:00&#34;
+        ]
+
+        columnOrder = [&#39;FYN0111&#39;, &#39;TT0106_MA_Y&#39;, &#39;TIC0105_CA_YX&#39;, &#39;TIC0425_CA_YX&#39;, &#39;TT0653_MA_Y&#39;]
+
+        return [filename, columns, irrelevantColumns, targetColumns, traintime, testtime, columnOrder]</code></pre>
+</details>
+</dd>
+<dt id="src.core_configs.getConfigF_modelB"><code class="name flex">
+<span>def <span class="ident">getConfigF_modelB</span></span>(<span>res)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def getConfigF_modelB(res):
+        # File path to dataset .csv file
+        filename = &#34;../master-thesis-db/datasets/F/data_&#34; + res + &#34;.csv&#34;
+
+        # List of columns on form [&#39;name&#39;, &#39;desc&#39;, &#39;unit&#39;]
+        columns = getConfigF_columns()
+
+        # List of column names to ignore completely
+        irrelevantColumns = [
+                        &#39;FT0111&#39;,
+                        &#39;PDT0108_MA_Y&#39;,
+                        &#39;PDT0119_MA_Y&#39;,
+                        &#39;PDT0118_MA_Y&#39;,
+                        &#39;TT0104_MA_Y&#39;,
+                        &#39;TIC0103_CA_YX&#39;,
+                        &#39;TI0115_MA_Y&#39;,
+                        &#39;TT0652_MA_Y&#39;,
+                        &#39;TIC0103_CA_Y&#39;,
+                        &#39;PIC0104_CA_YX&#39;,
+                        &#39;TIC0101_CA_Y&#39;,
+                        &#39;TT0102_MA_Y&#39;,
+                        &#39;TIC0101_CA_YX&#39;,
+                        &#39;TT0651_MA_Y&#39;,
+        ]
+
+        # List of column names used a targets
+        targetColumns = [
+                &#39;TT0653_MA_Y&#39;,
+        ]
+
+        # List of training periods on form [&#39;start&#39;, &#39;end&#39;]
+        traintime = [
+                [&#34;2018-01-01 00:00:00&#34;, &#34;2018-08-01 00:00:00&#34;],
+        ]
+
+        # Testing period, recommended: entire dataset
+        testtime = [
+                &#34;2018-01-01 00:00:00&#34;,
+                &#34;2019-05-01 00:00:00&#34;
+        ]
+
+        columnOrder = [&#39;FYN0111&#39;, &#39;TT0106_MA_Y&#39;, &#39;TIC0105_CA_YX&#39;, &#39;TIC0425_CA_YX&#39;, &#39;TIC0105_CA_Y&#39;, &#39;TT0653_MA_Y&#39;]
+
+        return [filename, columns, irrelevantColumns, targetColumns, traintime, testtime, columnOrder]</code></pre>
+</details>
+</dd>
+<dt id="src.core_configs.getConfigG"><code class="name flex">
+<span>def <span class="ident">getConfigG</span></span>(<span>res)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def getConfigG(res):
+        # File path to dataset .csv file
+        filename = &#34;../master-thesis-db/datasets/G/data_&#34; + res + &#34;.csv&#34;
+
+        # List of columns on form [&#39;name&#39;, &#39;desc&#39;, &#39;unit&#39;]
+        columns = getConfigG_columns()
+
+        # List of column names to ignore completely
+        irrelevantColumns = [
+
+        ]
+
+        # List of training periods on form [&#39;start&#39;, &#39;end&#39;]
+        traintime = [
+                [&#34;2019-04-24 00:00:00&#34;, &#34;2019-08-01 00:00:00&#34;]
+        ]
+
+        # Testing period, recommended: entire dataset
+        testtime = [
+                &#34;2017-01-01 00:00:00&#34;,
+                &#34;2020-03-01 00:00:00&#34;,
+        ]
+        
+        columnOrder = [&#39;TZI0012&#39;, &#39;TI0066&#39;, &#39;FI0010&#39;, &#39;TT0025&#39;, &#39;TT0026&#39;, &#39;TIC0022U&#39;, &#39;FI0027&#39;, &#39;PDI0064&#39;, &#39;PDT0024&#39;, &#39;PI0001&#39;]
+
+        return [filename, columns, irrelevantColumns, None, traintime, testtime, columnOrder]</code></pre>
+</details>
+</dd>
+<dt id="src.core_configs.getConfigG_columns"><code class="name flex">
+<span>def <span class="ident">getConfigG_columns</span></span>(<span>)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def getConfigG_columns():
+        return [
+                [&#39;PDI0064&#39;, &#39;Process Pressure Difference&#39;, &#39;Bar&#39;],
+                [&#39;TI0066&#39;, &#39;Process Outlet Temperature&#39;,&#39;Degrees&#39;],
+                [&#39;TZI0012&#39;, &#39;Process Inlet Temperature&#39;, &#39;Degrees&#39;],
+                [&#39;FI0010&#39;, &#39;Process Flow Rate&#39;, &#39;M^3/day&#39;],
+                [&#39;TT0025&#39;, &#39;Coolant Inlet Temperature&#39;, &#39;Degrees&#39;],
+                [&#39;TT0026&#39;, &#39;Coolant Outlet Temperature&#39;, &#39;Degrees&#39;],
+                [&#39;PI0001&#39;, &#39;Coolant Inlet Pressure&#39;, &#39;Bar&#39;],
+                [&#39;FI0027&#39;, &#39;Coolant Flow Rate&#39;, &#39;M^3/day&#39;],
+                [&#39;TIC0022U&#39;, &#39;Coolant Valve Opening&#39;, &#39;%&#39;],
+                [&#39;PDT0024&#39;, &#39;Coolant Pressure Difference&#39;, &#39;Bar&#39;],
+        ]</code></pre>
+</details>
+</dd>
+<dt id="src.core_configs.getConfigG_modelA"><code class="name flex">
+<span>def <span class="ident">getConfigG_modelA</span></span>(<span>res)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def getConfigG_modelA(res):
+        # File path to dataset .csv file
+        filename = &#34;../master-thesis-db/datasets/G/data_&#34; + res + &#34;.csv&#34;
+
+        # List of columns on form [&#39;name&#39;, &#39;desc&#39;, &#39;unit&#39;]
+        columns = getConfigG_columns()
+
+        # List of column names to ignore completely
+        irrelevantColumns = [
+                &#39;PI0001&#39;,
+                &#39;FI0027&#39;,
+                &#39;TIC0022U&#39;,
+                &#39;PDT0024&#39;,
+                &#39;PDI0064&#39;,
+        ]
+
+        # List of column names used a targets
+        targetColumns = [
+                &#39;TT0026&#39;,
+        ]
+
+        # List of training periods on form [&#39;start&#39;, &#39;end&#39;]
+        traintime = [
+                [&#34;2019-04-24 00:00:00&#34;, &#34;2019-08-01 00:00:00&#34;]
+        ]
+
+        # Testing period, recommended: entire dataset
+        testtime = [
+                &#34;2017-01-01 00:00:00&#34;,
+                &#34;2020-03-01 00:00:00&#34;,
+        ]
+
+        columnOrder = [&#39;FI0010&#39;, &#39;TZI0012&#39;, &#39;TI0066&#39;, &#39;TT0025&#39;, &#39;TT0026&#39;]
+
+        return [filename, columns, irrelevantColumns, targetColumns, traintime, testtime, columnOrder]</code></pre>
+</details>
+</dd>
+<dt id="src.core_configs.getConfigG_modelB"><code class="name flex">
+<span>def <span class="ident">getConfigG_modelB</span></span>(<span>res)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def getConfigG_modelB(res):
+        # File path to dataset .csv file
+        filename = &#34;../master-thesis-db/datasets/G/data_&#34; + res + &#34;.csv&#34;
+
+        # List of columns on form [&#39;name&#39;, &#39;desc&#39;, &#39;unit&#39;]
+        columns = getConfigG_columns()
+
+        # List of column names to ignore completely
+        irrelevantColumns = [
+                &#39;PI0001&#39;,
+                &#39;FI0027&#39;,
+                &#39;PDI0064&#39;,
+                &#39;PDT0024&#39;,
+        ]
+
+        # List of column names used a targets
+        targetColumns = [
+                &#39;TT0026&#39;,
+        ]
+
+        # List of training periods on form [&#39;start&#39;, &#39;end&#39;]
+        traintime = [
+                [&#34;2019-04-24 00:00:00&#34;, &#34;2019-08-01 00:00:00&#34;]
+        ]
+
+        # Testing period, recommended: entire dataset
+        testtime = [
+                &#34;2017-01-01 00:00:00&#34;,
+                &#34;2020-03-01 00:00:00&#34;,
+        ]
+
+        columnOrder = [&#39;FI0010&#39;, &#39;TZI0012&#39;, &#39;TI0066&#39;, &#39;TT0025&#39;, &#39;TIC0022U&#39;,&#39;TT0026&#39;]
+
+        return [filename, columns, irrelevantColumns, targetColumns, traintime, testtime, columnOrder]</code></pre>
+</details>
+</dd>
+<dt id="src.core_configs.getConfigG_modelC"><code class="name flex">
+<span>def <span class="ident">getConfigG_modelC</span></span>(<span>res)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def getConfigG_modelC(res):
+        # File path to dataset .csv file
+        filename = &#34;../master-thesis-db/datasets/G/data_&#34; + res + &#34;.csv&#34;
+
+        # List of columns on form [&#39;name&#39;, &#39;desc&#39;, &#39;unit&#39;]
+        columns = getConfigG_columns()
+
+        # List of column names to ignore completely
+        irrelevantColumns = [
+                &#39;PI0001&#39;,
+                &#39;FI0027&#39;,
+                &#39;TIC0022U&#39;,
+                &#39;PDT0024&#39;,
+        ]
+
+        # List of column names used a targets
+        targetColumns = [
+                &#39;TT0026&#39;,
+                &#39;PDI0064&#39;,
+        ]
+
+        # List of training periods on form [&#39;start&#39;, &#39;end&#39;]
+        traintime = [
+                [&#34;2019-04-24 00:00:00&#34;, &#34;2019-08-01 00:00:00&#34;]
+        ]
+
+        # Testing period, recommended: entire dataset
+        testtime = [
+                &#34;2017-01-01 00:00:00&#34;,
+                &#34;2020-03-01 00:00:00&#34;,
+        ]
+
+        columnOrder = [&#39;FI0010&#39;, &#39;TZI0012&#39;, &#39;TI0066&#39;, &#39;TT0025&#39;, &#39;TT0026&#39;, &#39;PDI0064&#39;]
+
+        return [filename, columns, irrelevantColumns, targetColumns, traintime, testtime, columnOrder]</code></pre>
+</details>
+</dd>
+</dl>
+</section>
+<section>
+</section>
+</article>
+<nav id="sidebar">
+<h1>Index</h1>
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="src" href="index.html">src</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-functions">Functions</a></h3>
+<ul class="two-column">
+<li><code><a title="src.core_configs.getConfig" href="#src.core_configs.getConfig">getConfig</a></code></li>
+<li><code><a title="src.core_configs.getConfigD" href="#src.core_configs.getConfigD">getConfigD</a></code></li>
+<li><code><a title="src.core_configs.getConfigD_columns" href="#src.core_configs.getConfigD_columns">getConfigD_columns</a></code></li>
+<li><code><a title="src.core_configs.getConfigD_modelA" href="#src.core_configs.getConfigD_modelA">getConfigD_modelA</a></code></li>
+<li><code><a title="src.core_configs.getConfigD_modelB" href="#src.core_configs.getConfigD_modelB">getConfigD_modelB</a></code></li>
+<li><code><a title="src.core_configs.getConfigD_modelC" href="#src.core_configs.getConfigD_modelC">getConfigD_modelC</a></code></li>
+<li><code><a title="src.core_configs.getConfigF" href="#src.core_configs.getConfigF">getConfigF</a></code></li>
+<li><code><a title="src.core_configs.getConfigF_columns" href="#src.core_configs.getConfigF_columns">getConfigF_columns</a></code></li>
+<li><code><a title="src.core_configs.getConfigF_modelA" href="#src.core_configs.getConfigF_modelA">getConfigF_modelA</a></code></li>
+<li><code><a title="src.core_configs.getConfigF_modelB" href="#src.core_configs.getConfigF_modelB">getConfigF_modelB</a></code></li>
+<li><code><a title="src.core_configs.getConfigG" href="#src.core_configs.getConfigG">getConfigG</a></code></li>
+<li><code><a title="src.core_configs.getConfigG_columns" href="#src.core_configs.getConfigG_columns">getConfigG_columns</a></code></li>
+<li><code><a title="src.core_configs.getConfigG_modelA" href="#src.core_configs.getConfigG_modelA">getConfigG_modelA</a></code></li>
+<li><code><a title="src.core_configs.getConfigG_modelB" href="#src.core_configs.getConfigG_modelB">getConfigG_modelB</a></code></li>
+<li><code><a title="src.core_configs.getConfigG_modelC" href="#src.core_configs.getConfigG_modelC">getConfigG_modelC</a></code></li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.8.1</a>.</p>
+</footer>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+<script>hljs.initHighlightingOnLoad()</script>
+</body>
+</html>

@@ -1,0 +1,1022 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+<meta name="generator" content="pdoc 0.8.1" />
+<title>src.utils.configs API documentation</title>
+<meta name="description" content="" />
+<link href='https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.0/normalize.min.css' rel='stylesheet'>
+<link href='https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/8.0.0/sanitize.min.css' rel='stylesheet'>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css" rel="stylesheet">
+<style>.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>src.utils.configs</code></h1>
+</header>
+<section id="section-intro">
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python"># NB: This file is primarily used for low-level development purposes
+#         Not of particular interest for the average user and/or viewer
+#         See file &#34;core_configs.py&#34; for configurations used together with the top-level module
+
+class Config():
+    def __init__(self, config):
+        self.columns = config[&#39;columns&#39;]
+        self.relevantColumns = config[&#39;relevantColumns&#39;]
+        self.labelNames = config[&#39;labelNames&#39;]
+        self.columnUnits = config[&#39;columnUnits&#39;]
+        self.timestamps = config[&#39;timestamps&#39;]
+
+def getConfigs():
+        return {
+                &#39;A&#39;: getConfigA,
+                &#39;B&#39;: getConfigB,
+                &#39;C&#39;: getConfigC,
+                &#39;D&#39;: getConfigD,
+                &#39;E&#39;: getConfigE,
+                &#39;F&#39;: getConfigF,
+                &#39;G&#39;: getConfigG,
+        }
+
+def getConfigDirs():
+        return getConfigs().keys()
+
+def getConfig(name):
+        configs = getConfigs()
+        if name in getConfigDirs():
+                return configs[name]()
+        else:
+                return [None, None, None, None, None]
+
+def getConfigA():
+        # A/data_0min.csv
+        #  startdate: 2016-01-01
+        #    enddate: 2020-03-01
+        # resolution: 10min
+        #               rows: 202891
+
+        columnDescriptions = {
+            &#39;TIT139.PV&#39;: &#39;Gas side inlet temperature&#39;,
+            &#39;TIC205.PV&#39;: &#39;Gas side outlet temperature&#39;,
+            &#39;FI125B.PV&#39;: &#39;Gas side flow&#39;,
+            &#39;PT140.PV&#39;: &#39;Gas side compressor pressure&#39;,
+            &#39;TT069.PV&#39;: &#39;Cooling side inlet temperature&#39;,
+            &#39;PT074.PV&#39;: &#39;Cooling side pressure&#39;,
+            &#39;TIC205.OUT&#39;: &#39;Cooling side vavle opening&#39;,
+            &#39;XV127.CMD&#39;: &#39;Anti-surge compressor valve&#39;,
+            &#39;XV127.ZSH&#39;: &#39;Anti-surge valve&#39;,
+            &#39;ZT127.PV&#39;: &#39;Anti-surge unknown&#39;,
+        }
+
+        irrelevantColumns = [
+                &#39;XV127.CMD&#39;,
+                &#39;XV127.ZSH&#39;
+        ]
+
+        columns = list(columnDescriptions.keys())
+        relevantColumns = list(filter((lambda column: column not in irrelevantColumns), columns))
+
+        columnUnits = None
+
+        traintime = [[&#34;2016-07-01 00:00:00&#34;, &#34;2016-10-06 00:00:00&#34;]]
+        testtime = [&#34;2016-01-01 00:00:00&#34;, &#34;2020-03-01 00:00:00&#34;]
+        validtime = [&#34;2016-09-01 00:00:00&#34;, &#34;2016-09-22 00:00:00&#34;]
+
+        timestamps = [traintime, testtime, validtime]
+
+        return [columns, relevantColumns, columnDescriptions, columnUnits, timestamps]
+
+def getConfigB():
+        # B/data_0min.csv
+        #  startdate: 2016-01-01
+        #    enddate: 2020-03-01
+        # resolution: 10min
+        #               rows: 199346
+
+        columnDescriptions = {
+            &#39;TT181.PV&#39;: &#39;Gas side inlet temperature&#39;,
+            &#39;TIC215.PV&#39;: &#39;Gas side outlet temperature&#39;,
+            &#39;FI165B.PV&#39;: &#39;Gas side flow&#39;,
+            &#39;PT180.PV&#39;: &#39;Gas side compressor pressure&#39;,
+            &#39;TT069.PV&#39;: &#39;Cooling side inlet temperature&#39;,
+            &#39;PT074.PV&#39;: &#39;Cooling side pressure&#39;,
+            &#39;TIC215.OUT&#39;: &#39;Cooling side vavle opening&#39;,
+            &#39;XV167.CMD&#39;: &#39;Anti-surge compressor valve&#39;,
+            &#39;XV167.ZSH&#39;: &#39;Anti-surge valve&#39;,
+            &#39;ZT167.PV&#39;: &#39;Anti-surge unknown&#39;,
+        }
+
+        irrelevantColumns = [
+                &#39;XV167.CMD&#39;,
+                &#39;XV167.ZSH&#39;
+        ]
+
+        columns = list(columnDescriptions.keys())
+        relevantColumns = list(filter((lambda column: column not in irrelevantColumns), columns))
+
+        columnUnits = None
+
+        traintime = [
+        #[&#34;2016-01-01 00:00:00&#34;, &#34;2016-03-01 00:00:00&#34;],
+        #[&#34;2016-05-01 00:00:00&#34;, &#34;2016-06-01 00:00:00&#34;],
+        #[&#34;2016-08-01 00:00:00&#34;, &#34;2016-10-01 00:00:00&#34;],
+        #[&#34;2017-07-01 00:00:00&#34;, &#34;2017-08-01 00:00:00&#34;],
+        #[&#34;2017-10-01 00:00:00&#34;, &#34;2017-11-01 00:00:00&#34;],
+        [&#34;2016-04-10 00:00:00&#34;, &#34;2016-06-10 00:00:00&#34;],
+    ]
+        
+        testtime = [&#34;2016-01-01 00:00:00&#34;, &#34;2020-03-01 00:00:00&#34;]
+        validtime = [&#34;2016-01-01 00:00:00&#34;, &#34;2020-03-01 00:00:00&#34;]
+
+
+        timestamps = [traintime, testtime, validtime]
+
+        return [columns, relevantColumns, columnDescriptions, columnUnits, timestamps]
+
+
+def getConfigC():
+        # C/data.csv
+        #  startdate: 2019-09-11
+        #    enddate: 2019-10-09
+        # resolution: 10sec
+        #               rows: 238040
+
+        columnDescriptions = {
+            &#34;Date&#34;: &#34;Date&#34;,
+            &#34;FT202Flow&#34;: &#34;Process flow&#34;,
+            &#34;FT202density&#34;: &#34;Process density&#34;,
+            &#34;FT202Temp&#34;: &#34;Process flow upstream&#34;,
+            &#34;TT229&#34;: &#34;Process temperture in HX&#34;,
+            &#34;TIC207&#34;: &#34;Process temperature out HX&#34;,
+            &#34;PDT203&#34;: &#34;Process dP HX&#34;,
+            &#34;FT400&#34;: &#34;Cooling flow&#34;,
+            &#34;TIC201&#34;: &#34;Cooling temperature in HX&#34;,
+            &#34;TT404&#34;: &#34;Cooling temperature out HX&#34;,
+            &#34;TIC231&#34;: &#34;Process temperature out oil heater&#34;,
+            &#34;HX400PV&#34;: &#34;Oil heater unknown&#34;,
+            &#34;TV404output&#34;: &#34;Oil heater unknown (duty?)&#34;,
+            &#34;TIC220&#34;: &#34;Process temperature tank&#34;,
+            &#34;PIC203&#34;: &#34;Uknown&#34;,
+            &#34;TT206&#34;: &#34;Process temperature upstream&#34;,
+            &#34;PT213&#34;: &#34;Process pressure in HX&#34;,
+            &#34;PT701&#34;: &#34;Process pressure out HX&#34;,
+            &#34;dPPT213-PT701&#34;: &#34;Unknown&#34;,
+            &#34;EstimertHX206&#34;: &#34;Unknown&#34;,
+            &#34;ProsessdT&#34;: &#34;Process dT&#34;,
+            &#34;KjolevanndT&#34;: &#34;Cooling dT&#34;,
+            &#34;dT1&#34;: &#34;Uknown&#34;,
+            &#34;dT2&#34;: &#34;Unknown&#34;,
+        }
+
+        irrelevantColumns = [
+            &#34;FT202density&#34;,
+            &#34;FT202Temp&#34;,
+            &#34;TIC231&#34;,
+            &#34;HX400PV&#34;,
+            &#34;TV404output&#34;,
+            &#34;TIC220&#34;,
+            &#34;PIC203&#34;,
+            &#34;TT206&#34;,
+            &#34;PT213&#34;,
+            &#34;PT701&#34;,
+            &#34;dPPT213-PT701&#34;,
+            &#34;EstimertHX206&#34;,
+            &#34;ProsessdT&#34;,
+            &#34;KjolevanndT&#34;,
+            &#34;dT1&#34;,
+            &#34;dT2&#34;,
+        ]
+
+        columns = list(columnDescriptions.keys())
+        relevantColumns = list(filter((lambda column: column not in irrelevantColumns), columns))
+
+        columnUnits = None
+
+        traintime = [[&#34;2019-09-15 12:00:00&#34;, &#34;2019-09-18 12:00:00&#34;]]
+        testtime = [&#34;2019-09-15 12:00:00&#34;, &#34;2019-09-28 08:00:00&#34;]
+        validtime = [&#34;2019-09-17 12:00:00&#34;, &#34;2019-09-18 12:00:00&#34;]
+        
+        timestamps = [traintime, testtime, validtime]
+
+        return [columns, relevantColumns, columnDescriptions, columnUnits, timestamps]
+
+def getConfigD():
+        # D/dataC.csv
+        #  startdate: 2020-01-01
+        #    enddate: 2020-07-01
+        # resolution: 360min
+        #               rows: 727
+
+        columnDescriptions = {
+            &#39;20TT001&#39;: &#39;Gas side inlet temperature&#39;,
+            &#39;20PT001&#39;: &#39;Gas side inlet pressure&#39;,
+            &#39;20FT001&#39;: &#39;Gas side flow&#39;,
+            &#39;20TT002&#39;: &#39;Gas side outlet temperature&#39;,
+            &#39;20PDT001&#39;: &#39;Gas side pressure differential&#39;,
+            &#39;50TT001&#39;: &#39;Cooling side inlet temperature&#39;,
+            &#39;50PT001&#39;: &#39;Cooling side inlet pressure&#39;,
+            &#39;50FT001&#39;: &#39;Cooling side flow&#39;,
+            &#39;50TT002&#39;: &#39;Cooling side outlet temperature&#39;,
+            &#39;50PDT001&#39;: &#39;Cooling side pressure differential&#39;,
+            &#39;50TV001&#39;: &#39;CM Valve opening&#39;
+        }
+
+        irrelevantColumns = [
+        ]
+
+        columns = list(columnDescriptions.keys())
+        relevantColumns = list(filter((lambda column: column not in irrelevantColumns), columns))
+
+        columnUnits = None
+
+        traintime = [[&#34;2020-01-01 00:00:00&#34;, &#34;2020-03-01 00:00:00&#34;]]
+        testtime = [&#34;2020-01-01 00:00:00&#34;, &#34;2020-07-01 00:00:00&#34;]
+        validtime = [&#34;2020-03-01 00:00:00&#34;, &#34;2020-04-01 00:00:00&#34;]
+
+        timestamps = [traintime, testtime, validtime]
+
+        return [columns, relevantColumns, columnDescriptions, columnUnits, timestamps]
+
+def getConfigE():
+        # E/data.csv
+        #  startdate: 2014-04-01
+        #    enddate: 2018-11-22
+        # resolution: 360min
+        #               rows: 6788
+
+        columnDescriptions = {
+                &#39;Date&#39;: &#39;Datetime&#39;,
+                &#39;TT0102&#39;: &#39;Varm side temperatur inn&#39;,
+                &#39;TT0107&#39;: &#39;Varm side temperatur ut&#39;,
+                &#39;FT0005&#39;: &#39;Varm side gasseksport&#39;,
+                &#39;FT0161&#39;: &#39;Varm side veske ut av scrubber&#39;,
+                &#39;PT0106&#39;: &#39;Varm side trykk innløpsseparator&#39;,
+                &#39;PDT0105&#39;: &#39;Varm side trykkfall&#39;,
+                &#39;TT0312&#39;: &#39;Kald side temperatur inn&#39;,
+                &#39;TT0601&#39;: &#39;Kald side temperatur ut&#39;,
+                &#39;FT0605&#39;: &#39;Kald side kjølemedium&#39;,
+                &#39;PDT0604&#39;: &#39;Kald side trykkfall&#39;,
+                &#39;TIC0108&#39;: &#39;Kald side ventilåpning&#39;,
+                &#39;HV0175&#39;: &#39;Pumpe bypass&#39;,
+                &#39;PT0160&#39;: &#39;Pumpe trykk ut&#39;,
+        }
+
+        irrelevantColumns = [
+        ]
+
+        columns = list(columnDescriptions.keys())
+        relevantColumns = list(filter((lambda column: column not in irrelevantColumns), columns))
+
+        columnUnits = {
+                &#39;TT0102&#39;: &#39;degrees&#39;,
+                &#39;TT0107&#39;: &#39;degrees&#39;,
+                &#39;FT0005&#39;: &#39;Sm^3 / h&#39;,
+                &#39;FT0161&#39;: &#39;Am^3 / h&#39;,
+                &#39;PT0106&#39;: &#39;BarA&#39;,
+                &#39;PDT0105&#39;: &#39;BarG&#39;,
+                &#39;TT0312&#39;: &#39;degrees&#39;,
+                &#39;TT0601&#39;: &#39;degrees&#39;,
+                &#39;FT0605&#39;: &#39;Am^3 / h&#39;,
+                &#39;PDT0604&#39;: &#39;Bar&#39;,
+                &#39;TIC0108&#39;: &#39;%&#39;,
+                &#39;HV0175&#39;: &#39;bool&#39;,
+                &#39;PT0160&#39;: &#39;Bar&#39;,
+        }
+
+        traintime = [[&#34;2015-03-01 00:00:00&#34;, &#34;2016-01-01 00:00:00&#34;]]
+        testtime = [&#34;2017-11-13 00:00:00&#34;, &#34;2018-06-01 00:00:00&#34;]
+        validtime = [&#34;2015-10-01 00:00:00&#34;, &#34;2016-01-01 00:00:00&#34;]
+
+        timestamps = [traintime, testtime, validtime]
+
+        return [columns, relevantColumns, columnDescriptions, columnUnits, timestamps]
+        
+def getConfigF():
+        # F/data2_30min.csv
+        #  startdate: 2017-10-21
+        #    enddate: 2020-02-01
+        # resolution: 30min
+        #               rows: 32781
+
+        columnDescriptions = {
+                &#39;Date&#39;:&#39;Date&#39;,
+                &#39;FYN0111&#39;: &#39;Gasseksport rate&#39;,
+                &#39;FT0111&#39;: &#39;Gasseksport molvekt&#39;,
+                &#39;TT0102_MA_Y&#39;: &#39;Varm side A temperatur inn&#39;,
+                &#39;TIC0101_CA_YX&#39;: &#39;Varm side A temperatur ut&#39;,
+                &#39;TT0104_MA_Y&#39;: &#39;Varm side B temperatur inn&#39;,
+                &#39;TIC0103_CA_YX&#39;: &#39;Varm side B temperatur ut&#39;,
+                &#39;TT0106_MA_Y&#39;: &#39;Varm side C temperatur inn&#39;,
+                &#39;TIC0105_CA_YX&#39;: &#39;Varm side C temperatur ut&#39;,
+                &#39;TI0115_MA_Y&#39;: &#39;Scrubber temperatur ut&#39;,
+                &#39;PDT0108_MA_Y&#39;: &#39;Varm side A trykkfall&#39;,
+                &#39;PDT0119_MA_Y&#39;: &#39;Varm side B trykkfall&#39;,
+                &#39;PDT0118_MA_Y&#39;: &#39;Varm side C trykkfall&#39;,
+                &#39;PIC0104_CA_YX&#39;: &#39;Innløpsseparator trykk&#39;,
+                &#39;TIC0425_CA_YX&#39;: &#39;Kald side temperatur inn&#39;,
+                &#39;TT0651_MA_Y&#39;: &#39;Kald side A temperatur ut&#39;,
+                &#39;TT0652_MA_Y&#39;: &#39;Kald side B temperatur ut&#39;,
+                &#39;TT0653_MA_Y&#39;: &#39;Kald side C temperatur ut&#39;,
+                &#39;TIC0101_CA_Y&#39;: &#39;Kald side A ventilåpning&#39;,
+                &#39;TIC0103_CA_Y&#39;: &#39;Kald side B ventilåpning&#39;,
+                &#39;TIC0105_CA_Y&#39;: &#39;Kald side C ventilåpning&#39;,
+        }
+
+        irrelevantColumns = [
+                &#39;FT0111&#39;,
+                &#39;PDT0108_MA_Y&#39;,
+                &#39;PDT0119_MA_Y&#39;,
+                &#39;PDT0118_MA_Y&#39;,
+                &#39;TT0104_MA_Y&#39;,
+                &#39;TIC0103_CA_YX&#39;,
+                &#39;TT0652_MA_Y&#39;,
+                &#39;TIC0103_CA_Y&#39;,
+        ]
+
+        columns = list(columnDescriptions.keys())
+        relevantColumns = list(filter((lambda column: column not in irrelevantColumns), columns))
+
+        columnUnits = {
+                &#39;Date&#39;:&#39;Date&#39;,
+                &#39;FYN0111&#39;: &#39;MSm^3/d&#39;,
+                &#39;FT0111&#39;: &#39;g/mole&#39;,
+                &#39;TT0102_MA_Y&#39;: &#39;degrees&#39;,
+                &#39;TIC0101_CA_YX&#39;: &#39;degrees&#39;,
+                &#39;TT0104_MA_Y&#39;: &#39;degrees&#39;,
+                &#39;TIC0103_CA_YX&#39;: &#39;degrees&#39;,
+                &#39;TT0106_MA_Y&#39;: &#39;degrees&#39;,
+                &#39;TIC0105_CA_YX&#39;: &#39;degrees&#39;,
+                &#39;TI0115_MA_Y&#39;: &#39;degrees&#39;,
+                &#39;PDT0108_MA_Y&#39;: &#39;Bar&#39;,
+                &#39;PDT0119_MA_Y&#39;: &#39;Bar&#39;,
+                &#39;PDT0118_MA_Y&#39;: &#39;Bar&#39;,
+                &#39;PIC0104_CA_YX&#39;: &#39;Barg&#39;,
+                &#39;TIC0425_CA_YX&#39;: &#39;degrees&#39;,
+                &#39;TT0651_MA_Y&#39;: &#39;degrees&#39;,
+                &#39;TT0652_MA_Y&#39;: &#39;degrees&#39;,
+                &#39;TT0653_MA_Y&#39;: &#39;degrees&#39;,
+                &#39;TIC0101_CA_Y&#39;: &#39;%&#39;,
+                &#39;TIC0103_CA_Y&#39;: &#39;%&#39;,
+                &#39;TIC0105_CA_Y&#39;: &#39;%&#39;,
+        }
+        &#34;&#34;&#34;
+        traintime = [&#34;2017-07-01 00:00:00&#34;, &#34;2018-05-01 00:00:00&#34;]
+        testtime = [&#34;2017-07-01 00:00:00&#34;, &#34;2020-02-01 00:00:00&#34;]
+        validtime = [&#34;2018-01-01 00:00:00&#34;, &#34;2018-05-01 00:00:00&#34;]
+        
+        traintime = [&#34;2017-08-05 00:00:00&#34;, &#34;2018-05-01 00:00:00&#34;]
+        testtime = [&#34;2017-08-05 00:00:00&#34;, &#34;2020-02-01 00:00:00&#34;]
+        validtime = [&#34;2018-01-01 00:00:00&#34;, &#34;2018-05-01 00:00:00&#34;]
+        &#34;&#34;&#34;
+        traintime = [[&#34;2017-08-05 00:00:00&#34;, &#34;2018-03-01 00:00:00&#34;]]
+        testtime = [&#34;2017-08-05 00:00:00&#34;, &#34;2019-11-01 00:00:00&#34;]
+        validtime = [&#34;2018-05-01 00:00:00&#34;, &#34;2018-07-01 00:00:00&#34;]
+        &#34;&#34;&#34;
+        traintime = [&#34;2019-04-15 00:00:00&#34;, &#34;2019-06-01 00:00:00&#34;]
+        testtime = [&#34;2019-04-15 00:00:00&#34;, &#34;2020-02-01 00:00:00&#34;]
+        validtime = [&#34;2019-05-01 00:00:00&#34;, &#34;2019-07-01 00:00:00&#34;]
+        &#34;&#34;&#34;
+        timestamps = [traintime, testtime, validtime]
+
+        return [columns, relevantColumns, columnDescriptions, columnUnits, timestamps]
+
+def getConfigG():
+        # G/data_10min.csv
+        #  startdate: 2017-01-11
+        #    enddate: 2020-03-01
+        # resolution: 10min
+        #               rows: ?
+
+        columnDescriptions = {
+                &#39;Date&#39;:&#39;Date&#39;,
+                &#39;PDI0064&#39;: &#39;Process side dP&#39;,
+                &#39;TI0066&#39;: &#39;Process side Temperature out&#39;,
+                &#39;TZI0012&#39;: &#39;Process side Temperature in&#39;,
+                &#39;FI0010&#39;: &#39;Process side flow rate&#39;,
+                &#39;TT0025&#39;: &#39;Cooling side Temperature in&#39;,
+                &#39;TT0026&#39;: &#39;Cooling side Tmperature out&#39;,
+                &#39;PI0001&#39;: &#39;Cooling side Pressure in&#39;,
+                &#39;FI0027&#39;: &#39;Cooling side flow rate&#39;,
+                &#39;TIC0022U&#39;: &#39;Cooling side valve opening&#39;,
+                &#39;PDT0024&#39;: &#39;Cooling side dP&#39;,
+        }
+
+        irrelevantColumns = [
+        ]
+
+        columns = list(columnDescriptions.keys())
+        relevantColumns = list(filter((lambda column: column not in irrelevantColumns), columns))
+
+        columnUnits = {
+                &#39;Date&#39;:&#39;Date&#39;,
+                &#39;PDI0064&#39;: &#39;bar&#39;,
+                &#39;TI0066&#39;: &#39;degrees&#39;,
+                &#39;TZI0012&#39;: &#39;degrees&#39;,
+                &#39;FI0010&#39;: &#39;m3/h&#39;,
+                &#39;TT0025&#39;: &#39;degrees&#39;,
+                &#39;TT0026&#39;: &#39;degrees&#39;,
+                &#39;PI0001&#39;: &#39;barG&#39;,
+                &#39;FI0027&#39;: &#39;m3/h&#39;,
+                &#39;TIC0022U&#39;: &#39;%&#39;,
+                &#39;PDT0024&#39;: &#39;bar&#39;,
+        }
+
+        traintime = [
+                [&#34;2019-04-10 00:00:00&#34;, &#34;2019-06-10 00:00:00&#34;]
+        ]
+        testtime = [&#34;2017-01-01 00:00:00&#34;, &#34;2020-03-01 00:00:00&#34;]
+        validtime = [&#34;2013-06-01 00:00:00&#34;, &#34;2014-06-01 00:00:00&#34;]
+
+        timestamps = [traintime, testtime, validtime]
+
+        return [columns, relevantColumns, columnDescriptions, columnUnits, timestamps]</code></pre>
+</details>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-functions">Functions</h2>
+<dl>
+<dt id="src.utils.configs.getConfig"><code class="name flex">
+<span>def <span class="ident">getConfig</span></span>(<span>name)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def getConfig(name):
+        configs = getConfigs()
+        if name in getConfigDirs():
+                return configs[name]()
+        else:
+                return [None, None, None, None, None]</code></pre>
+</details>
+</dd>
+<dt id="src.utils.configs.getConfigA"><code class="name flex">
+<span>def <span class="ident">getConfigA</span></span>(<span>)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def getConfigA():
+        # A/data_0min.csv
+        #  startdate: 2016-01-01
+        #    enddate: 2020-03-01
+        # resolution: 10min
+        #               rows: 202891
+
+        columnDescriptions = {
+            &#39;TIT139.PV&#39;: &#39;Gas side inlet temperature&#39;,
+            &#39;TIC205.PV&#39;: &#39;Gas side outlet temperature&#39;,
+            &#39;FI125B.PV&#39;: &#39;Gas side flow&#39;,
+            &#39;PT140.PV&#39;: &#39;Gas side compressor pressure&#39;,
+            &#39;TT069.PV&#39;: &#39;Cooling side inlet temperature&#39;,
+            &#39;PT074.PV&#39;: &#39;Cooling side pressure&#39;,
+            &#39;TIC205.OUT&#39;: &#39;Cooling side vavle opening&#39;,
+            &#39;XV127.CMD&#39;: &#39;Anti-surge compressor valve&#39;,
+            &#39;XV127.ZSH&#39;: &#39;Anti-surge valve&#39;,
+            &#39;ZT127.PV&#39;: &#39;Anti-surge unknown&#39;,
+        }
+
+        irrelevantColumns = [
+                &#39;XV127.CMD&#39;,
+                &#39;XV127.ZSH&#39;
+        ]
+
+        columns = list(columnDescriptions.keys())
+        relevantColumns = list(filter((lambda column: column not in irrelevantColumns), columns))
+
+        columnUnits = None
+
+        traintime = [[&#34;2016-07-01 00:00:00&#34;, &#34;2016-10-06 00:00:00&#34;]]
+        testtime = [&#34;2016-01-01 00:00:00&#34;, &#34;2020-03-01 00:00:00&#34;]
+        validtime = [&#34;2016-09-01 00:00:00&#34;, &#34;2016-09-22 00:00:00&#34;]
+
+        timestamps = [traintime, testtime, validtime]
+
+        return [columns, relevantColumns, columnDescriptions, columnUnits, timestamps]</code></pre>
+</details>
+</dd>
+<dt id="src.utils.configs.getConfigB"><code class="name flex">
+<span>def <span class="ident">getConfigB</span></span>(<span>)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def getConfigB():
+        # B/data_0min.csv
+        #  startdate: 2016-01-01
+        #    enddate: 2020-03-01
+        # resolution: 10min
+        #               rows: 199346
+
+        columnDescriptions = {
+            &#39;TT181.PV&#39;: &#39;Gas side inlet temperature&#39;,
+            &#39;TIC215.PV&#39;: &#39;Gas side outlet temperature&#39;,
+            &#39;FI165B.PV&#39;: &#39;Gas side flow&#39;,
+            &#39;PT180.PV&#39;: &#39;Gas side compressor pressure&#39;,
+            &#39;TT069.PV&#39;: &#39;Cooling side inlet temperature&#39;,
+            &#39;PT074.PV&#39;: &#39;Cooling side pressure&#39;,
+            &#39;TIC215.OUT&#39;: &#39;Cooling side vavle opening&#39;,
+            &#39;XV167.CMD&#39;: &#39;Anti-surge compressor valve&#39;,
+            &#39;XV167.ZSH&#39;: &#39;Anti-surge valve&#39;,
+            &#39;ZT167.PV&#39;: &#39;Anti-surge unknown&#39;,
+        }
+
+        irrelevantColumns = [
+                &#39;XV167.CMD&#39;,
+                &#39;XV167.ZSH&#39;
+        ]
+
+        columns = list(columnDescriptions.keys())
+        relevantColumns = list(filter((lambda column: column not in irrelevantColumns), columns))
+
+        columnUnits = None
+
+        traintime = [
+        #[&#34;2016-01-01 00:00:00&#34;, &#34;2016-03-01 00:00:00&#34;],
+        #[&#34;2016-05-01 00:00:00&#34;, &#34;2016-06-01 00:00:00&#34;],
+        #[&#34;2016-08-01 00:00:00&#34;, &#34;2016-10-01 00:00:00&#34;],
+        #[&#34;2017-07-01 00:00:00&#34;, &#34;2017-08-01 00:00:00&#34;],
+        #[&#34;2017-10-01 00:00:00&#34;, &#34;2017-11-01 00:00:00&#34;],
+        [&#34;2016-04-10 00:00:00&#34;, &#34;2016-06-10 00:00:00&#34;],
+    ]
+        
+        testtime = [&#34;2016-01-01 00:00:00&#34;, &#34;2020-03-01 00:00:00&#34;]
+        validtime = [&#34;2016-01-01 00:00:00&#34;, &#34;2020-03-01 00:00:00&#34;]
+
+
+        timestamps = [traintime, testtime, validtime]
+
+        return [columns, relevantColumns, columnDescriptions, columnUnits, timestamps]</code></pre>
+</details>
+</dd>
+<dt id="src.utils.configs.getConfigC"><code class="name flex">
+<span>def <span class="ident">getConfigC</span></span>(<span>)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def getConfigC():
+        # C/data.csv
+        #  startdate: 2019-09-11
+        #    enddate: 2019-10-09
+        # resolution: 10sec
+        #               rows: 238040
+
+        columnDescriptions = {
+            &#34;Date&#34;: &#34;Date&#34;,
+            &#34;FT202Flow&#34;: &#34;Process flow&#34;,
+            &#34;FT202density&#34;: &#34;Process density&#34;,
+            &#34;FT202Temp&#34;: &#34;Process flow upstream&#34;,
+            &#34;TT229&#34;: &#34;Process temperture in HX&#34;,
+            &#34;TIC207&#34;: &#34;Process temperature out HX&#34;,
+            &#34;PDT203&#34;: &#34;Process dP HX&#34;,
+            &#34;FT400&#34;: &#34;Cooling flow&#34;,
+            &#34;TIC201&#34;: &#34;Cooling temperature in HX&#34;,
+            &#34;TT404&#34;: &#34;Cooling temperature out HX&#34;,
+            &#34;TIC231&#34;: &#34;Process temperature out oil heater&#34;,
+            &#34;HX400PV&#34;: &#34;Oil heater unknown&#34;,
+            &#34;TV404output&#34;: &#34;Oil heater unknown (duty?)&#34;,
+            &#34;TIC220&#34;: &#34;Process temperature tank&#34;,
+            &#34;PIC203&#34;: &#34;Uknown&#34;,
+            &#34;TT206&#34;: &#34;Process temperature upstream&#34;,
+            &#34;PT213&#34;: &#34;Process pressure in HX&#34;,
+            &#34;PT701&#34;: &#34;Process pressure out HX&#34;,
+            &#34;dPPT213-PT701&#34;: &#34;Unknown&#34;,
+            &#34;EstimertHX206&#34;: &#34;Unknown&#34;,
+            &#34;ProsessdT&#34;: &#34;Process dT&#34;,
+            &#34;KjolevanndT&#34;: &#34;Cooling dT&#34;,
+            &#34;dT1&#34;: &#34;Uknown&#34;,
+            &#34;dT2&#34;: &#34;Unknown&#34;,
+        }
+
+        irrelevantColumns = [
+            &#34;FT202density&#34;,
+            &#34;FT202Temp&#34;,
+            &#34;TIC231&#34;,
+            &#34;HX400PV&#34;,
+            &#34;TV404output&#34;,
+            &#34;TIC220&#34;,
+            &#34;PIC203&#34;,
+            &#34;TT206&#34;,
+            &#34;PT213&#34;,
+            &#34;PT701&#34;,
+            &#34;dPPT213-PT701&#34;,
+            &#34;EstimertHX206&#34;,
+            &#34;ProsessdT&#34;,
+            &#34;KjolevanndT&#34;,
+            &#34;dT1&#34;,
+            &#34;dT2&#34;,
+        ]
+
+        columns = list(columnDescriptions.keys())
+        relevantColumns = list(filter((lambda column: column not in irrelevantColumns), columns))
+
+        columnUnits = None
+
+        traintime = [[&#34;2019-09-15 12:00:00&#34;, &#34;2019-09-18 12:00:00&#34;]]
+        testtime = [&#34;2019-09-15 12:00:00&#34;, &#34;2019-09-28 08:00:00&#34;]
+        validtime = [&#34;2019-09-17 12:00:00&#34;, &#34;2019-09-18 12:00:00&#34;]
+        
+        timestamps = [traintime, testtime, validtime]
+
+        return [columns, relevantColumns, columnDescriptions, columnUnits, timestamps]</code></pre>
+</details>
+</dd>
+<dt id="src.utils.configs.getConfigD"><code class="name flex">
+<span>def <span class="ident">getConfigD</span></span>(<span>)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def getConfigD():
+        # D/dataC.csv
+        #  startdate: 2020-01-01
+        #    enddate: 2020-07-01
+        # resolution: 360min
+        #               rows: 727
+
+        columnDescriptions = {
+            &#39;20TT001&#39;: &#39;Gas side inlet temperature&#39;,
+            &#39;20PT001&#39;: &#39;Gas side inlet pressure&#39;,
+            &#39;20FT001&#39;: &#39;Gas side flow&#39;,
+            &#39;20TT002&#39;: &#39;Gas side outlet temperature&#39;,
+            &#39;20PDT001&#39;: &#39;Gas side pressure differential&#39;,
+            &#39;50TT001&#39;: &#39;Cooling side inlet temperature&#39;,
+            &#39;50PT001&#39;: &#39;Cooling side inlet pressure&#39;,
+            &#39;50FT001&#39;: &#39;Cooling side flow&#39;,
+            &#39;50TT002&#39;: &#39;Cooling side outlet temperature&#39;,
+            &#39;50PDT001&#39;: &#39;Cooling side pressure differential&#39;,
+            &#39;50TV001&#39;: &#39;CM Valve opening&#39;
+        }
+
+        irrelevantColumns = [
+        ]
+
+        columns = list(columnDescriptions.keys())
+        relevantColumns = list(filter((lambda column: column not in irrelevantColumns), columns))
+
+        columnUnits = None
+
+        traintime = [[&#34;2020-01-01 00:00:00&#34;, &#34;2020-03-01 00:00:00&#34;]]
+        testtime = [&#34;2020-01-01 00:00:00&#34;, &#34;2020-07-01 00:00:00&#34;]
+        validtime = [&#34;2020-03-01 00:00:00&#34;, &#34;2020-04-01 00:00:00&#34;]
+
+        timestamps = [traintime, testtime, validtime]
+
+        return [columns, relevantColumns, columnDescriptions, columnUnits, timestamps]</code></pre>
+</details>
+</dd>
+<dt id="src.utils.configs.getConfigDirs"><code class="name flex">
+<span>def <span class="ident">getConfigDirs</span></span>(<span>)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def getConfigDirs():
+        return getConfigs().keys()</code></pre>
+</details>
+</dd>
+<dt id="src.utils.configs.getConfigE"><code class="name flex">
+<span>def <span class="ident">getConfigE</span></span>(<span>)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def getConfigE():
+        # E/data.csv
+        #  startdate: 2014-04-01
+        #    enddate: 2018-11-22
+        # resolution: 360min
+        #               rows: 6788
+
+        columnDescriptions = {
+                &#39;Date&#39;: &#39;Datetime&#39;,
+                &#39;TT0102&#39;: &#39;Varm side temperatur inn&#39;,
+                &#39;TT0107&#39;: &#39;Varm side temperatur ut&#39;,
+                &#39;FT0005&#39;: &#39;Varm side gasseksport&#39;,
+                &#39;FT0161&#39;: &#39;Varm side veske ut av scrubber&#39;,
+                &#39;PT0106&#39;: &#39;Varm side trykk innløpsseparator&#39;,
+                &#39;PDT0105&#39;: &#39;Varm side trykkfall&#39;,
+                &#39;TT0312&#39;: &#39;Kald side temperatur inn&#39;,
+                &#39;TT0601&#39;: &#39;Kald side temperatur ut&#39;,
+                &#39;FT0605&#39;: &#39;Kald side kjølemedium&#39;,
+                &#39;PDT0604&#39;: &#39;Kald side trykkfall&#39;,
+                &#39;TIC0108&#39;: &#39;Kald side ventilåpning&#39;,
+                &#39;HV0175&#39;: &#39;Pumpe bypass&#39;,
+                &#39;PT0160&#39;: &#39;Pumpe trykk ut&#39;,
+        }
+
+        irrelevantColumns = [
+        ]
+
+        columns = list(columnDescriptions.keys())
+        relevantColumns = list(filter((lambda column: column not in irrelevantColumns), columns))
+
+        columnUnits = {
+                &#39;TT0102&#39;: &#39;degrees&#39;,
+                &#39;TT0107&#39;: &#39;degrees&#39;,
+                &#39;FT0005&#39;: &#39;Sm^3 / h&#39;,
+                &#39;FT0161&#39;: &#39;Am^3 / h&#39;,
+                &#39;PT0106&#39;: &#39;BarA&#39;,
+                &#39;PDT0105&#39;: &#39;BarG&#39;,
+                &#39;TT0312&#39;: &#39;degrees&#39;,
+                &#39;TT0601&#39;: &#39;degrees&#39;,
+                &#39;FT0605&#39;: &#39;Am^3 / h&#39;,
+                &#39;PDT0604&#39;: &#39;Bar&#39;,
+                &#39;TIC0108&#39;: &#39;%&#39;,
+                &#39;HV0175&#39;: &#39;bool&#39;,
+                &#39;PT0160&#39;: &#39;Bar&#39;,
+        }
+
+        traintime = [[&#34;2015-03-01 00:00:00&#34;, &#34;2016-01-01 00:00:00&#34;]]
+        testtime = [&#34;2017-11-13 00:00:00&#34;, &#34;2018-06-01 00:00:00&#34;]
+        validtime = [&#34;2015-10-01 00:00:00&#34;, &#34;2016-01-01 00:00:00&#34;]
+
+        timestamps = [traintime, testtime, validtime]
+
+        return [columns, relevantColumns, columnDescriptions, columnUnits, timestamps]</code></pre>
+</details>
+</dd>
+<dt id="src.utils.configs.getConfigF"><code class="name flex">
+<span>def <span class="ident">getConfigF</span></span>(<span>)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def getConfigF():
+        # F/data2_30min.csv
+        #  startdate: 2017-10-21
+        #    enddate: 2020-02-01
+        # resolution: 30min
+        #               rows: 32781
+
+        columnDescriptions = {
+                &#39;Date&#39;:&#39;Date&#39;,
+                &#39;FYN0111&#39;: &#39;Gasseksport rate&#39;,
+                &#39;FT0111&#39;: &#39;Gasseksport molvekt&#39;,
+                &#39;TT0102_MA_Y&#39;: &#39;Varm side A temperatur inn&#39;,
+                &#39;TIC0101_CA_YX&#39;: &#39;Varm side A temperatur ut&#39;,
+                &#39;TT0104_MA_Y&#39;: &#39;Varm side B temperatur inn&#39;,
+                &#39;TIC0103_CA_YX&#39;: &#39;Varm side B temperatur ut&#39;,
+                &#39;TT0106_MA_Y&#39;: &#39;Varm side C temperatur inn&#39;,
+                &#39;TIC0105_CA_YX&#39;: &#39;Varm side C temperatur ut&#39;,
+                &#39;TI0115_MA_Y&#39;: &#39;Scrubber temperatur ut&#39;,
+                &#39;PDT0108_MA_Y&#39;: &#39;Varm side A trykkfall&#39;,
+                &#39;PDT0119_MA_Y&#39;: &#39;Varm side B trykkfall&#39;,
+                &#39;PDT0118_MA_Y&#39;: &#39;Varm side C trykkfall&#39;,
+                &#39;PIC0104_CA_YX&#39;: &#39;Innløpsseparator trykk&#39;,
+                &#39;TIC0425_CA_YX&#39;: &#39;Kald side temperatur inn&#39;,
+                &#39;TT0651_MA_Y&#39;: &#39;Kald side A temperatur ut&#39;,
+                &#39;TT0652_MA_Y&#39;: &#39;Kald side B temperatur ut&#39;,
+                &#39;TT0653_MA_Y&#39;: &#39;Kald side C temperatur ut&#39;,
+                &#39;TIC0101_CA_Y&#39;: &#39;Kald side A ventilåpning&#39;,
+                &#39;TIC0103_CA_Y&#39;: &#39;Kald side B ventilåpning&#39;,
+                &#39;TIC0105_CA_Y&#39;: &#39;Kald side C ventilåpning&#39;,
+        }
+
+        irrelevantColumns = [
+                &#39;FT0111&#39;,
+                &#39;PDT0108_MA_Y&#39;,
+                &#39;PDT0119_MA_Y&#39;,
+                &#39;PDT0118_MA_Y&#39;,
+                &#39;TT0104_MA_Y&#39;,
+                &#39;TIC0103_CA_YX&#39;,
+                &#39;TT0652_MA_Y&#39;,
+                &#39;TIC0103_CA_Y&#39;,
+        ]
+
+        columns = list(columnDescriptions.keys())
+        relevantColumns = list(filter((lambda column: column not in irrelevantColumns), columns))
+
+        columnUnits = {
+                &#39;Date&#39;:&#39;Date&#39;,
+                &#39;FYN0111&#39;: &#39;MSm^3/d&#39;,
+                &#39;FT0111&#39;: &#39;g/mole&#39;,
+                &#39;TT0102_MA_Y&#39;: &#39;degrees&#39;,
+                &#39;TIC0101_CA_YX&#39;: &#39;degrees&#39;,
+                &#39;TT0104_MA_Y&#39;: &#39;degrees&#39;,
+                &#39;TIC0103_CA_YX&#39;: &#39;degrees&#39;,
+                &#39;TT0106_MA_Y&#39;: &#39;degrees&#39;,
+                &#39;TIC0105_CA_YX&#39;: &#39;degrees&#39;,
+                &#39;TI0115_MA_Y&#39;: &#39;degrees&#39;,
+                &#39;PDT0108_MA_Y&#39;: &#39;Bar&#39;,
+                &#39;PDT0119_MA_Y&#39;: &#39;Bar&#39;,
+                &#39;PDT0118_MA_Y&#39;: &#39;Bar&#39;,
+                &#39;PIC0104_CA_YX&#39;: &#39;Barg&#39;,
+                &#39;TIC0425_CA_YX&#39;: &#39;degrees&#39;,
+                &#39;TT0651_MA_Y&#39;: &#39;degrees&#39;,
+                &#39;TT0652_MA_Y&#39;: &#39;degrees&#39;,
+                &#39;TT0653_MA_Y&#39;: &#39;degrees&#39;,
+                &#39;TIC0101_CA_Y&#39;: &#39;%&#39;,
+                &#39;TIC0103_CA_Y&#39;: &#39;%&#39;,
+                &#39;TIC0105_CA_Y&#39;: &#39;%&#39;,
+        }
+        &#34;&#34;&#34;
+        traintime = [&#34;2017-07-01 00:00:00&#34;, &#34;2018-05-01 00:00:00&#34;]
+        testtime = [&#34;2017-07-01 00:00:00&#34;, &#34;2020-02-01 00:00:00&#34;]
+        validtime = [&#34;2018-01-01 00:00:00&#34;, &#34;2018-05-01 00:00:00&#34;]
+        
+        traintime = [&#34;2017-08-05 00:00:00&#34;, &#34;2018-05-01 00:00:00&#34;]
+        testtime = [&#34;2017-08-05 00:00:00&#34;, &#34;2020-02-01 00:00:00&#34;]
+        validtime = [&#34;2018-01-01 00:00:00&#34;, &#34;2018-05-01 00:00:00&#34;]
+        &#34;&#34;&#34;
+        traintime = [[&#34;2017-08-05 00:00:00&#34;, &#34;2018-03-01 00:00:00&#34;]]
+        testtime = [&#34;2017-08-05 00:00:00&#34;, &#34;2019-11-01 00:00:00&#34;]
+        validtime = [&#34;2018-05-01 00:00:00&#34;, &#34;2018-07-01 00:00:00&#34;]
+        &#34;&#34;&#34;
+        traintime = [&#34;2019-04-15 00:00:00&#34;, &#34;2019-06-01 00:00:00&#34;]
+        testtime = [&#34;2019-04-15 00:00:00&#34;, &#34;2020-02-01 00:00:00&#34;]
+        validtime = [&#34;2019-05-01 00:00:00&#34;, &#34;2019-07-01 00:00:00&#34;]
+        &#34;&#34;&#34;
+        timestamps = [traintime, testtime, validtime]
+
+        return [columns, relevantColumns, columnDescriptions, columnUnits, timestamps]</code></pre>
+</details>
+</dd>
+<dt id="src.utils.configs.getConfigG"><code class="name flex">
+<span>def <span class="ident">getConfigG</span></span>(<span>)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def getConfigG():
+        # G/data_10min.csv
+        #  startdate: 2017-01-11
+        #    enddate: 2020-03-01
+        # resolution: 10min
+        #               rows: ?
+
+        columnDescriptions = {
+                &#39;Date&#39;:&#39;Date&#39;,
+                &#39;PDI0064&#39;: &#39;Process side dP&#39;,
+                &#39;TI0066&#39;: &#39;Process side Temperature out&#39;,
+                &#39;TZI0012&#39;: &#39;Process side Temperature in&#39;,
+                &#39;FI0010&#39;: &#39;Process side flow rate&#39;,
+                &#39;TT0025&#39;: &#39;Cooling side Temperature in&#39;,
+                &#39;TT0026&#39;: &#39;Cooling side Tmperature out&#39;,
+                &#39;PI0001&#39;: &#39;Cooling side Pressure in&#39;,
+                &#39;FI0027&#39;: &#39;Cooling side flow rate&#39;,
+                &#39;TIC0022U&#39;: &#39;Cooling side valve opening&#39;,
+                &#39;PDT0024&#39;: &#39;Cooling side dP&#39;,
+        }
+
+        irrelevantColumns = [
+        ]
+
+        columns = list(columnDescriptions.keys())
+        relevantColumns = list(filter((lambda column: column not in irrelevantColumns), columns))
+
+        columnUnits = {
+                &#39;Date&#39;:&#39;Date&#39;,
+                &#39;PDI0064&#39;: &#39;bar&#39;,
+                &#39;TI0066&#39;: &#39;degrees&#39;,
+                &#39;TZI0012&#39;: &#39;degrees&#39;,
+                &#39;FI0010&#39;: &#39;m3/h&#39;,
+                &#39;TT0025&#39;: &#39;degrees&#39;,
+                &#39;TT0026&#39;: &#39;degrees&#39;,
+                &#39;PI0001&#39;: &#39;barG&#39;,
+                &#39;FI0027&#39;: &#39;m3/h&#39;,
+                &#39;TIC0022U&#39;: &#39;%&#39;,
+                &#39;PDT0024&#39;: &#39;bar&#39;,
+        }
+
+        traintime = [
+                [&#34;2019-04-10 00:00:00&#34;, &#34;2019-06-10 00:00:00&#34;]
+        ]
+        testtime = [&#34;2017-01-01 00:00:00&#34;, &#34;2020-03-01 00:00:00&#34;]
+        validtime = [&#34;2013-06-01 00:00:00&#34;, &#34;2014-06-01 00:00:00&#34;]
+
+        timestamps = [traintime, testtime, validtime]
+
+        return [columns, relevantColumns, columnDescriptions, columnUnits, timestamps]</code></pre>
+</details>
+</dd>
+<dt id="src.utils.configs.getConfigs"><code class="name flex">
+<span>def <span class="ident">getConfigs</span></span>(<span>)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def getConfigs():
+        return {
+                &#39;A&#39;: getConfigA,
+                &#39;B&#39;: getConfigB,
+                &#39;C&#39;: getConfigC,
+                &#39;D&#39;: getConfigD,
+                &#39;E&#39;: getConfigE,
+                &#39;F&#39;: getConfigF,
+                &#39;G&#39;: getConfigG,
+        }</code></pre>
+</details>
+</dd>
+</dl>
+</section>
+<section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="src.utils.configs.Config"><code class="flex name class">
+<span>class <span class="ident">Config</span></span>
+<span>(</span><span>config)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Config():
+    def __init__(self, config):
+        self.columns = config[&#39;columns&#39;]
+        self.relevantColumns = config[&#39;relevantColumns&#39;]
+        self.labelNames = config[&#39;labelNames&#39;]
+        self.columnUnits = config[&#39;columnUnits&#39;]
+        self.timestamps = config[&#39;timestamps&#39;]</code></pre>
+</details>
+</dd>
+</dl>
+</section>
+</article>
+<nav id="sidebar">
+<h1>Index</h1>
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="src.utils" href="index.html">src.utils</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-functions">Functions</a></h3>
+<ul class="two-column">
+<li><code><a title="src.utils.configs.getConfig" href="#src.utils.configs.getConfig">getConfig</a></code></li>
+<li><code><a title="src.utils.configs.getConfigA" href="#src.utils.configs.getConfigA">getConfigA</a></code></li>
+<li><code><a title="src.utils.configs.getConfigB" href="#src.utils.configs.getConfigB">getConfigB</a></code></li>
+<li><code><a title="src.utils.configs.getConfigC" href="#src.utils.configs.getConfigC">getConfigC</a></code></li>
+<li><code><a title="src.utils.configs.getConfigD" href="#src.utils.configs.getConfigD">getConfigD</a></code></li>
+<li><code><a title="src.utils.configs.getConfigDirs" href="#src.utils.configs.getConfigDirs">getConfigDirs</a></code></li>
+<li><code><a title="src.utils.configs.getConfigE" href="#src.utils.configs.getConfigE">getConfigE</a></code></li>
+<li><code><a title="src.utils.configs.getConfigF" href="#src.utils.configs.getConfigF">getConfigF</a></code></li>
+<li><code><a title="src.utils.configs.getConfigG" href="#src.utils.configs.getConfigG">getConfigG</a></code></li>
+<li><code><a title="src.utils.configs.getConfigs" href="#src.utils.configs.getConfigs">getConfigs</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="src.utils.configs.Config" href="#src.utils.configs.Config">Config</a></code></h4>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.8.1</a>.</p>
+</footer>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+<script>hljs.initHighlightingOnLoad()</script>
+</body>
+</html>

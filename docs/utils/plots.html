@@ -1,0 +1,692 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+<meta name="generator" content="pdoc 0.8.1" />
+<title>src.utils.plots API documentation</title>
+<meta name="description" content="" />
+<link href='https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.0/normalize.min.css' rel='stylesheet'>
+<link href='https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/8.0.0/sanitize.min.css' rel='stylesheet'>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css" rel="stylesheet">
+<style>.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>src.utils.plots</code></h1>
+</header>
+<section id="section-intro">
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">import numpy as np
+import pandas as pd
+import matplotlib.pyplot as pltt
+
+np.random.seed(100)
+
+def getPlotColors():
+    colors = [
+        &#39;#000080&#39;,
+        &#39;#2ca25f&#39;,
+        &#39;#8856a7&#39;,
+        &#39;#43a2ca&#39;,
+        &#39;#e34a33&#39;,
+        &#39;#636363&#39;,
+        &#39;#663300&#39;,
+        &#39;#003300&#39;,
+        &#39;#ff3399&#39;,
+        &#39;#99d8c9&#39;,
+        &#39;#9ebcda&#39;,
+        &#39;#fdbb84&#39;,
+        &#39;#c994c7&#39;,
+        &#39;darkgreen&#39;,
+        &#39;darkred&#39;,
+        &#39;darkgrey&#39;,
+    ]
+    
+    return colors
+
+def plotDataColumnSingle(dfindex, plt, column, data, columnDescriptions=None, color=&#39;darkgreen&#39;, interpoldeg=3):
+    # Plots a single data column based on index, plt object, columnName and data
+
+    fig, ax = plt.subplots(1, 1, figsize=(10,3), dpi=100)
+    ax.set_xlabel(&#39;Date&#39;)
+    if columnDescriptions:
+        ax.set_ylabel(columnDescriptions[column])
+        ax.set_title(&#34;Deviation for &#34; + columnDescriptions[column])
+    else:
+        ax.set_ylabel(column)
+        ax.set_title(&#34;Deviation for &#34; + column)
+    ax.plot(dfindex, data, color=color, label=&#34;Data&#34;)
+    ax.tick_params(axis=&#39;y&#39;, labelcolor=color)
+    ax.grid(1, axis=&#39;y&#39;)
+
+    z = np.polyfit(range(len(data)), data, interpoldeg)
+    p = np.poly1d(z)
+    func = p(range(len(data)))
+    ax.plot(dfindex, func, color=&#39;black&#39;, label=&#34;Pol.fit&#34;)
+
+    fig.subplots_adjust(right=0.7)
+ 
+    ax.legend(bbox_to_anchor=(1.05, 1), loc=&#39;upper left&#39;, borderaxespad=0., prop={&#39;size&#39;: 10})
+    fig.autofmt_xdate()
+
+def plotColumns(
+        dfindex,
+        plt,
+        args,
+        desc=&#34;&#34;,
+        columnDescriptions=None,
+        trainEndStr=None,
+        columnUnits=None,
+        alpha=0.8,
+        interpol=False,
+        interpoldeg=3,
+    ):
+    # Primary plotting method
+    # Plots provided data from a predefined args format:
+    # [label, column, data, color]
+
+    fig,ax = plt.subplots(1, 1, figsize=(10,3), dpi=100)
+    ax.set_xlabel(&#39;Date&#39;)
+    for i, arg in enumerate(args):
+        label, column, data, color = arg
+        
+        ax.set_title((desc + &#34;\n&#34; + columnDescriptions[column]) if columnDescriptions else (desc + &#34;\n&#34; + column))
+        ax.set_ylabel(columnUnits[column] if columnUnits is not None else &#34;&#34;)
+
+        if color is not None:
+            ax.plot(dfindex, data, color=color, label=label, alpha=alpha)
+        else:
+            ax.plot(dfindex, data, label=label, alpha=alpha)
+    if interpol:
+        for i, arg in enumerate(args):
+            label, column, data, color, alpha = arg
+            z = np.polyfit(range(len(data)), data, interpoldeg)
+            p = np.poly1d(z)
+            func = p(range(len(data)))
+            if color is not None:
+                ax.plot(dfindex, func, color=color, label=&#34;Pol. fit, &#34; + label, alpha=1.0)
+            else:
+                ax.plot(dfindex, func, label=&#34;Pol. fit, &#34; + label, alpha=1.0)
+
+    if trainEndStr:
+        for i, trainEndString in enumerate(trainEndStr):
+            ax.axvline(x=pd.to_datetime(trainEndString, dayfirst=True), color=&#39;black&#39; if i % 2 == 0 else &#39;blue&#39;, label=&#39;start training&#39; if i % 2 == 0 else &#39;end training&#39;)
+    ax.tick_params(axis=&#39;y&#39;, labelcolor=color)
+    ax.grid(1, axis=&#39;y&#39;)
+
+    fig.subplots_adjust(right=0.7)
+    ax.legend(bbox_to_anchor=(1.05, 1), loc=&#39;upper left&#39;, borderaxespad=0., prop={&#39;size&#39;: 10})
+    fig.autofmt_xdate()
+
+def duoPlot(y1, y2, x, plt, columnDescriptions=None, relevantColumns=None, columnUnits=None, color1=getPlotColors()[0], color2=getPlotColors()[1], y2lim=None, textArgs=[&#39;Duo plot&#39;, &#39;Date&#39;, &#39;Label 1&#39;, &#39;Label 2&#39;]):
+    # Plots two columns in the same figure with two different axes
+
+    title, xaxis, y1axis, y2axis = textArgs
+
+    fig, ax1 = plt.subplots(1, 1, figsize=(10,3), dpi=100)
+    ax1.plot(x, y1, color=color1, alpha=0.8)
+    ax2 = ax1.twinx()
+    ax2.plot(x, y2, color=color2, alpha=0.8)
+
+    if y2lim is not  None:
+        (ymin, ymax) = y2lim
+        ax2.set_ylim([ymin, ymax])
+
+    ax1.set_xlabel(xaxis)
+    ax1.tick_params(axis=&#39;x&#39;, rotation=0)
+    ax1.set_ylabel(y1axis, color=color1)
+    ax1.tick_params(axis=&#39;y&#39;, rotation=0)
+    ax2.set_ylabel(y2axis, color=color2)
+    ax2.tick_params(axis=&#39;y&#39;)
+
+    ax1.grid(alpha=.4)
+    ax2.set_title(title)
+    plt.show()
+
+def plotTraining(history, plt):
+    # Plots the training history of a set of models
+
+    fig, ax = plt.subplots(1, 1, figsize=(8, 6), dpi=100)
+    plt.plot(history.history[&#39;mean_squared_error&#39;], color=&#39;blue&#39;, label=&#34;Training loss&#34;, alpha=0.8)
+    plt.plot(history.history[&#39;val_mean_squared_error&#39;], color=&#34;orange&#34;, label=&#34;Validation loss&#34;, alpha=0.8)
+    plt.xlabel(&#39;Epoch&#39;)
+    plt.ylabel(&#39;Loss&#39;)
+    plt.legend(loc=&#34;upper right&#34;)
+    plt.title(&#39;Training history&#39;)
+    plt.show()
+
+def plotData(df, plt, columnDescriptions={}, relevantColumns=None, columnUnits=None, color=getPlotColors()[0]):
+    # Plots the columns of a pandas dataframe
+
+    if relevantColumns is not None:
+        columns = relevantColumns
+    else:
+        columns = df.columns
+
+    columnDescKeys = list(columnDescriptions.keys())
+    columnUnitKeys = list(columnUnits.keys()) if columnUnits is not None else []
+    dfcolumns = df.columns
+
+    for column in columns:
+        if column != &#34;Date&#34;:
+            if  column in df.columns:
+                fig, ax = plt.subplots()
+                ax.set_xlabel(&#39;Date&#39;)
+                if columnDescriptions is not None and column in columnDescKeys:
+                    ax.set_title(columnDescriptions[column] + &#34; &#34; + column)
+                else:
+                    ax.set_title(column)
+                if columnUnits is not None and column in columnUnitKeys:
+                    ax.set_ylabel(columnUnits[column])
+                else:
+                    ax.set_ylabel(column)
+                #plt.gca().spines[&#34;top&#34;].set_alpha(.3)
+                #plt.gca().spines[&#34;bottom&#34;].set_alpha(.3)
+                #plt.gca().spines[&#34;right&#34;].set_alpha(.3)
+                #plt.gca().spines[&#34;left&#34;].set_alpha(.3)
+                plt.plot(df.index, df[column], label=column, lw=1.5, color=color, alpha=0.8)
+                #plt.text(df.shape[0]+1, df[column].values[-1], column, fontsize=14, color=color)
+                #plt.tick_params(axis=&#34;both&#34;, which=&#34;both&#34;, bottom=False, top=False, labelbottom=True, left=False, right=False, labelleft=True)
+                plt.grid(1, alpha=0.5)
+                plt.legend(loc=(1.01, 0.01), ncol=1)
+            else:
+                print(&#34;Column &#34; + column + &#34; not in dataset&#34;)
+    plt.show()
+
+def plotDataByTimeframe(df, plt, start, end, columnDescriptions=None, relevantColumns=None):
+    # Plots the columns of a pandas dataframe based on provided timeframe
+    
+    df = getDataByTimeframe(df, start, end)
+    plotData(df, plt, columnDescriptions=columnDescriptions, relevantColumns=relevantColumns)
+
+def plotModelScores(plt, names, r2_train, r2_test, test=False):
+    # Plots calculated scores (training + potentially test) of a machine learning model
+
+    fig, ax = plt.subplots(1, 1, figsize=(10,3), dpi=100)
+    ax.set_ylabel(&#39;R2 score&#39;)
+    ax.set_xlabel(&#39;Model&#39;)
+    ax.set_title(&#39;Model metrics&#39;)
+
+    ax.plot(names, r2_train, marker=&#39;x&#39;, markersize=10, label=&#34;Training metrics&#34;)
+    if test:
+        ax.plot(names, r2_test, marker=&#39;x&#39;, markersize=10, label=&#34;Test metrics&#34;)
+    ax.legend()
+
+    plt.show()
+
+def plotModelPredictions(plt, deviationsList, columnsList, indexList, labelNames, columnUnits, traintime, interpol=False, interpoldeg=10):
+    # Primary plotting entry point used in low-level API
+    # deviationsList is a set of deviations between predicted and actual value for all outputs for all models
+    # columnsList is a set of predictions for all outputs for all models
+
+    for i in range(len(deviationsList)):
+        plotColumns(
+            indexList,
+            plt,
+            columnsList[i],
+            desc=&#34;Prediction and targets&#34;,
+            columnDescriptions=labelNames,
+            columnUnits=columnUnits,
+            trainEndStr=[item for sublist in traintime for item in sublist],
+            interpol=interpol,
+            interpoldeg=interpoldeg,
+        )
+        plotColumns(
+            indexList,
+            plt,
+            deviationsList[i],
+            desc=&#34;Deviation&#34;,
+            columnDescriptions=labelNames,
+            columnUnits=columnUnits,
+            trainEndStr=[item for sublist in traintime for item in sublist],
+            interpol=interpol,
+            interpoldeg=interpoldeg,
+        )
+
+    plt.show()
+
+def plotTrainingSummary(trainingSummary):
+    # Plots the training history generated by the modelFuncs.getTrainingSummary() method
+
+    colors = getPlotColors()
+
+    fig,axs = pltt.subplots(nrows=1, ncols=2, figsize=(10, 3), dpi=100)
+    fig.tight_layout(w_pad=3.0)
+
+    ax1, ax2 = axs
+
+    max_y = 5.0 *  np.mean(list(map(lambda x: x[&#39;loss_actual&#39;], trainingSummary.values())))
+    max_yval = 5.0 * np.mean(list(map(lambda x: x[&#39;val_loss_final&#39;], trainingSummary.values())))
+
+    ax1.set_ylim([0, max_y])
+    ax1.set_title(&#39;Loss&#39;)
+    ax1.set_ylabel(&#39;Loss&#39;)
+    ax1.set_xlabel(&#39;Epoch&#39;)
+    ax2.set_ylim([0, max_yval])
+    ax2.set_title(&#39;Validation loss&#39;)
+    ax2.set_ylabel(&#39;Val. loss&#39;)
+    ax2.set_xlabel(&#39;Epoch&#39;)
+
+    for i, (name, summary) in enumerate(trainingSummary.items()):
+        ax1.plot(summary[&#39;loss&#39;], color=colors[i], label=name, alpha=0.8)
+        ax2.plot(summary[&#39;val_loss&#39;], color=colors[i], label=name, alpha=0.8)
+        #ax1.plot(summary[&#39;loss_loc&#39;], summary[&#39;loss_final&#39;], color=colors[i], marker=&#39;o&#39;, markersize=9, label=&#34;Min. loss&#34;, alpha=0.7)
+        ax1.plot(summary[&#39;val_loss_loc&#39;], summary[&#39;loss_actual&#39;], color=colors[i], marker=&#39;x&#39;, markersize=10, label=&#34;Chosen loss&#34;)
+        ax2.plot(summary[&#39;val_loss_loc&#39;], summary[&#39;val_loss_final&#39;], color=colors[i], marker=&#39;x&#39;, markersize=10, label=&#34;Min. val loss&#34;)
+
+    ax1.legend(loc=&#39;upper right&#39;, prop={&#39;size&#39;: 10})
+    ax2.legend(loc=&#39;upper right&#39;, prop={&#39;size&#39;: 10})
+    pltt.show()</code></pre>
+</details>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-functions">Functions</h2>
+<dl>
+<dt id="src.utils.plots.duoPlot"><code class="name flex">
+<span>def <span class="ident">duoPlot</span></span>(<span>y1, y2, x, plt, columnDescriptions=None, relevantColumns=None, columnUnits=None, color1='#000080', color2='#2ca25f', y2lim=None, textArgs=['Duo plot', 'Date', 'Label 1', 'Label 2'])</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def duoPlot(y1, y2, x, plt, columnDescriptions=None, relevantColumns=None, columnUnits=None, color1=getPlotColors()[0], color2=getPlotColors()[1], y2lim=None, textArgs=[&#39;Duo plot&#39;, &#39;Date&#39;, &#39;Label 1&#39;, &#39;Label 2&#39;]):
+    # Plots two columns in the same figure with two different axes
+
+    title, xaxis, y1axis, y2axis = textArgs
+
+    fig, ax1 = plt.subplots(1, 1, figsize=(10,3), dpi=100)
+    ax1.plot(x, y1, color=color1, alpha=0.8)
+    ax2 = ax1.twinx()
+    ax2.plot(x, y2, color=color2, alpha=0.8)
+
+    if y2lim is not  None:
+        (ymin, ymax) = y2lim
+        ax2.set_ylim([ymin, ymax])
+
+    ax1.set_xlabel(xaxis)
+    ax1.tick_params(axis=&#39;x&#39;, rotation=0)
+    ax1.set_ylabel(y1axis, color=color1)
+    ax1.tick_params(axis=&#39;y&#39;, rotation=0)
+    ax2.set_ylabel(y2axis, color=color2)
+    ax2.tick_params(axis=&#39;y&#39;)
+
+    ax1.grid(alpha=.4)
+    ax2.set_title(title)
+    plt.show()</code></pre>
+</details>
+</dd>
+<dt id="src.utils.plots.getPlotColors"><code class="name flex">
+<span>def <span class="ident">getPlotColors</span></span>(<span>)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def getPlotColors():
+    colors = [
+        &#39;#000080&#39;,
+        &#39;#2ca25f&#39;,
+        &#39;#8856a7&#39;,
+        &#39;#43a2ca&#39;,
+        &#39;#e34a33&#39;,
+        &#39;#636363&#39;,
+        &#39;#663300&#39;,
+        &#39;#003300&#39;,
+        &#39;#ff3399&#39;,
+        &#39;#99d8c9&#39;,
+        &#39;#9ebcda&#39;,
+        &#39;#fdbb84&#39;,
+        &#39;#c994c7&#39;,
+        &#39;darkgreen&#39;,
+        &#39;darkred&#39;,
+        &#39;darkgrey&#39;,
+    ]
+    
+    return colors</code></pre>
+</details>
+</dd>
+<dt id="src.utils.plots.plotColumns"><code class="name flex">
+<span>def <span class="ident">plotColumns</span></span>(<span>dfindex, plt, args, desc='', columnDescriptions=None, trainEndStr=None, columnUnits=None, alpha=0.8, interpol=False, interpoldeg=3)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def plotColumns(
+        dfindex,
+        plt,
+        args,
+        desc=&#34;&#34;,
+        columnDescriptions=None,
+        trainEndStr=None,
+        columnUnits=None,
+        alpha=0.8,
+        interpol=False,
+        interpoldeg=3,
+    ):
+    # Primary plotting method
+    # Plots provided data from a predefined args format:
+    # [label, column, data, color]
+
+    fig,ax = plt.subplots(1, 1, figsize=(10,3), dpi=100)
+    ax.set_xlabel(&#39;Date&#39;)
+    for i, arg in enumerate(args):
+        label, column, data, color = arg
+        
+        ax.set_title((desc + &#34;\n&#34; + columnDescriptions[column]) if columnDescriptions else (desc + &#34;\n&#34; + column))
+        ax.set_ylabel(columnUnits[column] if columnUnits is not None else &#34;&#34;)
+
+        if color is not None:
+            ax.plot(dfindex, data, color=color, label=label, alpha=alpha)
+        else:
+            ax.plot(dfindex, data, label=label, alpha=alpha)
+    if interpol:
+        for i, arg in enumerate(args):
+            label, column, data, color, alpha = arg
+            z = np.polyfit(range(len(data)), data, interpoldeg)
+            p = np.poly1d(z)
+            func = p(range(len(data)))
+            if color is not None:
+                ax.plot(dfindex, func, color=color, label=&#34;Pol. fit, &#34; + label, alpha=1.0)
+            else:
+                ax.plot(dfindex, func, label=&#34;Pol. fit, &#34; + label, alpha=1.0)
+
+    if trainEndStr:
+        for i, trainEndString in enumerate(trainEndStr):
+            ax.axvline(x=pd.to_datetime(trainEndString, dayfirst=True), color=&#39;black&#39; if i % 2 == 0 else &#39;blue&#39;, label=&#39;start training&#39; if i % 2 == 0 else &#39;end training&#39;)
+    ax.tick_params(axis=&#39;y&#39;, labelcolor=color)
+    ax.grid(1, axis=&#39;y&#39;)
+
+    fig.subplots_adjust(right=0.7)
+    ax.legend(bbox_to_anchor=(1.05, 1), loc=&#39;upper left&#39;, borderaxespad=0., prop={&#39;size&#39;: 10})
+    fig.autofmt_xdate()</code></pre>
+</details>
+</dd>
+<dt id="src.utils.plots.plotData"><code class="name flex">
+<span>def <span class="ident">plotData</span></span>(<span>df, plt, columnDescriptions={}, relevantColumns=None, columnUnits=None, color='#000080')</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def plotData(df, plt, columnDescriptions={}, relevantColumns=None, columnUnits=None, color=getPlotColors()[0]):
+    # Plots the columns of a pandas dataframe
+
+    if relevantColumns is not None:
+        columns = relevantColumns
+    else:
+        columns = df.columns
+
+    columnDescKeys = list(columnDescriptions.keys())
+    columnUnitKeys = list(columnUnits.keys()) if columnUnits is not None else []
+    dfcolumns = df.columns
+
+    for column in columns:
+        if column != &#34;Date&#34;:
+            if  column in df.columns:
+                fig, ax = plt.subplots()
+                ax.set_xlabel(&#39;Date&#39;)
+                if columnDescriptions is not None and column in columnDescKeys:
+                    ax.set_title(columnDescriptions[column] + &#34; &#34; + column)
+                else:
+                    ax.set_title(column)
+                if columnUnits is not None and column in columnUnitKeys:
+                    ax.set_ylabel(columnUnits[column])
+                else:
+                    ax.set_ylabel(column)
+                #plt.gca().spines[&#34;top&#34;].set_alpha(.3)
+                #plt.gca().spines[&#34;bottom&#34;].set_alpha(.3)
+                #plt.gca().spines[&#34;right&#34;].set_alpha(.3)
+                #plt.gca().spines[&#34;left&#34;].set_alpha(.3)
+                plt.plot(df.index, df[column], label=column, lw=1.5, color=color, alpha=0.8)
+                #plt.text(df.shape[0]+1, df[column].values[-1], column, fontsize=14, color=color)
+                #plt.tick_params(axis=&#34;both&#34;, which=&#34;both&#34;, bottom=False, top=False, labelbottom=True, left=False, right=False, labelleft=True)
+                plt.grid(1, alpha=0.5)
+                plt.legend(loc=(1.01, 0.01), ncol=1)
+            else:
+                print(&#34;Column &#34; + column + &#34; not in dataset&#34;)
+    plt.show()</code></pre>
+</details>
+</dd>
+<dt id="src.utils.plots.plotDataByTimeframe"><code class="name flex">
+<span>def <span class="ident">plotDataByTimeframe</span></span>(<span>df, plt, start, end, columnDescriptions=None, relevantColumns=None)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def plotDataByTimeframe(df, plt, start, end, columnDescriptions=None, relevantColumns=None):
+    # Plots the columns of a pandas dataframe based on provided timeframe
+    
+    df = getDataByTimeframe(df, start, end)
+    plotData(df, plt, columnDescriptions=columnDescriptions, relevantColumns=relevantColumns)</code></pre>
+</details>
+</dd>
+<dt id="src.utils.plots.plotDataColumnSingle"><code class="name flex">
+<span>def <span class="ident">plotDataColumnSingle</span></span>(<span>dfindex, plt, column, data, columnDescriptions=None, color='darkgreen', interpoldeg=3)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def plotDataColumnSingle(dfindex, plt, column, data, columnDescriptions=None, color=&#39;darkgreen&#39;, interpoldeg=3):
+    # Plots a single data column based on index, plt object, columnName and data
+
+    fig, ax = plt.subplots(1, 1, figsize=(10,3), dpi=100)
+    ax.set_xlabel(&#39;Date&#39;)
+    if columnDescriptions:
+        ax.set_ylabel(columnDescriptions[column])
+        ax.set_title(&#34;Deviation for &#34; + columnDescriptions[column])
+    else:
+        ax.set_ylabel(column)
+        ax.set_title(&#34;Deviation for &#34; + column)
+    ax.plot(dfindex, data, color=color, label=&#34;Data&#34;)
+    ax.tick_params(axis=&#39;y&#39;, labelcolor=color)
+    ax.grid(1, axis=&#39;y&#39;)
+
+    z = np.polyfit(range(len(data)), data, interpoldeg)
+    p = np.poly1d(z)
+    func = p(range(len(data)))
+    ax.plot(dfindex, func, color=&#39;black&#39;, label=&#34;Pol.fit&#34;)
+
+    fig.subplots_adjust(right=0.7)
+ 
+    ax.legend(bbox_to_anchor=(1.05, 1), loc=&#39;upper left&#39;, borderaxespad=0., prop={&#39;size&#39;: 10})
+    fig.autofmt_xdate()</code></pre>
+</details>
+</dd>
+<dt id="src.utils.plots.plotModelPredictions"><code class="name flex">
+<span>def <span class="ident">plotModelPredictions</span></span>(<span>plt, deviationsList, columnsList, indexList, labelNames, columnUnits, traintime, interpol=False, interpoldeg=10)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def plotModelPredictions(plt, deviationsList, columnsList, indexList, labelNames, columnUnits, traintime, interpol=False, interpoldeg=10):
+    # Primary plotting entry point used in low-level API
+    # deviationsList is a set of deviations between predicted and actual value for all outputs for all models
+    # columnsList is a set of predictions for all outputs for all models
+
+    for i in range(len(deviationsList)):
+        plotColumns(
+            indexList,
+            plt,
+            columnsList[i],
+            desc=&#34;Prediction and targets&#34;,
+            columnDescriptions=labelNames,
+            columnUnits=columnUnits,
+            trainEndStr=[item for sublist in traintime for item in sublist],
+            interpol=interpol,
+            interpoldeg=interpoldeg,
+        )
+        plotColumns(
+            indexList,
+            plt,
+            deviationsList[i],
+            desc=&#34;Deviation&#34;,
+            columnDescriptions=labelNames,
+            columnUnits=columnUnits,
+            trainEndStr=[item for sublist in traintime for item in sublist],
+            interpol=interpol,
+            interpoldeg=interpoldeg,
+        )
+
+    plt.show()</code></pre>
+</details>
+</dd>
+<dt id="src.utils.plots.plotModelScores"><code class="name flex">
+<span>def <span class="ident">plotModelScores</span></span>(<span>plt, names, r2_train, r2_test, test=False)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def plotModelScores(plt, names, r2_train, r2_test, test=False):
+    # Plots calculated scores (training + potentially test) of a machine learning model
+
+    fig, ax = plt.subplots(1, 1, figsize=(10,3), dpi=100)
+    ax.set_ylabel(&#39;R2 score&#39;)
+    ax.set_xlabel(&#39;Model&#39;)
+    ax.set_title(&#39;Model metrics&#39;)
+
+    ax.plot(names, r2_train, marker=&#39;x&#39;, markersize=10, label=&#34;Training metrics&#34;)
+    if test:
+        ax.plot(names, r2_test, marker=&#39;x&#39;, markersize=10, label=&#34;Test metrics&#34;)
+    ax.legend()
+
+    plt.show()</code></pre>
+</details>
+</dd>
+<dt id="src.utils.plots.plotTraining"><code class="name flex">
+<span>def <span class="ident">plotTraining</span></span>(<span>history, plt)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def plotTraining(history, plt):
+    # Plots the training history of a set of models
+
+    fig, ax = plt.subplots(1, 1, figsize=(8, 6), dpi=100)
+    plt.plot(history.history[&#39;mean_squared_error&#39;], color=&#39;blue&#39;, label=&#34;Training loss&#34;, alpha=0.8)
+    plt.plot(history.history[&#39;val_mean_squared_error&#39;], color=&#34;orange&#34;, label=&#34;Validation loss&#34;, alpha=0.8)
+    plt.xlabel(&#39;Epoch&#39;)
+    plt.ylabel(&#39;Loss&#39;)
+    plt.legend(loc=&#34;upper right&#34;)
+    plt.title(&#39;Training history&#39;)
+    plt.show()</code></pre>
+</details>
+</dd>
+<dt id="src.utils.plots.plotTrainingSummary"><code class="name flex">
+<span>def <span class="ident">plotTrainingSummary</span></span>(<span>trainingSummary)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def plotTrainingSummary(trainingSummary):
+    # Plots the training history generated by the modelFuncs.getTrainingSummary() method
+
+    colors = getPlotColors()
+
+    fig,axs = pltt.subplots(nrows=1, ncols=2, figsize=(10, 3), dpi=100)
+    fig.tight_layout(w_pad=3.0)
+
+    ax1, ax2 = axs
+
+    max_y = 5.0 *  np.mean(list(map(lambda x: x[&#39;loss_actual&#39;], trainingSummary.values())))
+    max_yval = 5.0 * np.mean(list(map(lambda x: x[&#39;val_loss_final&#39;], trainingSummary.values())))
+
+    ax1.set_ylim([0, max_y])
+    ax1.set_title(&#39;Loss&#39;)
+    ax1.set_ylabel(&#39;Loss&#39;)
+    ax1.set_xlabel(&#39;Epoch&#39;)
+    ax2.set_ylim([0, max_yval])
+    ax2.set_title(&#39;Validation loss&#39;)
+    ax2.set_ylabel(&#39;Val. loss&#39;)
+    ax2.set_xlabel(&#39;Epoch&#39;)
+
+    for i, (name, summary) in enumerate(trainingSummary.items()):
+        ax1.plot(summary[&#39;loss&#39;], color=colors[i], label=name, alpha=0.8)
+        ax2.plot(summary[&#39;val_loss&#39;], color=colors[i], label=name, alpha=0.8)
+        #ax1.plot(summary[&#39;loss_loc&#39;], summary[&#39;loss_final&#39;], color=colors[i], marker=&#39;o&#39;, markersize=9, label=&#34;Min. loss&#34;, alpha=0.7)
+        ax1.plot(summary[&#39;val_loss_loc&#39;], summary[&#39;loss_actual&#39;], color=colors[i], marker=&#39;x&#39;, markersize=10, label=&#34;Chosen loss&#34;)
+        ax2.plot(summary[&#39;val_loss_loc&#39;], summary[&#39;val_loss_final&#39;], color=colors[i], marker=&#39;x&#39;, markersize=10, label=&#34;Min. val loss&#34;)
+
+    ax1.legend(loc=&#39;upper right&#39;, prop={&#39;size&#39;: 10})
+    ax2.legend(loc=&#39;upper right&#39;, prop={&#39;size&#39;: 10})
+    pltt.show()</code></pre>
+</details>
+</dd>
+</dl>
+</section>
+<section>
+</section>
+</article>
+<nav id="sidebar">
+<h1>Index</h1>
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="src.utils" href="index.html">src.utils</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-functions">Functions</a></h3>
+<ul class="">
+<li><code><a title="src.utils.plots.duoPlot" href="#src.utils.plots.duoPlot">duoPlot</a></code></li>
+<li><code><a title="src.utils.plots.getPlotColors" href="#src.utils.plots.getPlotColors">getPlotColors</a></code></li>
+<li><code><a title="src.utils.plots.plotColumns" href="#src.utils.plots.plotColumns">plotColumns</a></code></li>
+<li><code><a title="src.utils.plots.plotData" href="#src.utils.plots.plotData">plotData</a></code></li>
+<li><code><a title="src.utils.plots.plotDataByTimeframe" href="#src.utils.plots.plotDataByTimeframe">plotDataByTimeframe</a></code></li>
+<li><code><a title="src.utils.plots.plotDataColumnSingle" href="#src.utils.plots.plotDataColumnSingle">plotDataColumnSingle</a></code></li>
+<li><code><a title="src.utils.plots.plotModelPredictions" href="#src.utils.plots.plotModelPredictions">plotModelPredictions</a></code></li>
+<li><code><a title="src.utils.plots.plotModelScores" href="#src.utils.plots.plotModelScores">plotModelScores</a></code></li>
+<li><code><a title="src.utils.plots.plotTraining" href="#src.utils.plots.plotTraining">plotTraining</a></code></li>
+<li><code><a title="src.utils.plots.plotTrainingSummary" href="#src.utils.plots.plotTrainingSummary">plotTrainingSummary</a></code></li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.8.1</a>.</p>
+</footer>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+<script>hljs.initHighlightingOnLoad()</script>
+</body>
+</html>

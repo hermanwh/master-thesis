@@ -1,0 +1,2019 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+<meta name="generator" content="pdoc 0.8.1" />
+<title>src.utils.models API documentation</title>
+<meta name="description" content="" />
+<link href='https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.0/normalize.min.css' rel='stylesheet'>
+<link href='https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/8.0.0/sanitize.min.css' rel='stylesheet'>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css" rel="stylesheet">
+<style>.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>src.utils.models</code></h1>
+</header>
+<section id="section-intro">
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">import sys, os
+ROOT_PATH = os.path.abspath(&#34;.&#34;).split(&#34;src&#34;)[0]
+if ROOT_PATH not in sys.path:
+    sys.path.append(ROOT_PATH)
+module_path = os.path.abspath(os.path.join(ROOT_PATH+&#34;/src/utils/&#34;))
+if module_path not in sys.path:
+    sys.path.append(module_path)
+
+from sklearn.linear_model import (ElasticNet, ElasticNetCV, LinearRegression, Lasso, LassoCV, Ridge, RidgeCV)
+from sklearn.neural_network import MLPRegressor, BernoulliRBM
+from sklearn.ensemble import RandomForestRegressor, GradientBoostingRegressor, BaggingRegressor, AdaBoostRegressor
+from sklearn.svm import LinearSVR
+from sklearn.tree import DecisionTreeRegressor
+from keras.models import Sequential, Model
+from keras.layers import Dense, Activation, Dropout
+from keras.engine.input_layer import Input
+from keras.regularizers import l2, l1, l1_l2
+from keras.preprocessing.sequence import TimeseriesGenerator
+from sklearn.preprocessing import MinMaxScaler, StandardScaler
+from sklearn.model_selection import train_test_split
+from keras.callbacks.callbacks import ModelCheckpoint
+from keras.layers.recurrent import GRU, LSTM
+from keras.layers.advanced_activations import LeakyReLU
+from copy import deepcopy
+
+import pickle
+import numpy as np
+import tensorflow as tf
+from modelFuncs import getRNNSplit
+
+np.random.seed(100)
+tf.random.set_seed(100)
+
+CURRENT_MODEL_WEIGHTS_FILEPATH = ROOT_PATH + &#39;/src/ml/trained_models/training_weights/&#39;
+
+class Args():
+    def __init__(self, args):
+        self.activation = args[&#39;activation&#39;]
+        self.loss = args[&#39;loss&#39;]
+        self.optimizer = args[&#39;optimizer&#39;]
+        self.metrics = args[&#39;metrics&#39;]
+        self.epochs = args[&#39;epochs&#39;]
+        self.batchSize = args[&#39;batchSize&#39;]
+        self.verbose = args[&#39;verbose&#39;]
+        self.callbacks= args[&#39;callbacks&#39;]
+        self.enrolWindow = args[&#39;enrolWindow&#39;]
+        self.validationSize = args[&#39;validationSize&#39;]
+        self.testSize = args[&#39;testSize&#39;]
+
+class EnsembleModel():
+    def __init__(self, models, X_train, y_train, modelType=&#34;Ensemble&#34;, name=None):
+        maxEnrol = 0
+        for model in models:
+            if model.args is not None:
+                enrol = model.args.enrolWindow
+                if enrol is not None and enrol &gt; maxEnrol:
+                    maxEnrol = enrol
+
+        self.maxEnrol = maxEnrol
+        self.models = models
+        self.MLmodel = None
+        self.X_train = X_train
+        self.y_train = y_train
+        self.name = name
+        self.history = None
+        self.modelType = modelType
+
+    def train(self):
+        preds = []
+        for model in self.models:
+            model.train()
+            prediction = model.predict(model.X_train, model.y_train)
+            if model.modelType == &#34;RNN&#34;:
+                preds.append(prediction[self.maxEnrol - model.args.enrolWindow:])
+            else:
+                preds.append(prediction[self.maxEnrol:])
+
+        train = preds[0]
+        for pred in preds[1:]:
+            train = np.concatenate((train, pred), axis=1)
+        self.MLmodel = sklearnLinear(
+            params = {  
+                &#39;name&#39;: &#39;Linear model of ensemble&#39;,
+                &#39;X_train&#39;: train,
+                &#39;y_train&#39;: self.y_train[self.maxEnrol:],
+            },
+        )
+        self.MLmodel.train()
+
+    def trainEnsemble(self):
+        preds = []
+        for model in self.models:
+            prediction = model.predict(model.X_train, model.y_train)
+            if model.modelType == &#34;RNN&#34;:
+                preds.append(prediction[self.maxEnrol - model.args.enrolWindow:])
+            else:
+                preds.append(prediction[self.maxEnrol:])
+
+        train = preds[0]
+        for pred in preds[1:]:
+            train = np.concatenate((train, pred), axis=1)
+        self.MLmodel = sklearnLinear(
+            params = {
+                &#39;name&#39;: &#39;Linear model of ensemble&#39;,
+                &#39;X_train&#39;: train,
+                &#39;y_train&#39;: self.y_train[self.maxEnrol:],
+            },
+        )
+        self.MLmodel.train()
+
+    def predict(self, X, y):
+        preds = []
+        for model in self.models:
+            prediction = model.predict(X, y)
+            if model.modelType == &#34;RNN&#34;:
+                preds.append(prediction[self.maxEnrol - model.args.enrolWindow:])
+            else:
+                preds.append(prediction[self.maxEnrol:])
+
+        test = preds[0]
+        for pred in preds[1:]:
+            test = np.concatenate((test, pred), axis=1)
+        return self.MLmodel.predict(test)
+
+    def save(self, directory, name):
+        for model in self.models:
+            if model.args:
+                dirr = directory + name + &#39;/&#39;
+                if not os.path.exists(dirr):
+                    os.makedirs(dirr)
+                model.save(dirr, &#34;_&#34;.join(model.name.split(&#39; &#39;)))
+
+class MachinLearningModel():
+    def __init__(self, model, X_train, y_train, args=None, modelType=None, scaler=&#34;standard&#34;, name=None):
+        if scaler == &#34;standard&#34;:
+            inputScaler = StandardScaler()
+            outputScaler = StandardScaler()
+        else:
+            inputScaler = MinMaxScaler()
+            outputScaler = MinMaxScaler()
+        
+        inputScaler.fit(X_train)
+        outputScaler.fit(y_train)
+
+        self.model = model
+        self.X_train = X_train
+        self.y_train = y_train
+        self.args = args
+        self.name = name
+        self.history = None
+        self.inputScaler = inputScaler
+        self.outputScaler = outputScaler
+        self.modelType = modelType
+
+    def train(self):
+        checkpoint_path = CURRENT_MODEL_WEIGHTS_FILEPATH + &#34;_&#34;.join(self.name.split(&#34; &#34;))
+        if not os.path.exists(checkpoint_path):
+            os.makedirs(checkpoint_path)
+        weights_path = checkpoint_path + &#34;/current_weights.h5&#34;
+        checkpoint = ModelCheckpoint(
+            filepath=weights_path,
+            monitor=&#39;val_loss&#39;,
+            verbose=1,
+            save_weights_only=True,
+            save_best_only=True,
+        ),
+
+        if self.modelType == &#34;RNN&#34;:
+            &#34;&#34;&#34;
+            THIS CODE CAN BE USED IF GENERATORS ARE DESIRED
+            NB: not suitable for heat exchanger data,
+                because the validation data will not have
+                the same properties as the training data
+                See thesis for details
+
+            X_t, X_v, y_t, y_v = train_test_split(self.X_train, self.y_train, test_size=0.2, shuffle=False)
+            validation_generator = TimeseriesGenerator(
+                self.inputScaler.transform(X_v),
+                self.outputScaler.transform(y_v),
+                length = self.args.enrolWindow,
+                sampling_rate = 1,
+                batch_size = self.args.batchSize
+            )
+            train_generator = TimeseriesGenerator(
+                self.inputScaler.transform(X_t),
+                self.outputScaler.transform(y_t),
+                length = self.args.enrolWindow,
+                sampling_rate = 1,
+                batch_size = self.args.batchSize
+            )
+            self.model.compile(
+                loss = self.args.loss,
+                optimizer = self.args.optimizer,
+                metrics = self.args.metrics
+            )
+            history = self.model.fit_generator(
+                train_generator,
+                epochs = self.args.epochs,
+                verbose = self.args.verbose,
+                callbacks = [*self.args.callbacks, *checkpoint],
+                validation_data = validation_generator,
+            )
+            &#34;&#34;&#34;
+            # Own implementation of train-val split for RNN data
+            X_t, X_v, y_t, y_v = getRNNSplit(
+                self.inputScaler.transform(self.X_train),
+                self.outputScaler.transform(self.y_train),
+                self.args.enrolWindow,
+                validation_split=0.2,
+            )
+            self.model.compile(
+                loss = self.args.loss,
+                optimizer = self.args.optimizer,
+                metrics = self.args.metrics
+            )
+            history = self.model.fit(
+                X_t,
+                y_t,
+                epochs = self.args.epochs,
+                batch_size = self.args.batchSize,
+                verbose = self.args.verbose,
+                callbacks = [*self.args.callbacks, *checkpoint],
+                validation_data = (X_v, y_v),
+            )
+            self.history = history.history
+            self.model.load_weights(weights_path)
+        elif self.modelType == &#34;MLP&#34;:
+            self.model.compile(
+                loss = self.args.loss,
+                optimizer = self.args.optimizer,
+                metrics = self.args.metrics
+            )
+            history = self.model.fit(
+                self.inputScaler.transform(self.X_train),
+                self.outputScaler.transform(self.y_train),
+                epochs = self.args.epochs,
+                batch_size = self.args.batchSize,
+                verbose = self.args.verbose,
+                callbacks = [*self.args.callbacks, *checkpoint],
+                validation_split = self.args.validationSize,
+            )
+            self.history = history.history
+            self.model.load_weights(weights_path)
+        else:
+            history = self.model.fit(
+                self.inputScaler.transform(self.X_train),
+                self.outputScaler.transform(self.y_train),
+            )
+            if hasattr(self.model, &#39;coef_&#39;):
+                print(&#34;    Trained weights for &#34; + self.name + &#34;:&#34;)
+                print(str(self.model.coef_))
+            self.history = None
+
+    def predict(self, X, y=None):
+        if self.modelType == &#34;RNN&#34;:
+            test_generator = TimeseriesGenerator(
+                self.inputScaler.transform(X),
+                self.outputScaler.transform(y),
+                length = self.args.enrolWindow,
+                sampling_rate = 1,
+                batch_size = self.args.batchSize
+            )
+            return self.outputScaler.inverse_transform(
+                self.model.predict(test_generator)
+            )
+        else:
+            return self.outputScaler.inverse_transform(
+                self.model.predict(
+                    self.inputScaler.transform(X)
+                )
+            )
+
+    def predictMultiple(self, X, y, numberOfPredictions=20):
+        if self.modelType == &#34;RNN&#34;:
+            predictions = np.zeros((numberOfPredictions, (y.shape[0] - self.args.enrolWindow), y.shape[1]))
+            for i in range(numberOfPredictions):
+                predictions[i] = self.predict(X, y)
+
+            mean = np.array([np.mean(predictions[:,:,i], axis=0) for i in range(y.shape[1])]).T
+            standarddev = np.array([np.std(predictions[:,:,i], axis=0) for i in range(y.shape[1])]).T
+        
+            return [predictions, mean, standarddev]
+        else:
+            return None
+
+    def save(self, directory, name):
+        if self.args:
+            self.model.save(directory + name + &#34;.h5&#34;)
+            with open(directory + name + &#34;.pickle&#34;, &#39;wb&#39;) as file_pi:
+                pickle.dump(self.history, file_pi)
+
+
+class AutoencoderModel():
+    def __init__(self, model, X_train, args=None, modelType=&#34;AUTOENCODER&#34;, scaler=&#34;standard&#34;, name=None):
+        if scaler == &#34;standard&#34;:
+            inputScaler = StandardScaler()
+        else:
+            inputScaler = MinMaxScaler()
+        
+        inputScaler.fit(X_train)
+
+        self.model = model
+        self.X_train = X_train
+        self.args = args
+        self.name = name
+        self.history = None
+        self.inputScaler = inputScaler
+        self.modelType = modelType
+
+    def train(self):
+        self.model.compile(
+            loss = self.args.loss,
+            optimizer = self.args.optimizer,
+            metrics = self.args.metrics
+        )
+        history = self.model.fit(
+            self.inputScaler.transform(self.X_train),
+            self.inputScaler.transform(self.X_train),
+            epochs = self.args.epochs,
+            batch_size = self.args.batchSize,
+            verbose = self.args.verbose,
+            callbacks = self.args.callbacks,
+            validation_split = self.args.validationSize,
+        )
+        self.history = history.history
+
+    def predict(self, X, y=None):
+        return self.inputScaler.inverse_transform(
+            self.model.predict(
+                self.inputScaler.transform(X)
+            )
+        )
+
+    def save(self, directory, name):
+        if self.args:
+            self.model.save(directory + name + &#34;.h5&#34;)
+            with open(directory + name + &#34;.pickle&#34;, &#39;wb&#39;) as file_pi:
+                pickle.dump(self.history, file_pi)
+
+def ensembleModel(
+    params,
+    models,
+    ):
+
+    X = params[&#39;X_train&#39;]
+    Y = params[&#39;y_train&#39;]
+    name = params[&#39;name&#39;]
+
+    return EnsembleModel(
+        models,
+        X,
+        Y,
+        name=name,
+    )
+
+def kerasLSTM(
+    params,
+    layers=[128],
+    dropout=0.0,
+    recurrentDropout=0.0,
+    alpha=None,
+    training=False,
+    ):
+
+    X_train = params[&#39;X_train&#39;]
+    y_train = params[&#39;y_train&#39;]
+    name = params[&#39;name&#39;]
+    args = Args(params[&#39;args&#39;])
+    input_layer = Input(shape=(None,X_train.shape[-1]))
+
+    if len(layers) &gt; 1:
+        firstLayerUnits = layers[0]
+        layer_1 = LSTM(firstLayerUnits,
+                            activation = args.activation,
+                            dropout = dropout,
+                            recurrent_dropout = recurrentDropout,
+                            return_sequences = True)(input_layer, training=training)
+        if alpha is not None:
+            layer_1 = LeakyReLU(alpha=alpha)(layer_1)
+        for i, layerUnits in enumerate(layers[1:]):
+            layer_1 = LSTM(layerUnits,
+                            activation = args.activation,
+                            dropout = dropout,
+                            recurrent_dropout = recurrentDropout,
+                            return_sequences = True if (i &lt; len(layers) - 2) else False)(layer_1, training=training)
+            if alpha is not None:
+                layer_1 = LeakyReLU(alpha=alpha)(layer_1)
+    else:
+        firstLayerUnits = layers[0]
+        layer_1 = LSTM(firstLayerUnits,
+                            activation = args.activation,
+                            dropout = dropout,
+                            return_sequences = False,
+                            recurrent_dropout = recurrentDropout)(input_layer, training=training)
+        if alpha is not None:
+            layer_1 = LeakyReLU(alpha=alpha)(layer_1)
+
+    output_layer = Dense(
+        y_train.shape[-1],
+        activation=&#39;linear&#39;)(layer_1)
+    
+    model = Model(input_layer, output_layer)
+
+    return MachinLearningModel(
+        model,
+        X_train,
+        y_train,
+        args=args,
+        modelType=&#34;RNN&#34;,
+        name=name,
+    )
+
+def kerasGRU(
+    params,
+    layers=[128],
+    dropout=0.0,
+    recurrentDropout=0.0,
+    alpha=None,
+    training=False,
+    ):
+
+    X_train = params[&#39;X_train&#39;]
+    y_train = params[&#39;y_train&#39;]
+    name = params[&#39;name&#39;]
+    args = Args(params[&#39;args&#39;])
+    input_layer = Input(shape=(None,X_train.shape[-1]))
+
+    if len(layers) &gt; 1:
+        firstLayerUnits = layers[0]
+        layer_1 = GRU(
+            firstLayerUnits,
+            activation = args.activation,
+            dropout = dropout,
+            recurrent_dropout = recurrentDropout,
+            return_sequences = True)(input_layer, training=training)
+        if alpha is not None:
+            layer_1 = LeakyReLU(alpha=alpha)(layer_1)
+        for layerUnits in layers[1:]:
+            layer_1 = GRU(
+                layerUnits,
+                activation = args.activation,
+                dropout = dropout,
+                recurrent_dropout = recurrentDropout,
+                return_sequences = False)(layer_1, training=training)
+            if alpha is not None:
+                layer_1 = LeakyReLU(alpha=alpha)(layer_1)
+    else:
+        firstLayerUnits = layers[0]
+        layer_1 = GRU(
+            firstLayerUnits,
+            activation = args.activation,
+            dropout = dropout,
+            recurrent_dropout = recurrentDropout)(input_layer, training=training)
+        if alpha is not None:
+            layer_1 = LeakyReLU(alpha=alpha)(layer_1)
+
+    output_layer = Dense(
+        y_train.shape[-1],
+        activation=&#39;linear&#39;)(layer_1)
+    
+    model = Model(input_layer, output_layer)
+
+    return MachinLearningModel(
+        model,
+        X_train,
+        y_train,
+        args=args,
+        modelType=&#34;RNN&#34;,
+        name=name,
+    )
+
+def kerasMLP(
+    params,
+    structure,
+    dropout=None,
+    l1_rate=0.0,
+    l2_rate=0.0,
+    ):
+
+    X_train = params[&#39;X_train&#39;]
+    y_train = params[&#39;y_train&#39;]
+    name = params[&#39;name&#39;]
+    args = Args(params[&#39;args&#39;])
+
+    model = Sequential()
+
+    firstLayerNeurons, firstLayerActivation = structure[0]
+    model.add(
+        Dense(
+            firstLayerNeurons,
+            input_dim=X_train.shape[1],
+            activation=firstLayerActivation,
+            kernel_regularizer=l1_l2(l1=l1_rate, l2=l2_rate),
+        )
+    )
+    if dropout is not None:
+        model.add(Dropout(dropout))
+
+    for neurons, activation in structure[1:]:
+        model.add(
+            Dense(
+                neurons,
+                activation=activation,
+                kernel_regularizer=l1_l2(l1=l1_rate, l2=l2_rate),
+            )
+        )
+        if dropout is not None:
+            model.add(Dropout(dropout))
+    
+    model.add(
+        Dense(
+            y_train.shape[1],
+            activation=&#39;linear&#39;,
+        )
+    )
+
+    return MachinLearningModel(
+        model,
+        X_train,
+        y_train,
+        args=args,
+        modelType=&#34;MLP&#34;,
+        name=name,
+    )
+
+def sklearnSVM(params):
+    X = params[&#39;X_train&#39;]
+    Y = params[&#39;y_train&#39;]
+    name = params[&#39;name&#39;]
+    model = LinearSVR()
+    return MachinLearningModel(model, X, Y, modelType=&#34;Linear&#34;, name=name)
+
+def sklearnDecisionTree(params):
+    X = params[&#39;X_train&#39;]
+    Y = params[&#39;y_train&#39;]
+    name = params[&#39;name&#39;]
+    model = DecisionTreeRegressor()
+    return MachinLearningModel(model, X, Y, modelType=&#34;Linear&#34;, name=name)
+
+def sklearnAdaBoost(params):
+    X = params[&#39;X_train&#39;]
+    Y = params[&#39;y_train&#39;]
+    name = params[&#39;name&#39;]
+    model = AdaBoostRegressor()
+    return MachinLearningModel(model, X, Y, modelType=&#34;Linear&#34;, name=name)
+
+def sklearnBagging(params):
+    X = params[&#39;X_train&#39;]
+    Y = params[&#39;y_train&#39;]
+    name = params[&#39;name&#39;]
+    model = BaggingRegressor()
+    return MachinLearningModel(model, X, Y, modelType=&#34;Linear&#34;, name=name)
+
+def sklearnGradientBoosting(params):
+    X = params[&#39;X_train&#39;]
+    Y = params[&#39;y_train&#39;]
+    name = params[&#39;name&#39;]
+    model = GradientBoostingRegressor()
+    return MachinLearningModel(model, X, Y, modelType=&#34;Linear&#34;, name=name)
+
+def sklearnRandomForest(params):
+    X = params[&#39;X_train&#39;]
+    Y = params[&#39;y_train&#39;]
+    name = params[&#39;name&#39;]
+    model = RandomForestRegressor()
+    return MachinLearningModel(model, X, Y, modelType=&#34;Linear&#34;, name=name)
+
+def sklearnMLP(params):
+    X = params[&#39;X_train&#39;]
+    Y = params[&#39;y_train&#39;]
+    name = params[&#39;name&#39;]
+    model = MLPRegressor(early_stopping=True)
+    return MachinLearningModel(model, X, Y, modelType=&#34;Linear&#34;, name=name)
+
+def sklearnLinear(params):
+    X = params[&#39;X_train&#39;]
+    Y = params[&#39;y_train&#39;]
+    name = params[&#39;name&#39;]
+    model = LinearRegression()
+    return MachinLearningModel(model, X, Y, modelType=&#34;Linear&#34;, name=name)
+
+def sklearnLasso(params, alpha=0.1):
+    X = params[&#39;X_train&#39;]
+    Y = params[&#39;y_train&#39;]
+    name = params[&#39;name&#39;]
+    model = Lasso(alpha=alpha)
+    return MachinLearningModel(model, X, Y, modelType=&#34;Linear&#34;, name=name)
+
+def sklearnLassoCV(params, alphas=(0.1, 1.0, 10.0), folds=10):
+    X = params[&#39;X_train&#39;]
+    Y = params[&#39;y_train&#39;]
+    name = params[&#39;name&#39;]
+    model = LassoCV(alphas=alphas, cv=folds)
+    return MachinLearningModel(model, X, Y, modelType=&#34;Linear&#34;, name=name)
+
+def sklearnRidge(params, alpha=1.0):
+    X = params[&#39;X_train&#39;]
+    Y = params[&#39;y_train&#39;]
+    name = params[&#39;name&#39;]
+    model = Ridge(alpha=alpha)
+    return MachinLearningModel(model, X, Y, modelType=&#34;Linear&#34;, name=name)
+
+def sklearnRidgeCV(params, alphas=(0.1, 1.0, 10.0), folds=10):
+    X = params[&#39;X_train&#39;]
+    Y = params[&#39;y_train&#39;]
+    name = params[&#39;name&#39;]
+    model = RidgeCV(alphas=alphas, cv=folds)
+    return MachinLearningModel(model, X, Y, modelType=&#34;Linear&#34;, name=name)
+
+def sklearnElasticNet(params, alpha=1.0, l1_ratio=0.5):
+    X = params[&#39;X_train&#39;]
+    Y = params[&#39;y_train&#39;]
+    name = params[&#39;name&#39;]
+    model = ElasticNet(alpha=alpha, l1_ratio=l1_ratio)
+    return MachinLearningModel(model, X, Y, modelType=&#34;Linear&#34;, name=name)
+
+def sklearnElasticNetCV(params, alphas=(0.1, 1.0, 10.0), l1_ratio=0.5, folds=10):
+    X = params[&#39;X_train&#39;]
+    Y = params[&#39;y_train&#39;]
+    name = params[&#39;name&#39;]
+    model = ElasticNetCV(alphas=alphas, l1_ratio=l1_ratio, cv=folds)
+    return MachinLearningModel(model, X, Y, modelType=&#34;Linear&#34;, name=name)
+
+def autoencoder_Dropout(params, dropout=0.2, encodingDim=3):
+    X = params[&#39;X_train&#39;]
+    name = params[&#39;name&#39;]
+    args = Args(params[&#39;args&#39;])
+
+    if encodingDim &gt; 3:
+        encodingDim = 3
+
+    input_d = Input(shape=(X.shape[1],))
+    encoded = Dense(6, activation=&#39;tanh&#39;)(input_d)
+    encoded = Dropout(dropout)(encoded)
+    encoded = Dense(5, activation=&#39;tanh&#39;)(encoded)
+    encoded = Dropout(dropout)(encoded)
+    encoded = Dense(4, activation=&#39;tanh&#39;)(encoded)
+    encoded = Dropout(dropout)(encoded)
+    encoded = Dense(encodingDim, activation=&#39;tanh&#39;)(encoded)
+    #encoded = Dropout(dropout)(encoded)
+    decoded = Dense(4, activation=&#39;tanh&#39;)(encoded)
+    #decoded = Dropout(dropout)(decoded)
+    decoded = Dense(5, activation=&#39;tanh&#39;)(decoded)
+    #decoded = Dropout(dropout)(decoded)
+    decoded = Dense(6, activation=&#39;tanh&#39;)(decoded)
+    #decoded = Dropout(dropout)(decoded)
+    decoded = Dense(X.shape[1], activation=&#39;linear&#39;)(decoded)
+    model = Model(input_d, decoded)
+    return AutoencoderModel(model, X, args, modelType=&#34;AUTOENCODER&#34;, name=name)
+
+def autoencoder_Regularized(params, l1_rate=10e-4, encodingDim=3):
+    X = params[&#39;X_train&#39;]
+    name = params[&#39;name&#39;]
+    args = Args(params[&#39;args&#39;])
+
+    if encodingDim &gt; 3:
+        encodingDim = 3
+
+    model = Sequential()
+    model.add(Dense(X.shape[1]))
+    model.add(Dense(6, activation=&#39;tanh&#39;, activity_regularizer=l1(l1_rate)))
+    model.add(Dense(5, activation=&#39;tanh&#39;, activity_regularizer=l1(l1_rate)))
+    model.add(Dense(4, activation=&#39;tanh&#39;, activity_regularizer=l1(l1_rate)))
+    model.add(Dense(encodingDim, activation=&#39;tanh&#39;, activity_regularizer=l1(l1_rate)))
+    model.add(Dense(4, activation=&#39;tanh&#39;))
+    model.add(Dense(5, activation=&#39;tanh&#39;))
+    model.add(Dense(6, activation=&#39;tanh&#39;))
+    model.add(Dense(X.shape[1], activation=&#39;linear&#39;))
+    return AutoencoderModel(model, X, args, modelType=&#34;AUTOENCODER&#34;, name=name)</code></pre>
+</details>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-functions">Functions</h2>
+<dl>
+<dt id="src.utils.models.autoencoder_Dropout"><code class="name flex">
+<span>def <span class="ident">autoencoder_Dropout</span></span>(<span>params, dropout=0.2, encodingDim=3)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def autoencoder_Dropout(params, dropout=0.2, encodingDim=3):
+    X = params[&#39;X_train&#39;]
+    name = params[&#39;name&#39;]
+    args = Args(params[&#39;args&#39;])
+
+    if encodingDim &gt; 3:
+        encodingDim = 3
+
+    input_d = Input(shape=(X.shape[1],))
+    encoded = Dense(6, activation=&#39;tanh&#39;)(input_d)
+    encoded = Dropout(dropout)(encoded)
+    encoded = Dense(5, activation=&#39;tanh&#39;)(encoded)
+    encoded = Dropout(dropout)(encoded)
+    encoded = Dense(4, activation=&#39;tanh&#39;)(encoded)
+    encoded = Dropout(dropout)(encoded)
+    encoded = Dense(encodingDim, activation=&#39;tanh&#39;)(encoded)
+    #encoded = Dropout(dropout)(encoded)
+    decoded = Dense(4, activation=&#39;tanh&#39;)(encoded)
+    #decoded = Dropout(dropout)(decoded)
+    decoded = Dense(5, activation=&#39;tanh&#39;)(decoded)
+    #decoded = Dropout(dropout)(decoded)
+    decoded = Dense(6, activation=&#39;tanh&#39;)(decoded)
+    #decoded = Dropout(dropout)(decoded)
+    decoded = Dense(X.shape[1], activation=&#39;linear&#39;)(decoded)
+    model = Model(input_d, decoded)
+    return AutoencoderModel(model, X, args, modelType=&#34;AUTOENCODER&#34;, name=name)</code></pre>
+</details>
+</dd>
+<dt id="src.utils.models.autoencoder_Regularized"><code class="name flex">
+<span>def <span class="ident">autoencoder_Regularized</span></span>(<span>params, l1_rate=0.001, encodingDim=3)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def autoencoder_Regularized(params, l1_rate=10e-4, encodingDim=3):
+    X = params[&#39;X_train&#39;]
+    name = params[&#39;name&#39;]
+    args = Args(params[&#39;args&#39;])
+
+    if encodingDim &gt; 3:
+        encodingDim = 3
+
+    model = Sequential()
+    model.add(Dense(X.shape[1]))
+    model.add(Dense(6, activation=&#39;tanh&#39;, activity_regularizer=l1(l1_rate)))
+    model.add(Dense(5, activation=&#39;tanh&#39;, activity_regularizer=l1(l1_rate)))
+    model.add(Dense(4, activation=&#39;tanh&#39;, activity_regularizer=l1(l1_rate)))
+    model.add(Dense(encodingDim, activation=&#39;tanh&#39;, activity_regularizer=l1(l1_rate)))
+    model.add(Dense(4, activation=&#39;tanh&#39;))
+    model.add(Dense(5, activation=&#39;tanh&#39;))
+    model.add(Dense(6, activation=&#39;tanh&#39;))
+    model.add(Dense(X.shape[1], activation=&#39;linear&#39;))
+    return AutoencoderModel(model, X, args, modelType=&#34;AUTOENCODER&#34;, name=name)</code></pre>
+</details>
+</dd>
+<dt id="src.utils.models.ensembleModel"><code class="name flex">
+<span>def <span class="ident">ensembleModel</span></span>(<span>params, models)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def ensembleModel(
+    params,
+    models,
+    ):
+
+    X = params[&#39;X_train&#39;]
+    Y = params[&#39;y_train&#39;]
+    name = params[&#39;name&#39;]
+
+    return EnsembleModel(
+        models,
+        X,
+        Y,
+        name=name,
+    )</code></pre>
+</details>
+</dd>
+<dt id="src.utils.models.kerasGRU"><code class="name flex">
+<span>def <span class="ident">kerasGRU</span></span>(<span>params, layers=[128], dropout=0.0, recurrentDropout=0.0, alpha=None, training=False)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def kerasGRU(
+    params,
+    layers=[128],
+    dropout=0.0,
+    recurrentDropout=0.0,
+    alpha=None,
+    training=False,
+    ):
+
+    X_train = params[&#39;X_train&#39;]
+    y_train = params[&#39;y_train&#39;]
+    name = params[&#39;name&#39;]
+    args = Args(params[&#39;args&#39;])
+    input_layer = Input(shape=(None,X_train.shape[-1]))
+
+    if len(layers) &gt; 1:
+        firstLayerUnits = layers[0]
+        layer_1 = GRU(
+            firstLayerUnits,
+            activation = args.activation,
+            dropout = dropout,
+            recurrent_dropout = recurrentDropout,
+            return_sequences = True)(input_layer, training=training)
+        if alpha is not None:
+            layer_1 = LeakyReLU(alpha=alpha)(layer_1)
+        for layerUnits in layers[1:]:
+            layer_1 = GRU(
+                layerUnits,
+                activation = args.activation,
+                dropout = dropout,
+                recurrent_dropout = recurrentDropout,
+                return_sequences = False)(layer_1, training=training)
+            if alpha is not None:
+                layer_1 = LeakyReLU(alpha=alpha)(layer_1)
+    else:
+        firstLayerUnits = layers[0]
+        layer_1 = GRU(
+            firstLayerUnits,
+            activation = args.activation,
+            dropout = dropout,
+            recurrent_dropout = recurrentDropout)(input_layer, training=training)
+        if alpha is not None:
+            layer_1 = LeakyReLU(alpha=alpha)(layer_1)
+
+    output_layer = Dense(
+        y_train.shape[-1],
+        activation=&#39;linear&#39;)(layer_1)
+    
+    model = Model(input_layer, output_layer)
+
+    return MachinLearningModel(
+        model,
+        X_train,
+        y_train,
+        args=args,
+        modelType=&#34;RNN&#34;,
+        name=name,
+    )</code></pre>
+</details>
+</dd>
+<dt id="src.utils.models.kerasLSTM"><code class="name flex">
+<span>def <span class="ident">kerasLSTM</span></span>(<span>params, layers=[128], dropout=0.0, recurrentDropout=0.0, alpha=None, training=False)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def kerasLSTM(
+    params,
+    layers=[128],
+    dropout=0.0,
+    recurrentDropout=0.0,
+    alpha=None,
+    training=False,
+    ):
+
+    X_train = params[&#39;X_train&#39;]
+    y_train = params[&#39;y_train&#39;]
+    name = params[&#39;name&#39;]
+    args = Args(params[&#39;args&#39;])
+    input_layer = Input(shape=(None,X_train.shape[-1]))
+
+    if len(layers) &gt; 1:
+        firstLayerUnits = layers[0]
+        layer_1 = LSTM(firstLayerUnits,
+                            activation = args.activation,
+                            dropout = dropout,
+                            recurrent_dropout = recurrentDropout,
+                            return_sequences = True)(input_layer, training=training)
+        if alpha is not None:
+            layer_1 = LeakyReLU(alpha=alpha)(layer_1)
+        for i, layerUnits in enumerate(layers[1:]):
+            layer_1 = LSTM(layerUnits,
+                            activation = args.activation,
+                            dropout = dropout,
+                            recurrent_dropout = recurrentDropout,
+                            return_sequences = True if (i &lt; len(layers) - 2) else False)(layer_1, training=training)
+            if alpha is not None:
+                layer_1 = LeakyReLU(alpha=alpha)(layer_1)
+    else:
+        firstLayerUnits = layers[0]
+        layer_1 = LSTM(firstLayerUnits,
+                            activation = args.activation,
+                            dropout = dropout,
+                            return_sequences = False,
+                            recurrent_dropout = recurrentDropout)(input_layer, training=training)
+        if alpha is not None:
+            layer_1 = LeakyReLU(alpha=alpha)(layer_1)
+
+    output_layer = Dense(
+        y_train.shape[-1],
+        activation=&#39;linear&#39;)(layer_1)
+    
+    model = Model(input_layer, output_layer)
+
+    return MachinLearningModel(
+        model,
+        X_train,
+        y_train,
+        args=args,
+        modelType=&#34;RNN&#34;,
+        name=name,
+    )</code></pre>
+</details>
+</dd>
+<dt id="src.utils.models.kerasMLP"><code class="name flex">
+<span>def <span class="ident">kerasMLP</span></span>(<span>params, structure, dropout=None, l1_rate=0.0, l2_rate=0.0)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def kerasMLP(
+    params,
+    structure,
+    dropout=None,
+    l1_rate=0.0,
+    l2_rate=0.0,
+    ):
+
+    X_train = params[&#39;X_train&#39;]
+    y_train = params[&#39;y_train&#39;]
+    name = params[&#39;name&#39;]
+    args = Args(params[&#39;args&#39;])
+
+    model = Sequential()
+
+    firstLayerNeurons, firstLayerActivation = structure[0]
+    model.add(
+        Dense(
+            firstLayerNeurons,
+            input_dim=X_train.shape[1],
+            activation=firstLayerActivation,
+            kernel_regularizer=l1_l2(l1=l1_rate, l2=l2_rate),
+        )
+    )
+    if dropout is not None:
+        model.add(Dropout(dropout))
+
+    for neurons, activation in structure[1:]:
+        model.add(
+            Dense(
+                neurons,
+                activation=activation,
+                kernel_regularizer=l1_l2(l1=l1_rate, l2=l2_rate),
+            )
+        )
+        if dropout is not None:
+            model.add(Dropout(dropout))
+    
+    model.add(
+        Dense(
+            y_train.shape[1],
+            activation=&#39;linear&#39;,
+        )
+    )
+
+    return MachinLearningModel(
+        model,
+        X_train,
+        y_train,
+        args=args,
+        modelType=&#34;MLP&#34;,
+        name=name,
+    )</code></pre>
+</details>
+</dd>
+<dt id="src.utils.models.sklearnAdaBoost"><code class="name flex">
+<span>def <span class="ident">sklearnAdaBoost</span></span>(<span>params)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def sklearnAdaBoost(params):
+    X = params[&#39;X_train&#39;]
+    Y = params[&#39;y_train&#39;]
+    name = params[&#39;name&#39;]
+    model = AdaBoostRegressor()
+    return MachinLearningModel(model, X, Y, modelType=&#34;Linear&#34;, name=name)</code></pre>
+</details>
+</dd>
+<dt id="src.utils.models.sklearnBagging"><code class="name flex">
+<span>def <span class="ident">sklearnBagging</span></span>(<span>params)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def sklearnBagging(params):
+    X = params[&#39;X_train&#39;]
+    Y = params[&#39;y_train&#39;]
+    name = params[&#39;name&#39;]
+    model = BaggingRegressor()
+    return MachinLearningModel(model, X, Y, modelType=&#34;Linear&#34;, name=name)</code></pre>
+</details>
+</dd>
+<dt id="src.utils.models.sklearnDecisionTree"><code class="name flex">
+<span>def <span class="ident">sklearnDecisionTree</span></span>(<span>params)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def sklearnDecisionTree(params):
+    X = params[&#39;X_train&#39;]
+    Y = params[&#39;y_train&#39;]
+    name = params[&#39;name&#39;]
+    model = DecisionTreeRegressor()
+    return MachinLearningModel(model, X, Y, modelType=&#34;Linear&#34;, name=name)</code></pre>
+</details>
+</dd>
+<dt id="src.utils.models.sklearnElasticNet"><code class="name flex">
+<span>def <span class="ident">sklearnElasticNet</span></span>(<span>params, alpha=1.0, l1_ratio=0.5)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def sklearnElasticNet(params, alpha=1.0, l1_ratio=0.5):
+    X = params[&#39;X_train&#39;]
+    Y = params[&#39;y_train&#39;]
+    name = params[&#39;name&#39;]
+    model = ElasticNet(alpha=alpha, l1_ratio=l1_ratio)
+    return MachinLearningModel(model, X, Y, modelType=&#34;Linear&#34;, name=name)</code></pre>
+</details>
+</dd>
+<dt id="src.utils.models.sklearnElasticNetCV"><code class="name flex">
+<span>def <span class="ident">sklearnElasticNetCV</span></span>(<span>params, alphas=(0.1, 1.0, 10.0), l1_ratio=0.5, folds=10)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def sklearnElasticNetCV(params, alphas=(0.1, 1.0, 10.0), l1_ratio=0.5, folds=10):
+    X = params[&#39;X_train&#39;]
+    Y = params[&#39;y_train&#39;]
+    name = params[&#39;name&#39;]
+    model = ElasticNetCV(alphas=alphas, l1_ratio=l1_ratio, cv=folds)
+    return MachinLearningModel(model, X, Y, modelType=&#34;Linear&#34;, name=name)</code></pre>
+</details>
+</dd>
+<dt id="src.utils.models.sklearnGradientBoosting"><code class="name flex">
+<span>def <span class="ident">sklearnGradientBoosting</span></span>(<span>params)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def sklearnGradientBoosting(params):
+    X = params[&#39;X_train&#39;]
+    Y = params[&#39;y_train&#39;]
+    name = params[&#39;name&#39;]
+    model = GradientBoostingRegressor()
+    return MachinLearningModel(model, X, Y, modelType=&#34;Linear&#34;, name=name)</code></pre>
+</details>
+</dd>
+<dt id="src.utils.models.sklearnLasso"><code class="name flex">
+<span>def <span class="ident">sklearnLasso</span></span>(<span>params, alpha=0.1)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def sklearnLasso(params, alpha=0.1):
+    X = params[&#39;X_train&#39;]
+    Y = params[&#39;y_train&#39;]
+    name = params[&#39;name&#39;]
+    model = Lasso(alpha=alpha)
+    return MachinLearningModel(model, X, Y, modelType=&#34;Linear&#34;, name=name)</code></pre>
+</details>
+</dd>
+<dt id="src.utils.models.sklearnLassoCV"><code class="name flex">
+<span>def <span class="ident">sklearnLassoCV</span></span>(<span>params, alphas=(0.1, 1.0, 10.0), folds=10)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def sklearnLassoCV(params, alphas=(0.1, 1.0, 10.0), folds=10):
+    X = params[&#39;X_train&#39;]
+    Y = params[&#39;y_train&#39;]
+    name = params[&#39;name&#39;]
+    model = LassoCV(alphas=alphas, cv=folds)
+    return MachinLearningModel(model, X, Y, modelType=&#34;Linear&#34;, name=name)</code></pre>
+</details>
+</dd>
+<dt id="src.utils.models.sklearnLinear"><code class="name flex">
+<span>def <span class="ident">sklearnLinear</span></span>(<span>params)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def sklearnLinear(params):
+    X = params[&#39;X_train&#39;]
+    Y = params[&#39;y_train&#39;]
+    name = params[&#39;name&#39;]
+    model = LinearRegression()
+    return MachinLearningModel(model, X, Y, modelType=&#34;Linear&#34;, name=name)</code></pre>
+</details>
+</dd>
+<dt id="src.utils.models.sklearnMLP"><code class="name flex">
+<span>def <span class="ident">sklearnMLP</span></span>(<span>params)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def sklearnMLP(params):
+    X = params[&#39;X_train&#39;]
+    Y = params[&#39;y_train&#39;]
+    name = params[&#39;name&#39;]
+    model = MLPRegressor(early_stopping=True)
+    return MachinLearningModel(model, X, Y, modelType=&#34;Linear&#34;, name=name)</code></pre>
+</details>
+</dd>
+<dt id="src.utils.models.sklearnRandomForest"><code class="name flex">
+<span>def <span class="ident">sklearnRandomForest</span></span>(<span>params)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def sklearnRandomForest(params):
+    X = params[&#39;X_train&#39;]
+    Y = params[&#39;y_train&#39;]
+    name = params[&#39;name&#39;]
+    model = RandomForestRegressor()
+    return MachinLearningModel(model, X, Y, modelType=&#34;Linear&#34;, name=name)</code></pre>
+</details>
+</dd>
+<dt id="src.utils.models.sklearnRidge"><code class="name flex">
+<span>def <span class="ident">sklearnRidge</span></span>(<span>params, alpha=1.0)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def sklearnRidge(params, alpha=1.0):
+    X = params[&#39;X_train&#39;]
+    Y = params[&#39;y_train&#39;]
+    name = params[&#39;name&#39;]
+    model = Ridge(alpha=alpha)
+    return MachinLearningModel(model, X, Y, modelType=&#34;Linear&#34;, name=name)</code></pre>
+</details>
+</dd>
+<dt id="src.utils.models.sklearnRidgeCV"><code class="name flex">
+<span>def <span class="ident">sklearnRidgeCV</span></span>(<span>params, alphas=(0.1, 1.0, 10.0), folds=10)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def sklearnRidgeCV(params, alphas=(0.1, 1.0, 10.0), folds=10):
+    X = params[&#39;X_train&#39;]
+    Y = params[&#39;y_train&#39;]
+    name = params[&#39;name&#39;]
+    model = RidgeCV(alphas=alphas, cv=folds)
+    return MachinLearningModel(model, X, Y, modelType=&#34;Linear&#34;, name=name)</code></pre>
+</details>
+</dd>
+<dt id="src.utils.models.sklearnSVM"><code class="name flex">
+<span>def <span class="ident">sklearnSVM</span></span>(<span>params)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def sklearnSVM(params):
+    X = params[&#39;X_train&#39;]
+    Y = params[&#39;y_train&#39;]
+    name = params[&#39;name&#39;]
+    model = LinearSVR()
+    return MachinLearningModel(model, X, Y, modelType=&#34;Linear&#34;, name=name)</code></pre>
+</details>
+</dd>
+</dl>
+</section>
+<section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="src.utils.models.Args"><code class="flex name class">
+<span>class <span class="ident">Args</span></span>
+<span>(</span><span>args)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Args():
+    def __init__(self, args):
+        self.activation = args[&#39;activation&#39;]
+        self.loss = args[&#39;loss&#39;]
+        self.optimizer = args[&#39;optimizer&#39;]
+        self.metrics = args[&#39;metrics&#39;]
+        self.epochs = args[&#39;epochs&#39;]
+        self.batchSize = args[&#39;batchSize&#39;]
+        self.verbose = args[&#39;verbose&#39;]
+        self.callbacks= args[&#39;callbacks&#39;]
+        self.enrolWindow = args[&#39;enrolWindow&#39;]
+        self.validationSize = args[&#39;validationSize&#39;]
+        self.testSize = args[&#39;testSize&#39;]</code></pre>
+</details>
+</dd>
+<dt id="src.utils.models.AutoencoderModel"><code class="flex name class">
+<span>class <span class="ident">AutoencoderModel</span></span>
+<span>(</span><span>model, X_train, args=None, modelType='AUTOENCODER', scaler='standard', name=None)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class AutoencoderModel():
+    def __init__(self, model, X_train, args=None, modelType=&#34;AUTOENCODER&#34;, scaler=&#34;standard&#34;, name=None):
+        if scaler == &#34;standard&#34;:
+            inputScaler = StandardScaler()
+        else:
+            inputScaler = MinMaxScaler()
+        
+        inputScaler.fit(X_train)
+
+        self.model = model
+        self.X_train = X_train
+        self.args = args
+        self.name = name
+        self.history = None
+        self.inputScaler = inputScaler
+        self.modelType = modelType
+
+    def train(self):
+        self.model.compile(
+            loss = self.args.loss,
+            optimizer = self.args.optimizer,
+            metrics = self.args.metrics
+        )
+        history = self.model.fit(
+            self.inputScaler.transform(self.X_train),
+            self.inputScaler.transform(self.X_train),
+            epochs = self.args.epochs,
+            batch_size = self.args.batchSize,
+            verbose = self.args.verbose,
+            callbacks = self.args.callbacks,
+            validation_split = self.args.validationSize,
+        )
+        self.history = history.history
+
+    def predict(self, X, y=None):
+        return self.inputScaler.inverse_transform(
+            self.model.predict(
+                self.inputScaler.transform(X)
+            )
+        )
+
+    def save(self, directory, name):
+        if self.args:
+            self.model.save(directory + name + &#34;.h5&#34;)
+            with open(directory + name + &#34;.pickle&#34;, &#39;wb&#39;) as file_pi:
+                pickle.dump(self.history, file_pi)</code></pre>
+</details>
+<h3>Methods</h3>
+<dl>
+<dt id="src.utils.models.AutoencoderModel.predict"><code class="name flex">
+<span>def <span class="ident">predict</span></span>(<span>self, X, y=None)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def predict(self, X, y=None):
+    return self.inputScaler.inverse_transform(
+        self.model.predict(
+            self.inputScaler.transform(X)
+        )
+    )</code></pre>
+</details>
+</dd>
+<dt id="src.utils.models.AutoencoderModel.save"><code class="name flex">
+<span>def <span class="ident">save</span></span>(<span>self, directory, name)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def save(self, directory, name):
+    if self.args:
+        self.model.save(directory + name + &#34;.h5&#34;)
+        with open(directory + name + &#34;.pickle&#34;, &#39;wb&#39;) as file_pi:
+            pickle.dump(self.history, file_pi)</code></pre>
+</details>
+</dd>
+<dt id="src.utils.models.AutoencoderModel.train"><code class="name flex">
+<span>def <span class="ident">train</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def train(self):
+    self.model.compile(
+        loss = self.args.loss,
+        optimizer = self.args.optimizer,
+        metrics = self.args.metrics
+    )
+    history = self.model.fit(
+        self.inputScaler.transform(self.X_train),
+        self.inputScaler.transform(self.X_train),
+        epochs = self.args.epochs,
+        batch_size = self.args.batchSize,
+        verbose = self.args.verbose,
+        callbacks = self.args.callbacks,
+        validation_split = self.args.validationSize,
+    )
+    self.history = history.history</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+<dt id="src.utils.models.EnsembleModel"><code class="flex name class">
+<span>class <span class="ident">EnsembleModel</span></span>
+<span>(</span><span>models, X_train, y_train, modelType='Ensemble', name=None)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class EnsembleModel():
+    def __init__(self, models, X_train, y_train, modelType=&#34;Ensemble&#34;, name=None):
+        maxEnrol = 0
+        for model in models:
+            if model.args is not None:
+                enrol = model.args.enrolWindow
+                if enrol is not None and enrol &gt; maxEnrol:
+                    maxEnrol = enrol
+
+        self.maxEnrol = maxEnrol
+        self.models = models
+        self.MLmodel = None
+        self.X_train = X_train
+        self.y_train = y_train
+        self.name = name
+        self.history = None
+        self.modelType = modelType
+
+    def train(self):
+        preds = []
+        for model in self.models:
+            model.train()
+            prediction = model.predict(model.X_train, model.y_train)
+            if model.modelType == &#34;RNN&#34;:
+                preds.append(prediction[self.maxEnrol - model.args.enrolWindow:])
+            else:
+                preds.append(prediction[self.maxEnrol:])
+
+        train = preds[0]
+        for pred in preds[1:]:
+            train = np.concatenate((train, pred), axis=1)
+        self.MLmodel = sklearnLinear(
+            params = {  
+                &#39;name&#39;: &#39;Linear model of ensemble&#39;,
+                &#39;X_train&#39;: train,
+                &#39;y_train&#39;: self.y_train[self.maxEnrol:],
+            },
+        )
+        self.MLmodel.train()
+
+    def trainEnsemble(self):
+        preds = []
+        for model in self.models:
+            prediction = model.predict(model.X_train, model.y_train)
+            if model.modelType == &#34;RNN&#34;:
+                preds.append(prediction[self.maxEnrol - model.args.enrolWindow:])
+            else:
+                preds.append(prediction[self.maxEnrol:])
+
+        train = preds[0]
+        for pred in preds[1:]:
+            train = np.concatenate((train, pred), axis=1)
+        self.MLmodel = sklearnLinear(
+            params = {
+                &#39;name&#39;: &#39;Linear model of ensemble&#39;,
+                &#39;X_train&#39;: train,
+                &#39;y_train&#39;: self.y_train[self.maxEnrol:],
+            },
+        )
+        self.MLmodel.train()
+
+    def predict(self, X, y):
+        preds = []
+        for model in self.models:
+            prediction = model.predict(X, y)
+            if model.modelType == &#34;RNN&#34;:
+                preds.append(prediction[self.maxEnrol - model.args.enrolWindow:])
+            else:
+                preds.append(prediction[self.maxEnrol:])
+
+        test = preds[0]
+        for pred in preds[1:]:
+            test = np.concatenate((test, pred), axis=1)
+        return self.MLmodel.predict(test)
+
+    def save(self, directory, name):
+        for model in self.models:
+            if model.args:
+                dirr = directory + name + &#39;/&#39;
+                if not os.path.exists(dirr):
+                    os.makedirs(dirr)
+                model.save(dirr, &#34;_&#34;.join(model.name.split(&#39; &#39;)))</code></pre>
+</details>
+<h3>Methods</h3>
+<dl>
+<dt id="src.utils.models.EnsembleModel.predict"><code class="name flex">
+<span>def <span class="ident">predict</span></span>(<span>self, X, y)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def predict(self, X, y):
+    preds = []
+    for model in self.models:
+        prediction = model.predict(X, y)
+        if model.modelType == &#34;RNN&#34;:
+            preds.append(prediction[self.maxEnrol - model.args.enrolWindow:])
+        else:
+            preds.append(prediction[self.maxEnrol:])
+
+    test = preds[0]
+    for pred in preds[1:]:
+        test = np.concatenate((test, pred), axis=1)
+    return self.MLmodel.predict(test)</code></pre>
+</details>
+</dd>
+<dt id="src.utils.models.EnsembleModel.save"><code class="name flex">
+<span>def <span class="ident">save</span></span>(<span>self, directory, name)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def save(self, directory, name):
+    for model in self.models:
+        if model.args:
+            dirr = directory + name + &#39;/&#39;
+            if not os.path.exists(dirr):
+                os.makedirs(dirr)
+            model.save(dirr, &#34;_&#34;.join(model.name.split(&#39; &#39;)))</code></pre>
+</details>
+</dd>
+<dt id="src.utils.models.EnsembleModel.train"><code class="name flex">
+<span>def <span class="ident">train</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def train(self):
+    preds = []
+    for model in self.models:
+        model.train()
+        prediction = model.predict(model.X_train, model.y_train)
+        if model.modelType == &#34;RNN&#34;:
+            preds.append(prediction[self.maxEnrol - model.args.enrolWindow:])
+        else:
+            preds.append(prediction[self.maxEnrol:])
+
+    train = preds[0]
+    for pred in preds[1:]:
+        train = np.concatenate((train, pred), axis=1)
+    self.MLmodel = sklearnLinear(
+        params = {  
+            &#39;name&#39;: &#39;Linear model of ensemble&#39;,
+            &#39;X_train&#39;: train,
+            &#39;y_train&#39;: self.y_train[self.maxEnrol:],
+        },
+    )
+    self.MLmodel.train()</code></pre>
+</details>
+</dd>
+<dt id="src.utils.models.EnsembleModel.trainEnsemble"><code class="name flex">
+<span>def <span class="ident">trainEnsemble</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def trainEnsemble(self):
+    preds = []
+    for model in self.models:
+        prediction = model.predict(model.X_train, model.y_train)
+        if model.modelType == &#34;RNN&#34;:
+            preds.append(prediction[self.maxEnrol - model.args.enrolWindow:])
+        else:
+            preds.append(prediction[self.maxEnrol:])
+
+    train = preds[0]
+    for pred in preds[1:]:
+        train = np.concatenate((train, pred), axis=1)
+    self.MLmodel = sklearnLinear(
+        params = {
+            &#39;name&#39;: &#39;Linear model of ensemble&#39;,
+            &#39;X_train&#39;: train,
+            &#39;y_train&#39;: self.y_train[self.maxEnrol:],
+        },
+    )
+    self.MLmodel.train()</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+<dt id="src.utils.models.MachinLearningModel"><code class="flex name class">
+<span>class <span class="ident">MachinLearningModel</span></span>
+<span>(</span><span>model, X_train, y_train, args=None, modelType=None, scaler='standard', name=None)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class MachinLearningModel():
+    def __init__(self, model, X_train, y_train, args=None, modelType=None, scaler=&#34;standard&#34;, name=None):
+        if scaler == &#34;standard&#34;:
+            inputScaler = StandardScaler()
+            outputScaler = StandardScaler()
+        else:
+            inputScaler = MinMaxScaler()
+            outputScaler = MinMaxScaler()
+        
+        inputScaler.fit(X_train)
+        outputScaler.fit(y_train)
+
+        self.model = model
+        self.X_train = X_train
+        self.y_train = y_train
+        self.args = args
+        self.name = name
+        self.history = None
+        self.inputScaler = inputScaler
+        self.outputScaler = outputScaler
+        self.modelType = modelType
+
+    def train(self):
+        checkpoint_path = CURRENT_MODEL_WEIGHTS_FILEPATH + &#34;_&#34;.join(self.name.split(&#34; &#34;))
+        if not os.path.exists(checkpoint_path):
+            os.makedirs(checkpoint_path)
+        weights_path = checkpoint_path + &#34;/current_weights.h5&#34;
+        checkpoint = ModelCheckpoint(
+            filepath=weights_path,
+            monitor=&#39;val_loss&#39;,
+            verbose=1,
+            save_weights_only=True,
+            save_best_only=True,
+        ),
+
+        if self.modelType == &#34;RNN&#34;:
+            &#34;&#34;&#34;
+            THIS CODE CAN BE USED IF GENERATORS ARE DESIRED
+            NB: not suitable for heat exchanger data,
+                because the validation data will not have
+                the same properties as the training data
+                See thesis for details
+
+            X_t, X_v, y_t, y_v = train_test_split(self.X_train, self.y_train, test_size=0.2, shuffle=False)
+            validation_generator = TimeseriesGenerator(
+                self.inputScaler.transform(X_v),
+                self.outputScaler.transform(y_v),
+                length = self.args.enrolWindow,
+                sampling_rate = 1,
+                batch_size = self.args.batchSize
+            )
+            train_generator = TimeseriesGenerator(
+                self.inputScaler.transform(X_t),
+                self.outputScaler.transform(y_t),
+                length = self.args.enrolWindow,
+                sampling_rate = 1,
+                batch_size = self.args.batchSize
+            )
+            self.model.compile(
+                loss = self.args.loss,
+                optimizer = self.args.optimizer,
+                metrics = self.args.metrics
+            )
+            history = self.model.fit_generator(
+                train_generator,
+                epochs = self.args.epochs,
+                verbose = self.args.verbose,
+                callbacks = [*self.args.callbacks, *checkpoint],
+                validation_data = validation_generator,
+            )
+            &#34;&#34;&#34;
+            # Own implementation of train-val split for RNN data
+            X_t, X_v, y_t, y_v = getRNNSplit(
+                self.inputScaler.transform(self.X_train),
+                self.outputScaler.transform(self.y_train),
+                self.args.enrolWindow,
+                validation_split=0.2,
+            )
+            self.model.compile(
+                loss = self.args.loss,
+                optimizer = self.args.optimizer,
+                metrics = self.args.metrics
+            )
+            history = self.model.fit(
+                X_t,
+                y_t,
+                epochs = self.args.epochs,
+                batch_size = self.args.batchSize,
+                verbose = self.args.verbose,
+                callbacks = [*self.args.callbacks, *checkpoint],
+                validation_data = (X_v, y_v),
+            )
+            self.history = history.history
+            self.model.load_weights(weights_path)
+        elif self.modelType == &#34;MLP&#34;:
+            self.model.compile(
+                loss = self.args.loss,
+                optimizer = self.args.optimizer,
+                metrics = self.args.metrics
+            )
+            history = self.model.fit(
+                self.inputScaler.transform(self.X_train),
+                self.outputScaler.transform(self.y_train),
+                epochs = self.args.epochs,
+                batch_size = self.args.batchSize,
+                verbose = self.args.verbose,
+                callbacks = [*self.args.callbacks, *checkpoint],
+                validation_split = self.args.validationSize,
+            )
+            self.history = history.history
+            self.model.load_weights(weights_path)
+        else:
+            history = self.model.fit(
+                self.inputScaler.transform(self.X_train),
+                self.outputScaler.transform(self.y_train),
+            )
+            if hasattr(self.model, &#39;coef_&#39;):
+                print(&#34;    Trained weights for &#34; + self.name + &#34;:&#34;)
+                print(str(self.model.coef_))
+            self.history = None
+
+    def predict(self, X, y=None):
+        if self.modelType == &#34;RNN&#34;:
+            test_generator = TimeseriesGenerator(
+                self.inputScaler.transform(X),
+                self.outputScaler.transform(y),
+                length = self.args.enrolWindow,
+                sampling_rate = 1,
+                batch_size = self.args.batchSize
+            )
+            return self.outputScaler.inverse_transform(
+                self.model.predict(test_generator)
+            )
+        else:
+            return self.outputScaler.inverse_transform(
+                self.model.predict(
+                    self.inputScaler.transform(X)
+                )
+            )
+
+    def predictMultiple(self, X, y, numberOfPredictions=20):
+        if self.modelType == &#34;RNN&#34;:
+            predictions = np.zeros((numberOfPredictions, (y.shape[0] - self.args.enrolWindow), y.shape[1]))
+            for i in range(numberOfPredictions):
+                predictions[i] = self.predict(X, y)
+
+            mean = np.array([np.mean(predictions[:,:,i], axis=0) for i in range(y.shape[1])]).T
+            standarddev = np.array([np.std(predictions[:,:,i], axis=0) for i in range(y.shape[1])]).T
+        
+            return [predictions, mean, standarddev]
+        else:
+            return None
+
+    def save(self, directory, name):
+        if self.args:
+            self.model.save(directory + name + &#34;.h5&#34;)
+            with open(directory + name + &#34;.pickle&#34;, &#39;wb&#39;) as file_pi:
+                pickle.dump(self.history, file_pi)</code></pre>
+</details>
+<h3>Methods</h3>
+<dl>
+<dt id="src.utils.models.MachinLearningModel.predict"><code class="name flex">
+<span>def <span class="ident">predict</span></span>(<span>self, X, y=None)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def predict(self, X, y=None):
+    if self.modelType == &#34;RNN&#34;:
+        test_generator = TimeseriesGenerator(
+            self.inputScaler.transform(X),
+            self.outputScaler.transform(y),
+            length = self.args.enrolWindow,
+            sampling_rate = 1,
+            batch_size = self.args.batchSize
+        )
+        return self.outputScaler.inverse_transform(
+            self.model.predict(test_generator)
+        )
+    else:
+        return self.outputScaler.inverse_transform(
+            self.model.predict(
+                self.inputScaler.transform(X)
+            )
+        )</code></pre>
+</details>
+</dd>
+<dt id="src.utils.models.MachinLearningModel.predictMultiple"><code class="name flex">
+<span>def <span class="ident">predictMultiple</span></span>(<span>self, X, y, numberOfPredictions=20)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def predictMultiple(self, X, y, numberOfPredictions=20):
+    if self.modelType == &#34;RNN&#34;:
+        predictions = np.zeros((numberOfPredictions, (y.shape[0] - self.args.enrolWindow), y.shape[1]))
+        for i in range(numberOfPredictions):
+            predictions[i] = self.predict(X, y)
+
+        mean = np.array([np.mean(predictions[:,:,i], axis=0) for i in range(y.shape[1])]).T
+        standarddev = np.array([np.std(predictions[:,:,i], axis=0) for i in range(y.shape[1])]).T
+    
+        return [predictions, mean, standarddev]
+    else:
+        return None</code></pre>
+</details>
+</dd>
+<dt id="src.utils.models.MachinLearningModel.save"><code class="name flex">
+<span>def <span class="ident">save</span></span>(<span>self, directory, name)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def save(self, directory, name):
+    if self.args:
+        self.model.save(directory + name + &#34;.h5&#34;)
+        with open(directory + name + &#34;.pickle&#34;, &#39;wb&#39;) as file_pi:
+            pickle.dump(self.history, file_pi)</code></pre>
+</details>
+</dd>
+<dt id="src.utils.models.MachinLearningModel.train"><code class="name flex">
+<span>def <span class="ident">train</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def train(self):
+    checkpoint_path = CURRENT_MODEL_WEIGHTS_FILEPATH + &#34;_&#34;.join(self.name.split(&#34; &#34;))
+    if not os.path.exists(checkpoint_path):
+        os.makedirs(checkpoint_path)
+    weights_path = checkpoint_path + &#34;/current_weights.h5&#34;
+    checkpoint = ModelCheckpoint(
+        filepath=weights_path,
+        monitor=&#39;val_loss&#39;,
+        verbose=1,
+        save_weights_only=True,
+        save_best_only=True,
+    ),
+
+    if self.modelType == &#34;RNN&#34;:
+        &#34;&#34;&#34;
+        THIS CODE CAN BE USED IF GENERATORS ARE DESIRED
+        NB: not suitable for heat exchanger data,
+            because the validation data will not have
+            the same properties as the training data
+            See thesis for details
+
+        X_t, X_v, y_t, y_v = train_test_split(self.X_train, self.y_train, test_size=0.2, shuffle=False)
+        validation_generator = TimeseriesGenerator(
+            self.inputScaler.transform(X_v),
+            self.outputScaler.transform(y_v),
+            length = self.args.enrolWindow,
+            sampling_rate = 1,
+            batch_size = self.args.batchSize
+        )
+        train_generator = TimeseriesGenerator(
+            self.inputScaler.transform(X_t),
+            self.outputScaler.transform(y_t),
+            length = self.args.enrolWindow,
+            sampling_rate = 1,
+            batch_size = self.args.batchSize
+        )
+        self.model.compile(
+            loss = self.args.loss,
+            optimizer = self.args.optimizer,
+            metrics = self.args.metrics
+        )
+        history = self.model.fit_generator(
+            train_generator,
+            epochs = self.args.epochs,
+            verbose = self.args.verbose,
+            callbacks = [*self.args.callbacks, *checkpoint],
+            validation_data = validation_generator,
+        )
+        &#34;&#34;&#34;
+        # Own implementation of train-val split for RNN data
+        X_t, X_v, y_t, y_v = getRNNSplit(
+            self.inputScaler.transform(self.X_train),
+            self.outputScaler.transform(self.y_train),
+            self.args.enrolWindow,
+            validation_split=0.2,
+        )
+        self.model.compile(
+            loss = self.args.loss,
+            optimizer = self.args.optimizer,
+            metrics = self.args.metrics
+        )
+        history = self.model.fit(
+            X_t,
+            y_t,
+            epochs = self.args.epochs,
+            batch_size = self.args.batchSize,
+            verbose = self.args.verbose,
+            callbacks = [*self.args.callbacks, *checkpoint],
+            validation_data = (X_v, y_v),
+        )
+        self.history = history.history
+        self.model.load_weights(weights_path)
+    elif self.modelType == &#34;MLP&#34;:
+        self.model.compile(
+            loss = self.args.loss,
+            optimizer = self.args.optimizer,
+            metrics = self.args.metrics
+        )
+        history = self.model.fit(
+            self.inputScaler.transform(self.X_train),
+            self.outputScaler.transform(self.y_train),
+            epochs = self.args.epochs,
+            batch_size = self.args.batchSize,
+            verbose = self.args.verbose,
+            callbacks = [*self.args.callbacks, *checkpoint],
+            validation_split = self.args.validationSize,
+        )
+        self.history = history.history
+        self.model.load_weights(weights_path)
+    else:
+        history = self.model.fit(
+            self.inputScaler.transform(self.X_train),
+            self.outputScaler.transform(self.y_train),
+        )
+        if hasattr(self.model, &#39;coef_&#39;):
+            print(&#34;    Trained weights for &#34; + self.name + &#34;:&#34;)
+            print(str(self.model.coef_))
+        self.history = None</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+</dl>
+</section>
+</article>
+<nav id="sidebar">
+<h1>Index</h1>
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="src.utils" href="index.html">src.utils</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-functions">Functions</a></h3>
+<ul class="">
+<li><code><a title="src.utils.models.autoencoder_Dropout" href="#src.utils.models.autoencoder_Dropout">autoencoder_Dropout</a></code></li>
+<li><code><a title="src.utils.models.autoencoder_Regularized" href="#src.utils.models.autoencoder_Regularized">autoencoder_Regularized</a></code></li>
+<li><code><a title="src.utils.models.ensembleModel" href="#src.utils.models.ensembleModel">ensembleModel</a></code></li>
+<li><code><a title="src.utils.models.kerasGRU" href="#src.utils.models.kerasGRU">kerasGRU</a></code></li>
+<li><code><a title="src.utils.models.kerasLSTM" href="#src.utils.models.kerasLSTM">kerasLSTM</a></code></li>
+<li><code><a title="src.utils.models.kerasMLP" href="#src.utils.models.kerasMLP">kerasMLP</a></code></li>
+<li><code><a title="src.utils.models.sklearnAdaBoost" href="#src.utils.models.sklearnAdaBoost">sklearnAdaBoost</a></code></li>
+<li><code><a title="src.utils.models.sklearnBagging" href="#src.utils.models.sklearnBagging">sklearnBagging</a></code></li>
+<li><code><a title="src.utils.models.sklearnDecisionTree" href="#src.utils.models.sklearnDecisionTree">sklearnDecisionTree</a></code></li>
+<li><code><a title="src.utils.models.sklearnElasticNet" href="#src.utils.models.sklearnElasticNet">sklearnElasticNet</a></code></li>
+<li><code><a title="src.utils.models.sklearnElasticNetCV" href="#src.utils.models.sklearnElasticNetCV">sklearnElasticNetCV</a></code></li>
+<li><code><a title="src.utils.models.sklearnGradientBoosting" href="#src.utils.models.sklearnGradientBoosting">sklearnGradientBoosting</a></code></li>
+<li><code><a title="src.utils.models.sklearnLasso" href="#src.utils.models.sklearnLasso">sklearnLasso</a></code></li>
+<li><code><a title="src.utils.models.sklearnLassoCV" href="#src.utils.models.sklearnLassoCV">sklearnLassoCV</a></code></li>
+<li><code><a title="src.utils.models.sklearnLinear" href="#src.utils.models.sklearnLinear">sklearnLinear</a></code></li>
+<li><code><a title="src.utils.models.sklearnMLP" href="#src.utils.models.sklearnMLP">sklearnMLP</a></code></li>
+<li><code><a title="src.utils.models.sklearnRandomForest" href="#src.utils.models.sklearnRandomForest">sklearnRandomForest</a></code></li>
+<li><code><a title="src.utils.models.sklearnRidge" href="#src.utils.models.sklearnRidge">sklearnRidge</a></code></li>
+<li><code><a title="src.utils.models.sklearnRidgeCV" href="#src.utils.models.sklearnRidgeCV">sklearnRidgeCV</a></code></li>
+<li><code><a title="src.utils.models.sklearnSVM" href="#src.utils.models.sklearnSVM">sklearnSVM</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="src.utils.models.Args" href="#src.utils.models.Args">Args</a></code></h4>
+</li>
+<li>
+<h4><code><a title="src.utils.models.AutoencoderModel" href="#src.utils.models.AutoencoderModel">AutoencoderModel</a></code></h4>
+<ul class="">
+<li><code><a title="src.utils.models.AutoencoderModel.predict" href="#src.utils.models.AutoencoderModel.predict">predict</a></code></li>
+<li><code><a title="src.utils.models.AutoencoderModel.save" href="#src.utils.models.AutoencoderModel.save">save</a></code></li>
+<li><code><a title="src.utils.models.AutoencoderModel.train" href="#src.utils.models.AutoencoderModel.train">train</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="src.utils.models.EnsembleModel" href="#src.utils.models.EnsembleModel">EnsembleModel</a></code></h4>
+<ul class="">
+<li><code><a title="src.utils.models.EnsembleModel.predict" href="#src.utils.models.EnsembleModel.predict">predict</a></code></li>
+<li><code><a title="src.utils.models.EnsembleModel.save" href="#src.utils.models.EnsembleModel.save">save</a></code></li>
+<li><code><a title="src.utils.models.EnsembleModel.train" href="#src.utils.models.EnsembleModel.train">train</a></code></li>
+<li><code><a title="src.utils.models.EnsembleModel.trainEnsemble" href="#src.utils.models.EnsembleModel.trainEnsemble">trainEnsemble</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="src.utils.models.MachinLearningModel" href="#src.utils.models.MachinLearningModel">MachinLearningModel</a></code></h4>
+<ul class="">
+<li><code><a title="src.utils.models.MachinLearningModel.predict" href="#src.utils.models.MachinLearningModel.predict">predict</a></code></li>
+<li><code><a title="src.utils.models.MachinLearningModel.predictMultiple" href="#src.utils.models.MachinLearningModel.predictMultiple">predictMultiple</a></code></li>
+<li><code><a title="src.utils.models.MachinLearningModel.save" href="#src.utils.models.MachinLearningModel.save">save</a></code></li>
+<li><code><a title="src.utils.models.MachinLearningModel.train" href="#src.utils.models.MachinLearningModel.train">train</a></code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.8.1</a>.</p>
+</footer>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+<script>hljs.initHighlightingOnLoad()</script>
+</body>
+</html>

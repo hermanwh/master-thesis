@@ -1,0 +1,2940 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+<meta name="generator" content="pdoc 0.8.1" />
+<title>src.core API documentation</title>
+<meta name="description" content="" />
+<link href='https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.0/normalize.min.css' rel='stylesheet'>
+<link href='https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/8.0.0/sanitize.min.css' rel='stylesheet'>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css" rel="stylesheet">
+<style>.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>src.core</code></h1>
+</header>
+<section id="section-intro">
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">import sys
+import os
+
+ROOT_PATH = os.path.abspath(&#34;.&#34;).split(&#34;src&#34;)[0]
+if ROOT_PATH not in sys.path:
+    sys.path.append(ROOT_PATH)
+module_path = os.path.abspath(os.path.join(ROOT_PATH+&#34;/src/utils/&#34;))
+if module_path not in sys.path:
+    sys.path.append(module_path)
+
+import matplotlib.pyplot as plt
+
+import utilities
+import metrics
+import models
+import modelFuncs
+import plots
+import prints
+import analysis
+
+import numpy as np
+import tensorflow as tf
+np.random.seed(100)
+tf.random.set_seed(100)
+
+_filename = None
+_names = None
+_descriptions = None
+_units = None
+_relevantColumns = None
+_columnDescriptions = None
+_columnUnits = None
+_columnNames = None
+_df = None
+_traintime = None
+_testtime = None
+_df_train = None
+_df_test = None
+_targetColumns = None
+_modelList = None
+_X_train = None
+_y_train = None
+_X_test = None
+_y_test = None
+_maxEnrolWindow = None
+_indexColumn = None
+
+_default_MLP_args = {
+    &#39;activation&#39;: &#39;relu&#39;,
+    &#39;loss&#39;: &#39;mean_absolute_error&#39;,
+    &#39;optimizer&#39;: &#39;adam&#39;,
+    &#39;metrics&#39;: [&#39;mean_absolute_error&#39;],
+    &#39;epochs&#39;: 500,
+    &#39;batchSize&#39;: 128*2,
+    &#39;verbose&#39;: 1,
+    &#39;callbacks&#39;: modelFuncs.getBasicCallbacks(patience_es=60, patience_rlr=40),
+    &#39;enrolWindow&#39;: 0,
+    &#39;validationSize&#39;: 0.2,
+    &#39;testSize&#39;: 0.2,
+}
+
+_default_LSTM_args = {
+    &#39;activation&#39;: &#39;tanh&#39;,
+    &#39;loss&#39;: &#39;mean_absolute_error&#39;,
+    &#39;optimizer&#39;: &#39;adam&#39;,
+    &#39;metrics&#39;: [&#39;mean_absolute_error&#39;],
+    &#39;epochs&#39;: 500,
+    &#39;batchSize&#39;: 128*2,
+    &#39;verbose&#39;: 1,
+    &#39;callbacks&#39;: modelFuncs.getBasicCallbacks(patience_es=60, patience_rlr=40),
+    &#39;enrolWindow&#39;: 12,
+    &#39;validationSize&#39;: 0.2,
+    &#39;testSize&#39;: 0.2,
+}
+
+def initDataframe(filename, columns, irrelevantColumns):
+    &#34;&#34;&#34;
+    FUNCTION:
+        Used to initiate a pandas dataframe from file and provided metadata
+    
+    PARAMS:
+        filename: str
+            location of dataset file on disk in .csv format
+        columns: List of list of column data
+            Provided metadata of column names, column descriptions and column units
+        irrelevantColumns: List of strings
+            columnNames excluded from the dataset
+    
+    RETURNS:
+        df: Pandas dataframe
+            Dataframe generated from file and metadata
+    &#34;&#34;&#34;
+    global _filename, _relevantColumns, _columnDescriptions, _columnUnits, _columnNames, _df
+
+    columnNames = list(map(lambda el: el[0], columns))
+    descriptions = list(map(lambda el: el[1], columns))
+    units = list(map(lambda el: el[2], columns))
+
+    relevantColumns = list(filter(lambda col: col not in irrelevantColumns, map(lambda el: el[0], columns)))
+    columnUnits = dict(zip(columnNames, units))
+    columnDescriptions = dict(zip(columnNames, descriptions))
+
+    _filename = filename
+    _relevantColumns = relevantColumns
+    _columnDescriptions = columnDescriptions
+    _columnUnits = columnUnits
+    _columnNames = columnNames
+    
+    df = utilities.initDataframe(
+        filename,
+        relevantColumns,
+        columnDescriptions,
+    )
+
+    _df = df
+
+    return df
+
+def getTestTrainSplit(traintime, testtime):
+    &#34;&#34;&#34;
+    FUNCTION:
+        Used to split training and testing rows into separate data frames
+    
+    PARAMS:
+        traintime: List of list of string pairs
+            start and end times indicating periods used for training
+        testtime: List of string pair
+            start and end time indicating period used for testing
+            preferably the entire period of the dataset
+    
+    RETURNS:
+        List[df_train, df_test]: [Pandas dataframe, Pandas dataframe]
+            Dataframes of training and testing dataset rows
+    &#34;&#34;&#34;
+    global _traintime, _testtime, _df, _df_train, _df_test
+
+    _traintime = traintime
+    _testtime = testtime
+
+    df_train, df_test = utilities.getTestTrainSplit(
+        _df,
+        traintime,
+        testtime,
+    )
+
+    _df_train = df_train
+    _df_test = df_test
+
+    return [df_train, df_test]
+
+def getFeatureTargetSplit(targetColumns):
+    &#34;&#34;&#34;
+    FUNCTION:
+        Used to split feature and target columns into separate arrays
+    
+    PARAMS:
+        targetColumns: List of strings
+            names of columns present in the dataset used as output(target) values
+    
+    RETURNS:
+        List[X_train, y_train, X_test, y_test]: [Numpy array, Numpy array, Numpy array, Numpy array]
+            Arrays of feature and target values for training and testing
+    &#34;&#34;&#34;
+    global _targetColumns, _X_train, _y_train, _X_test, _y_test
+
+    _targetColumns = targetColumns
+
+    X_train, y_train, X_test, y_test =  utilities.getFeatureTargetSplit(
+        _df_train,
+        _df_test,
+        targetColumns,
+    )
+
+    _X_train = X_train
+    _y_train = y_train
+    _X_test = X_test
+    _y_test = y_test
+
+    return [X_train, y_train, X_test, y_test]
+
+def prepareDataframe(df, traintime, testtime, targetColumns):
+    &#34;&#34;&#34;
+    FUNCTION:
+        Combination of getTestTrainingSplit and getFeatureTargetSplit
+        Used for even higher level programs where df_train and df_test are not needed
+    
+    PARAMS:
+        df: Pandas dataframe
+            dataframe generated from provided metadata
+        traintime: List of list of string pairs
+            start and end times indicating periods used for training
+        testtime: List of string pair
+            start and end time indicating period used for testing
+            preferably the entire period of the dataset
+        targetColumns: List of strings
+            names of columns present in the dataset used as output(target) values
+    
+    RETURNS:
+        List[X_train, y_train, X_test, y_test]: [Numpy array, Numpy array, Numpy array, Numpy array]
+            Arrays of feature and target values for training and testing
+    &#34;&#34;&#34;
+
+    df_train, df_test = getTestTrainSplit(
+        df,
+        traintime,
+        testtime,
+    )
+
+    return getFeatureTargetSplit(
+        df_train,
+        df_test,
+        targetColumns,
+    )
+
+def initModels(modelList):
+    &#34;&#34;&#34;
+    FUNCTION:
+        Used to initiate the provided models by calculating required model parameters
+    
+    PARAMS:
+        modelList: list of MachineLearningModel/EnsembleModel objects
+            The models used to make predictions
+    
+    RETURNS:
+        None
+    &#34;&#34;&#34;
+    global _maxEnrolWindow, _indexColumn, _modelList, _df_test
+
+    _maxEnrolWindow = utilities.findMaxEnrolWindow(modelList)
+    _indexColumn = _df_test.iloc[_maxEnrolWindow:].index
+    _modelList = modelList
+
+def trainModels(retrain=False):
+    &#34;&#34;&#34;
+    FUNCTION:
+        Used to train the models previously provided in the initModels method
+    
+    PARAMS:
+        retrain: boolean
+            Indicates if the program should prefer to load existing models where possible
+    
+    RETURNS:
+        None
+    &#34;&#34;&#34;
+    global _modelList, _filename, _targetColumns
+
+    modelFuncs.trainModels(
+        _modelList,
+        _filename,
+        _targetColumns,
+        retrain
+    )
+
+def predictWithModelsUsingDropout(numberOfPredictions=20):
+    &#34;&#34;&#34;
+    FUNCTION:
+        Used to make predictions with RNN models using dropout
+        at predict time. Requires that the provided models
+        have training=True, otherwise mean and std will be zero
+    
+    PARAMS:
+        numberOfPredictions: int
+            How many predictions to average in the result
+    
+    RETURNS:
+        List[predictions, means, standarddevs]: [list(float), list(float), list(float)]
+            Lists containing the predicted values and their means and stds
+    &#34;&#34;&#34;
+    global _modelList, _X_test, _y_test
+
+    return utilities.predictMultipleWithModels(
+        _modelList,
+        _X_test,
+        _y_test,
+        numberOfPredictions,
+    )
+
+def predictWithModels(plot=True, interpol=False, score=True):
+    &#34;&#34;&#34;
+    FUNCTION:
+        Used to make predictions using previously defined models
+    
+    PARAMS:
+        plot: boolean
+            Indicates if plots of the calculated predictions are desired
+        interpol: boolean
+            Indicates if interpolated functions for predictions should be plotted
+        score : boolean
+            Indicates if scores should be printed
+    
+    RETURNS:
+        List[modelNames, metrics_train, metrics_test, columnsList, deviationsList]:
+            [list(Str), list(float), list(float), list(obj), list(obj)]
+            Lists containing the names and train/test scores of the provided models,
+            as well as the actual predictions wrapped in objects used for printing
+    &#34;&#34;&#34;
+    global _modelList, _X_train, _y_train, _X_test, _y_test, _targetColumns, _indexColumn, _columnDescriptions, _columnUnits, _traintime
+
+    modelNames, metrics_train, metrics_test, deviationsList, columnsList = utilities.predictWithModels(
+        _modelList,
+        _X_train,
+        _y_train,
+        _X_test,
+        _y_test,
+        _targetColumns 
+    )
+
+    if score:
+        prints.printModelScores(
+            modelNames,
+            metrics_train,
+            metrics_test
+        )
+    if plot:
+        plots.plotModelPredictions(
+            plt,
+            deviationsList,
+            columnsList,
+            _indexColumn,
+            _columnDescriptions,
+            _columnUnits,
+            _traintime,
+            interpol=interpol,
+        )
+    if score:
+        plots.plotModelScores(
+            plt,
+            modelNames,
+            metrics_train,
+            metrics_test
+        )
+
+    return [modelNames, metrics_train, metrics_test, columnsList, deviationsList]
+
+def predictWithAutoencoderModels():
+    &#34;&#34;&#34;
+    FUNCTION:
+        Used to make predictions in the case where all
+        models in self.modelList are of type AutoencoderModel
+    
+    PARAMS:
+        None
+    
+    RETURNS:
+        None
+    &#34;&#34;&#34;
+    global _modelList, _df_test, _X_test
+
+    utilities.predictWithAutoencoderModels(
+        _modelList,
+        _df_test,
+        _X_test
+    )
+
+def MLP(
+        name,
+        layers=[128],
+        dropout=None,
+        l1_rate=0.0,
+        l2_rate=0.0,
+        activation=_default_MLP_args[&#39;activation&#39;],
+        loss=_default_MLP_args[&#39;loss&#39;],
+        optimizer=_default_MLP_args[&#39;optimizer&#39;],
+        metrics=_default_MLP_args[&#39;metrics&#39;],
+        epochs=_default_MLP_args[&#39;epochs&#39;],
+        batchSize=_default_MLP_args[&#39;batchSize&#39;],
+        verbose=_default_MLP_args[&#39;verbose&#39;],
+        validationSize=_default_MLP_args[&#39;validationSize&#39;],
+        testSize=_default_MLP_args[&#39;testSize&#39;],
+        callbacks=_default_MLP_args[&#39;callbacks&#39;],
+    ):
+    &#34;&#34;&#34;
+    FUNCTION:
+        Used to create a Neural Network model using multilayer perceptron
+    
+    PARAMS:
+        name: str
+            A name/alias given to the model by the user
+        layers: list of integers
+            List of neuron size for each layer
+        dropout: float
+            Level of dropout regularization
+        l1_rate: float
+            Level of l1 (Lasso) regularization
+        l2_rate: float
+            Level of l2 (Ridge) regularization
+
+    RETURNS:
+        model: MachineLearningModel
+            Object with typical machine learning methods like train, predict etc.
+    &#34;&#34;&#34;
+    global _X_train, _y_train, _default_MLP_args
+
+    mlpLayers = []
+    for layerSize in layers:
+        mlpLayers.append([layerSize, activation])
+
+    model = models.kerasMLP(
+        params = {
+            &#39;name&#39;: name,
+            &#39;X_train&#39;: _X_train,
+            &#39;y_train&#39;: _y_train,
+            &#39;args&#39;: {
+                &#39;activation&#39;: activation,
+                &#39;loss&#39;: loss,
+                &#39;optimizer&#39;: optimizer,
+                &#39;metrics&#39;: metrics,
+                &#39;epochs&#39;: epochs,
+                &#39;batchSize&#39;: batchSize,
+                &#39;verbose&#39;: verbose,
+                &#39;callbacks&#39;: callbacks,
+                &#39;enrolWindow&#39;: 0,
+                &#39;validationSize&#39;: validationSize,
+                &#39;testSize&#39;: testSize,
+            },
+        },
+        structure = mlpLayers,
+        dropout = dropout,
+        l1_rate = l1_rate,
+        l2_rate = l2_rate,
+    )
+
+    return model
+
+def LSTM(
+    name,
+    layers=[128],
+    dropout=0.0,
+    recurrentDropout=0.0,
+    alpha=None,
+    training=False,
+    enrolWindow=_default_LSTM_args[&#39;enrolWindow&#39;],
+    activation=_default_LSTM_args[&#39;activation&#39;],
+    loss=_default_LSTM_args[&#39;loss&#39;],
+    optimizer=_default_LSTM_args[&#39;optimizer&#39;],
+    metrics=_default_LSTM_args[&#39;metrics&#39;],
+    epochs=_default_LSTM_args[&#39;epochs&#39;],
+    batchSize=_default_LSTM_args[&#39;batchSize&#39;],
+    verbose=_default_LSTM_args[&#39;verbose&#39;],
+    validationSize=_default_LSTM_args[&#39;validationSize&#39;],
+    testSize=_default_LSTM_args[&#39;testSize&#39;],
+    callbacks=_default_LSTM_args[&#39;callbacks&#39;],
+    ):
+    &#34;&#34;&#34;
+    FUNCTION:
+        Used to create a Recurrent Neural Network model using
+        Long-Short Term Memory neurons (LSTM). Uses 
+        traditional dropout as regularization method
+    
+    PARAMS:
+        name: str
+            A name/alias given to the model by the user
+        layers: list of integers
+            List of neuron size for each layer
+        dropout: float
+            Level of dropout
+        recurrentDropout: float
+            Level of recurrent dropout
+        alpha: float
+            Alpha of the leaky relu function
+        training: boolean
+            Whether dropout should be use at time of prediction
+        enrolWindow: int
+            Number of samples used to make each prediction
+    
+    RETURNS:
+        model: MachineLearningModel
+            Object with typical machine learning methods like train, predict etc.
+    &#34;&#34;&#34;
+    global _X_train, _y_train, _default_LSTM_args
+
+    model = models.kerasLSTM(
+        params = {
+            &#39;name&#39;: name,
+            &#39;X_train&#39;: _X_train,
+            &#39;y_train&#39;: _y_train,
+            &#39;args&#39;: {
+                &#39;activation&#39;: activation,
+                &#39;loss&#39;: loss,
+                &#39;optimizer&#39;: optimizer,
+                &#39;metrics&#39;: metrics,
+                &#39;epochs&#39;: epochs,
+                &#39;batchSize&#39;: batchSize,
+                &#39;verbose&#39;: verbose,
+                &#39;callbacks&#39;: callbacks,
+                &#39;enrolWindow&#39;: enrolWindow,
+                &#39;validationSize&#39;: validationSize,
+                &#39;testSize&#39;: testSize,
+            },
+        },
+        layers=layers,
+        dropout=dropout,
+        recurrentDropout=recurrentDropout,
+        alpha=alpha,
+        training=training,
+    )
+    
+    return model
+
+def GRU(
+    name,
+    layers=[128],
+    dropout=0.0,
+    recurrentDropout=0.0,
+    alpha=None,
+    training=False,
+    enrolWindow=_default_LSTM_args[&#39;enrolWindow&#39;],
+    activation=_default_LSTM_args[&#39;activation&#39;],
+    loss=_default_LSTM_args[&#39;loss&#39;],
+    optimizer=_default_LSTM_args[&#39;optimizer&#39;],
+    metrics=_default_LSTM_args[&#39;metrics&#39;],
+    epochs=_default_LSTM_args[&#39;epochs&#39;],
+    batchSize=_default_LSTM_args[&#39;batchSize&#39;],
+    verbose=_default_LSTM_args[&#39;verbose&#39;],
+    validationSize=_default_LSTM_args[&#39;validationSize&#39;],
+    testSize=_default_LSTM_args[&#39;testSize&#39;],
+    callbacks=_default_LSTM_args[&#39;callbacks&#39;],
+    ):
+    &#34;&#34;&#34;
+    FUNCTION:
+        Used to create a Recurrent Neural Network model using
+        Long-Short Term Memory neurons (LSTM). Uses 
+        traditional dropout as regularization method
+    
+    PARAMS:
+        name: str
+            A name/alias given to the model by the user
+        layers: list of integers
+            List of neuron size for each layer
+        dropout: float
+            Level of dropout
+        recurrentDropout: float
+            Level of recurrent dropout
+        alpha: float
+            Alpha of the leaky relu function
+        training: boolean
+            Whether dropout should be use at time of prediction
+        enrolWindow: int
+            Number of samples used to make each prediction
+    
+    RETURNS:
+        model: MachineLearningModel
+            Object with typical machine learning methods like train, predict etc.
+    &#34;&#34;&#34;
+    global _X_train, _y_train, _default_LSTM_args
+
+    model = models.kerasGRU(
+        params = {
+            &#39;name&#39;: name,
+            &#39;X_train&#39;: _X_train,
+            &#39;y_train&#39;: _y_train,
+            &#39;args&#39;: {
+                &#39;activation&#39;: activation,
+                &#39;loss&#39;: loss,
+                &#39;optimizer&#39;: optimizer,
+                &#39;metrics&#39;: metrics,
+                &#39;epochs&#39;: epochs,
+                &#39;batchSize&#39;: batchSize,
+                &#39;verbose&#39;: verbose,
+                &#39;callbacks&#39;: callbacks,
+                &#39;enrolWindow&#39;: enrolWindow,
+                &#39;validationSize&#39;: validationSize,
+                &#39;testSize&#39;: testSize,
+            },
+        },
+        layers=layers,
+        dropout=dropout,
+        recurrentDropout=recurrentDropout,
+        alpha=alpha,
+        training=training,
+    )
+    
+    return model
+
+def Linear(
+    name,
+    ):
+    &#34;&#34;&#34;
+    FUNCTION:
+        Used to create a Linear Machine Learning model
+    
+    PARAMS:
+        name: str
+            A name/alias given to the model by the user
+    
+    RETURNS:
+        model: MachineLearningModel
+            Object with typical machine learning methods like train, predict etc.
+    &#34;&#34;&#34;
+    global _X_train, _y_train
+
+    model = models.sklearnLinear(
+        params={
+            &#39;name&#39;: name,
+            &#39;X_train&#39;: _X_train,
+            &#39;y_train&#39;: _y_train,
+        },
+    )
+
+    return model
+
+def Linear_Regularized(
+    name,
+    alphas=(0.1, 1.0, 10.0),
+    folds=10,
+    ):
+    &#34;&#34;&#34;
+    FUNCTION:
+        Used to create a Linear Machine Learning model with built-in
+        regularization and cross validation
+    
+    PARAMS:
+        name: str
+            A name/alias given to the model by the user
+        alphas: tuple of floats
+            Set of regluarization strenght parameters to try
+        folds: int
+            Number of cross validation folds
+    
+    RETURNS:
+        model: MachineLearningModel
+            Object with typical machine learning methods like train, predict etc.
+    &#34;&#34;&#34;
+    global _X_train, _y_train
+
+    model = models.sklearnRidgeCV(
+        params={
+            &#39;name&#39;: name,
+            &#39;X_train&#39;: _X_train,
+            &#39;y_train&#39;: _y_train,
+        },
+        alphas = alphas,
+        folds = folds,
+    )
+
+    return model
+
+def ElasticNet(
+    name,
+    alphas=(0.1, 1.0, 10.0),
+    l1_ratio=0.5,
+    ):
+    &#34;&#34;&#34;
+    FUNCTION:
+        Used to create a iterative regularization path fitting Machine Learning model
+    
+    PARAMS:
+        name: str
+            A name/alias given to the model by the user
+        alphas: tuple of floats
+            Set of regluarization strenght parameters to try
+        l1_ratio: float
+            ratio between L1 and L2 regularization
+    
+    RETURNS:
+        model: MachineLearningModel
+            Object with typical machine learning methods like train, predict etc.
+    &#34;&#34;&#34;
+    global _X_train, _y_train
+
+    model = models.sklearnElasticNetCV(
+        params={
+            &#39;name&#39;: name,
+            &#39;X_train&#39;: _X_train,
+            &#39;y_train&#39;: _y_train,
+        },
+        alphas = alphas,
+        l1_ratio = l1_ratio,
+    )
+
+    return model
+
+def DecisionTree(
+    name,
+    ):
+    &#34;&#34;&#34;
+    FUNCTION:
+        Used to create a decision tree regressor
+
+    PARAMS:
+        name: str
+            A name/alias given to the model by the user
+    
+    RETURNS:
+        model: MachineLearningModel
+            Object with typical machine learning methods like train, predict etc.
+    &#34;&#34;&#34;
+    global _X_train, _y_train
+
+    model = models.sklearnDecisionTree(
+        params={
+            &#39;name&#39;: name,
+            &#39;X_train&#39;: _X_train,
+            &#39;y_train&#39;: _y_train,
+        },
+    )
+
+    return model
+
+def RandomForest(
+    name,
+    ):
+    &#34;&#34;&#34;
+    FUNCTION:
+        Used to create a random forest (decision) tree regressor
+
+    PARAMS:
+        name: str
+            A name/alias given to the model by the user
+    
+    RETURNS:
+        model: MachineLearningModel
+            Object with typical machine learning methods like train, predict etc.
+    &#34;&#34;&#34;
+    global _X_train, _y_train
+
+    model = models.sklearnRandomForest(
+        params={
+            &#39;name&#39;: name,
+            &#39;X_train&#39;: _X_train,
+            &#39;y_train&#39;: _y_train,
+        },
+    )
+
+    return model
+
+def BaggingRegressor(
+    name,
+    ):
+    &#34;&#34;&#34;
+    FUNCTION:
+        Used to create a bagging regressor model, which aggregates base regressors
+        a achieve a final prediction
+
+    PARAMS:
+        name: str
+            A name/alias given to the model by the user
+    
+    RETURNS:
+        model: MachineLearningModel
+            Object with typical machine learning methods like train, predict etc.
+    &#34;&#34;&#34;
+    global _X_train, _y_train
+
+    model = models.sklearnBagging(
+        params={
+            &#39;name&#39;: name,
+            &#39;X_train&#39;: _X_train,
+            &#39;y_train&#39;: _y_train,
+        },
+    )
+
+    return model
+
+def AdaBoostRegressor(
+    name,
+    ):
+    &#34;&#34;&#34;
+    FUNCTION:
+        Used to create an AdaBoost regressor, which fits additional regressor
+        copies with different weights according to previous predictions
+
+    PARAMS:
+        name: str
+            A name/alias given to the model by the user
+    
+    RETURNS:
+        model: MachineLearningModel
+            Object with typical machine learning methods like train, predict etc.
+    &#34;&#34;&#34;
+    global _X_train, _y_train
+
+    model = models.sklearnAdaBoost(
+        params={
+            &#39;name&#39;: name,
+            &#39;X_train&#39;: _X_train,
+            &#39;y_train&#39;: _y_train,
+        },
+    )
+
+    return model
+
+def SupportVectorMachine(
+    name,
+    ):
+    &#34;&#34;&#34;
+    FUNCTION:
+        Used to create a Support Vector Machine regressor
+
+    PARAMS:
+        name: str
+            A name/alias given to the model by the user
+    
+    RETURNS:
+        model: MachineLearningModel
+            Object with typical machine learning methods like train, predict etc.
+    &#34;&#34;&#34;
+    global _X_train, _y_train
+
+    model = models.sklearnSVM(
+        params={
+            &#39;name&#39;: name,
+            &#39;X_train&#39;: _X_train,
+            &#39;y_train&#39;: _y_train,
+        },
+    )
+
+    return model
+
+def Ensemble(name, modelList):
+    &#34;&#34;&#34;
+    FUNCTION:
+        Used to create an Ensemble model, combining the prediction
+        of n&gt;1 machine learning methods using a linear regressor
+    
+    PARAMS:
+        name: str
+            A name/alias given to the model by the user
+        modelList: list of MachineLearningModel objects
+            A list of machine learning models used to construct the Ensemble model
+    
+    RETURNS:
+        model: EnsembleModel
+            Ensemble model object which behaves the same as any other MachineLearningModel
+    &#34;&#34;&#34;
+    global _X_train, _y_train
+
+    model = models.ensembleModel(
+        params={
+            &#39;name&#39;: name,
+            &#39;X_train&#39;: _X_train,
+            &#39;y_train&#39;: _y_train,
+        },
+        models=modelList,
+    )
+
+    return model
+
+def Autoencoder_Regularized(
+        name,
+        l1_rate=10e-4,
+        encodingDim=3,
+        activation=_default_MLP_args[&#39;activation&#39;],
+        loss=_default_MLP_args[&#39;loss&#39;],
+        optimizer=_default_MLP_args[&#39;optimizer&#39;],
+        metrics=_default_MLP_args[&#39;metrics&#39;],
+        epochs=_default_MLP_args[&#39;epochs&#39;],
+        batchSize=_default_MLP_args[&#39;batchSize&#39;],
+        verbose=_default_MLP_args[&#39;verbose&#39;],
+        validationSize=_default_MLP_args[&#39;validationSize&#39;],
+        testSize=_default_MLP_args[&#39;testSize&#39;],
+        callbacks=_default_MLP_args[&#39;callbacks&#39;],
+    ):
+    &#34;&#34;&#34;
+    FUNCTION:
+        Used to create an Autoencoder model using multilayer perceptron
+        and reguarlization by Lasso regluarization
+        NB: Autoencoder models SHOULD NOT and CAN NOT
+            be used together with other models, or
+            as submodels to Ensemble models
+    
+    PARAMS:
+        name: str
+            A name/alias given to the model by the user
+        l1_rate: float
+            Level of L1 regularization
+        encodingDim: int
+            Size of autoencoder middle layer
+    
+    RETURNS:
+        model: AutoencoderModel
+            Object with typical machine learning methods like train, predict etc.
+    &#34;&#34;&#34;
+    global _X_train, _default_MLP_args
+
+    model = models.autoencoder_Regularized(
+        params = {
+            &#39;name&#39;: name,
+            &#39;X_train&#39;: _X_train,
+            &#39;args&#39;: {
+                &#39;activation&#39;: activation,
+                &#39;loss&#39;: loss,
+                &#39;optimizer&#39;: optimizer,
+                &#39;metrics&#39;: metrics,
+                &#39;epochs&#39;: epochs,
+                &#39;batchSize&#39;: batchSize,
+                &#39;verbose&#39;: verbose,
+                &#39;callbacks&#39;: callbacks,
+                &#39;enrolWindow&#39;: 0,
+                &#39;validationSize&#39;: validationSize,
+                &#39;testSize&#39;: testSize,
+            },
+        },
+        l1_rate=l1_rate,
+        encodingDim=encodingDim,
+    )
+    
+    return model
+
+def Autoencoder_Dropout(
+        name,
+        dropout=0.0,
+        encodingDim=3,
+        activation=_default_MLP_args[&#39;activation&#39;],
+        loss=_default_MLP_args[&#39;loss&#39;],
+        optimizer=_default_MLP_args[&#39;optimizer&#39;],
+        metrics=_default_MLP_args[&#39;metrics&#39;],
+        epochs=_default_MLP_args[&#39;epochs&#39;],
+        batchSize=_default_MLP_args[&#39;batchSize&#39;],
+        verbose=_default_MLP_args[&#39;verbose&#39;],
+        validationSize=_default_MLP_args[&#39;validationSize&#39;],
+        testSize=_default_MLP_args[&#39;testSize&#39;],
+        callbacks=_default_MLP_args[&#39;callbacks&#39;],
+    ):
+    &#34;&#34;&#34;
+    FUNCTION:
+        Used to create an Autoencoder model using multilayer perceptron
+        and reguarlization by Lasso regluarization
+        NB: Autoencoder models SHOULD NOT and CAN NOT
+            be used together with other models, or
+            as submodels to Ensemble models
+    
+    PARAMS:
+        name: str
+            A name/alias given to the model by the user
+        dropout: float
+            Level of dropout
+        encodingDim: int
+            Size of autoencoder middle layer
+    
+    RETURNS:
+        model: AutoencoderModel
+            Object with typical machine learning methods like train, predict etc.
+    &#34;&#34;&#34;
+    global _X_train, _default_MLP_args
+
+    model = models.autoencoder_Dropout(
+        params = {
+            &#39;name&#39;: name,
+            &#39;X_train&#39;: _X_train,
+            &#39;args&#39;: {
+                &#39;activation&#39;: activation,
+                &#39;loss&#39;: loss,
+                &#39;optimizer&#39;: optimizer,
+                &#39;metrics&#39;: metrics,
+                &#39;epochs&#39;: epochs,
+                &#39;batchSize&#39;: batchSize,
+                &#39;verbose&#39;: verbose,
+                &#39;callbacks&#39;: callbacks,
+                &#39;enrolWindow&#39;: 0,
+                &#39;validationSize&#39;: validationSize,
+                &#39;testSize&#39;: testSize,
+            },
+        },
+        dropout=dropout,
+        encodingDim=encodingDim,
+    )
+    
+    return model
+
+def reset():
+    &#34;&#34;&#34;
+    FUNCTION:
+        Resets the state of the module
+    
+    PARAMS:
+        None
+
+    RETURNS:
+        None
+    &#34;&#34;&#34;
+    global _filename, _names, _descriptions, _units, _relevantColumns, _columnDescriptions, _columnUnits, _columnNames, _df, _traintime, _testtime, _df_train, _df_test, _targetColumns, _modelList, _X_train, _y_train, _X_test, _y_test, _maxEnrolWindow, _indexColumn
+    _filename = None
+    _names = None
+    _descriptions = None
+    _units = None
+    _relevantColumns = None
+    _columnDescriptions = None
+    _columnUnits = None
+    _columnNames = None
+    _df = None
+    _traintime = None
+    _testtime = None
+    _df_train = None
+    _df_test = None
+    _targetColumns = None
+    _modelList = None
+    _X_train = None
+    _y_train = None
+    _X_test = None
+    _y_test = None
+    _maxEnrolWindow = None
+    _indexColumn = None
+
+def getCallbacks(patience_es, patience_rlr):
+    &#34;&#34;&#34;
+    FUNCTION:
+        Returns a list of callbacks with the provided properties
+    
+    PARAMS:
+        patience_es: int
+            Number of iterations to wait before EarlyStopping is performed
+        patience_rlr: int
+            Number of iterations to wait before ReduceLearningRate is performed
+    
+    RETURNS:
+        List of callbacks
+    &#34;&#34;&#34;
+    return modelFuncs.getBasicCallbacks(patience_es=patience_es, patience_rlr=patience_rlr)
+
+def setMLPCallbacks(patience_es, patience_rlr):
+    &#34;&#34;&#34;
+    FUNCTION:
+        Redefines the default MLP callbacks
+        NB: only for current state
+    
+    PARAMS:
+        patience_es: int
+            Number of iterations to wait before EarlyStopping is performed
+        patience_rlr: int
+            Number of iterations to wait before ReduceLearningRate is performed
+    
+    RETURNS:
+        None
+    &#34;&#34;&#34;
+    global _default_MLP_args
+    _default_MLP_args[&#39;callbacks&#39;] = modelFuncs.getBasicCallbacks(patience_es=patience_es, patience_rlr=patrience_rlr)
+
+def setLSTMCallbacks(patience_es, patience_rlr):
+    &#34;&#34;&#34;
+    FUNCTION:
+        Redefines the default LSTM callbacks
+        NB: only for current state
+    
+    PARAMS:
+        patience_es: int
+            Number of iterations to wait before EarlyStopping is performed
+        patience_rlr: int
+            Number of iterations to wait before ReduceLearningRate is performed
+    
+    RETURNS:
+        None
+    &#34;&#34;&#34;
+    global _default_LSTM_args
+    _default_LSTM_args[&#39;callbacks&#39;] = modelFuncs.getBasicCallbacks(patience_es=patience_es, patience_rlr=patrience_rlr)
+
+def correlationMatrix(df):
+    return analysis.correlationMatrix(df)
+
+def pca(df, numberOfComponents, relevantColumns=None, columnDescriptions=None):
+    return analysis.pca(df, numberOfComponents, relevantColumns, columnDescriptions)
+
+def pcaPlot(df, timestamps=None, plotTitle=None):
+    return analysis.pcaPlot(df, timestamps, plotTitle)
+
+def pcaDuoPlot(df_train, df_test_1, df_test_2, plotTitle=None):
+    return analysis.pcaDuoPlot(df_train, df_test_1, df_test_2, plotTitle)
+
+def pairplot(df):
+    return analysis.pairplot(df)
+
+def scatterplot(df):
+    return analysis.scatterplot(df)
+
+def correlationPlot(df, title=&#34;Correlation plot&#34;):
+    return analysis.correlationPlot(df, title)
+
+def correlationDuoPlot(df1, df2, title1=&#34;Correlation plot 1&#34;, title2=&#34;Correlation plot 2&#34;):
+    return analysis.correlationDuoPlot(df1, df2, title1, title2)
+
+def correlationDifferencePlot(df1, df2, title=&#34;Correlation difference plot&#34;):
+    return analysis.correlationDifferencePlot(df1, df2, title)
+
+def valueDistribution(df, traintime, testtime, columnDescriptions, columnUnits):
+    return analysis.valueDistribution(df, traintime, testtime, columnDescriptions, columnUnits)
+
+def printCorrelationMatrix(covmat, df, columnNames=None):
+    return prints.printCorrelationMatrix(covmat, df, columnNames)
+
+def printExplainedVarianceRatio(pca):
+    return prints.printExplainedVarianceRatio(pca)</code></pre>
+</details>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-functions">Functions</h2>
+<dl>
+<dt id="src.core.AdaBoostRegressor"><code class="name flex">
+<span>def <span class="ident">AdaBoostRegressor</span></span>(<span>name)</span>
+</code></dt>
+<dd>
+<div class="desc"><h2 id="function">Function</h2>
+<p>Used to create an AdaBoost regressor, which fits additional regressor
+copies with different weights according to previous predictions</p>
+<h2 id="params">Params</h2>
+<p>name: str
+A name/alias given to the model by the user</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>model</code></dt>
+<dd>MachineLearningModel
+Object with typical machine learning methods like train, predict etc.</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def AdaBoostRegressor(
+    name,
+    ):
+    &#34;&#34;&#34;
+    FUNCTION:
+        Used to create an AdaBoost regressor, which fits additional regressor
+        copies with different weights according to previous predictions
+
+    PARAMS:
+        name: str
+            A name/alias given to the model by the user
+    
+    RETURNS:
+        model: MachineLearningModel
+            Object with typical machine learning methods like train, predict etc.
+    &#34;&#34;&#34;
+    global _X_train, _y_train
+
+    model = models.sklearnAdaBoost(
+        params={
+            &#39;name&#39;: name,
+            &#39;X_train&#39;: _X_train,
+            &#39;y_train&#39;: _y_train,
+        },
+    )
+
+    return model</code></pre>
+</details>
+</dd>
+<dt id="src.core.Autoencoder_Dropout"><code class="name flex">
+<span>def <span class="ident">Autoencoder_Dropout</span></span>(<span>name, dropout=0.0, encodingDim=3, activation='relu', loss='mean_absolute_error', optimizer='adam', metrics=['mean_absolute_error'], epochs=500, batchSize=256, verbose=1, validationSize=0.2, testSize=0.2, callbacks=[&lt;keras.callbacks.callbacks.EarlyStopping object&gt;, &lt;keras.callbacks.callbacks.ReduceLROnPlateau object&gt;])</span>
+</code></dt>
+<dd>
+<div class="desc"><h2 id="function">Function</h2>
+<p>Used to create an Autoencoder model using multilayer perceptron
+and reguarlization by Lasso regluarization
+NB: Autoencoder models SHOULD NOT and CAN NOT
+be used together with other models, or
+as submodels to Ensemble models</p>
+<h2 id="params">Params</h2>
+<p>name: str
+A name/alias given to the model by the user
+dropout: float
+Level of dropout
+encodingDim: int
+Size of autoencoder middle layer</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>model</code></dt>
+<dd>AutoencoderModel
+Object with typical machine learning methods like train, predict etc.</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def Autoencoder_Dropout(
+        name,
+        dropout=0.0,
+        encodingDim=3,
+        activation=_default_MLP_args[&#39;activation&#39;],
+        loss=_default_MLP_args[&#39;loss&#39;],
+        optimizer=_default_MLP_args[&#39;optimizer&#39;],
+        metrics=_default_MLP_args[&#39;metrics&#39;],
+        epochs=_default_MLP_args[&#39;epochs&#39;],
+        batchSize=_default_MLP_args[&#39;batchSize&#39;],
+        verbose=_default_MLP_args[&#39;verbose&#39;],
+        validationSize=_default_MLP_args[&#39;validationSize&#39;],
+        testSize=_default_MLP_args[&#39;testSize&#39;],
+        callbacks=_default_MLP_args[&#39;callbacks&#39;],
+    ):
+    &#34;&#34;&#34;
+    FUNCTION:
+        Used to create an Autoencoder model using multilayer perceptron
+        and reguarlization by Lasso regluarization
+        NB: Autoencoder models SHOULD NOT and CAN NOT
+            be used together with other models, or
+            as submodels to Ensemble models
+    
+    PARAMS:
+        name: str
+            A name/alias given to the model by the user
+        dropout: float
+            Level of dropout
+        encodingDim: int
+            Size of autoencoder middle layer
+    
+    RETURNS:
+        model: AutoencoderModel
+            Object with typical machine learning methods like train, predict etc.
+    &#34;&#34;&#34;
+    global _X_train, _default_MLP_args
+
+    model = models.autoencoder_Dropout(
+        params = {
+            &#39;name&#39;: name,
+            &#39;X_train&#39;: _X_train,
+            &#39;args&#39;: {
+                &#39;activation&#39;: activation,
+                &#39;loss&#39;: loss,
+                &#39;optimizer&#39;: optimizer,
+                &#39;metrics&#39;: metrics,
+                &#39;epochs&#39;: epochs,
+                &#39;batchSize&#39;: batchSize,
+                &#39;verbose&#39;: verbose,
+                &#39;callbacks&#39;: callbacks,
+                &#39;enrolWindow&#39;: 0,
+                &#39;validationSize&#39;: validationSize,
+                &#39;testSize&#39;: testSize,
+            },
+        },
+        dropout=dropout,
+        encodingDim=encodingDim,
+    )
+    
+    return model</code></pre>
+</details>
+</dd>
+<dt id="src.core.Autoencoder_Regularized"><code class="name flex">
+<span>def <span class="ident">Autoencoder_Regularized</span></span>(<span>name, l1_rate=0.001, encodingDim=3, activation='relu', loss='mean_absolute_error', optimizer='adam', metrics=['mean_absolute_error'], epochs=500, batchSize=256, verbose=1, validationSize=0.2, testSize=0.2, callbacks=[&lt;keras.callbacks.callbacks.EarlyStopping object&gt;, &lt;keras.callbacks.callbacks.ReduceLROnPlateau object&gt;])</span>
+</code></dt>
+<dd>
+<div class="desc"><h2 id="function">Function</h2>
+<p>Used to create an Autoencoder model using multilayer perceptron
+and reguarlization by Lasso regluarization
+NB: Autoencoder models SHOULD NOT and CAN NOT
+be used together with other models, or
+as submodels to Ensemble models</p>
+<h2 id="params">Params</h2>
+<p>name: str
+A name/alias given to the model by the user
+l1_rate: float
+Level of L1 regularization
+encodingDim: int
+Size of autoencoder middle layer</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>model</code></dt>
+<dd>AutoencoderModel
+Object with typical machine learning methods like train, predict etc.</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def Autoencoder_Regularized(
+        name,
+        l1_rate=10e-4,
+        encodingDim=3,
+        activation=_default_MLP_args[&#39;activation&#39;],
+        loss=_default_MLP_args[&#39;loss&#39;],
+        optimizer=_default_MLP_args[&#39;optimizer&#39;],
+        metrics=_default_MLP_args[&#39;metrics&#39;],
+        epochs=_default_MLP_args[&#39;epochs&#39;],
+        batchSize=_default_MLP_args[&#39;batchSize&#39;],
+        verbose=_default_MLP_args[&#39;verbose&#39;],
+        validationSize=_default_MLP_args[&#39;validationSize&#39;],
+        testSize=_default_MLP_args[&#39;testSize&#39;],
+        callbacks=_default_MLP_args[&#39;callbacks&#39;],
+    ):
+    &#34;&#34;&#34;
+    FUNCTION:
+        Used to create an Autoencoder model using multilayer perceptron
+        and reguarlization by Lasso regluarization
+        NB: Autoencoder models SHOULD NOT and CAN NOT
+            be used together with other models, or
+            as submodels to Ensemble models
+    
+    PARAMS:
+        name: str
+            A name/alias given to the model by the user
+        l1_rate: float
+            Level of L1 regularization
+        encodingDim: int
+            Size of autoencoder middle layer
+    
+    RETURNS:
+        model: AutoencoderModel
+            Object with typical machine learning methods like train, predict etc.
+    &#34;&#34;&#34;
+    global _X_train, _default_MLP_args
+
+    model = models.autoencoder_Regularized(
+        params = {
+            &#39;name&#39;: name,
+            &#39;X_train&#39;: _X_train,
+            &#39;args&#39;: {
+                &#39;activation&#39;: activation,
+                &#39;loss&#39;: loss,
+                &#39;optimizer&#39;: optimizer,
+                &#39;metrics&#39;: metrics,
+                &#39;epochs&#39;: epochs,
+                &#39;batchSize&#39;: batchSize,
+                &#39;verbose&#39;: verbose,
+                &#39;callbacks&#39;: callbacks,
+                &#39;enrolWindow&#39;: 0,
+                &#39;validationSize&#39;: validationSize,
+                &#39;testSize&#39;: testSize,
+            },
+        },
+        l1_rate=l1_rate,
+        encodingDim=encodingDim,
+    )
+    
+    return model</code></pre>
+</details>
+</dd>
+<dt id="src.core.BaggingRegressor"><code class="name flex">
+<span>def <span class="ident">BaggingRegressor</span></span>(<span>name)</span>
+</code></dt>
+<dd>
+<div class="desc"><h2 id="function">Function</h2>
+<p>Used to create a bagging regressor model, which aggregates base regressors
+a achieve a final prediction</p>
+<h2 id="params">Params</h2>
+<p>name: str
+A name/alias given to the model by the user</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>model</code></dt>
+<dd>MachineLearningModel
+Object with typical machine learning methods like train, predict etc.</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def BaggingRegressor(
+    name,
+    ):
+    &#34;&#34;&#34;
+    FUNCTION:
+        Used to create a bagging regressor model, which aggregates base regressors
+        a achieve a final prediction
+
+    PARAMS:
+        name: str
+            A name/alias given to the model by the user
+    
+    RETURNS:
+        model: MachineLearningModel
+            Object with typical machine learning methods like train, predict etc.
+    &#34;&#34;&#34;
+    global _X_train, _y_train
+
+    model = models.sklearnBagging(
+        params={
+            &#39;name&#39;: name,
+            &#39;X_train&#39;: _X_train,
+            &#39;y_train&#39;: _y_train,
+        },
+    )
+
+    return model</code></pre>
+</details>
+</dd>
+<dt id="src.core.DecisionTree"><code class="name flex">
+<span>def <span class="ident">DecisionTree</span></span>(<span>name)</span>
+</code></dt>
+<dd>
+<div class="desc"><h2 id="function">Function</h2>
+<p>Used to create a decision tree regressor</p>
+<h2 id="params">Params</h2>
+<p>name: str
+A name/alias given to the model by the user</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>model</code></dt>
+<dd>MachineLearningModel
+Object with typical machine learning methods like train, predict etc.</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def DecisionTree(
+    name,
+    ):
+    &#34;&#34;&#34;
+    FUNCTION:
+        Used to create a decision tree regressor
+
+    PARAMS:
+        name: str
+            A name/alias given to the model by the user
+    
+    RETURNS:
+        model: MachineLearningModel
+            Object with typical machine learning methods like train, predict etc.
+    &#34;&#34;&#34;
+    global _X_train, _y_train
+
+    model = models.sklearnDecisionTree(
+        params={
+            &#39;name&#39;: name,
+            &#39;X_train&#39;: _X_train,
+            &#39;y_train&#39;: _y_train,
+        },
+    )
+
+    return model</code></pre>
+</details>
+</dd>
+<dt id="src.core.ElasticNet"><code class="name flex">
+<span>def <span class="ident">ElasticNet</span></span>(<span>name, alphas=(0.1, 1.0, 10.0), l1_ratio=0.5)</span>
+</code></dt>
+<dd>
+<div class="desc"><h2 id="function">Function</h2>
+<p>Used to create a iterative regularization path fitting Machine Learning model</p>
+<h2 id="params">Params</h2>
+<p>name: str
+A name/alias given to the model by the user
+alphas: tuple of floats
+Set of regluarization strenght parameters to try
+l1_ratio: float
+ratio between L1 and L2 regularization</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>model</code></dt>
+<dd>MachineLearningModel
+Object with typical machine learning methods like train, predict etc.</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def ElasticNet(
+    name,
+    alphas=(0.1, 1.0, 10.0),
+    l1_ratio=0.5,
+    ):
+    &#34;&#34;&#34;
+    FUNCTION:
+        Used to create a iterative regularization path fitting Machine Learning model
+    
+    PARAMS:
+        name: str
+            A name/alias given to the model by the user
+        alphas: tuple of floats
+            Set of regluarization strenght parameters to try
+        l1_ratio: float
+            ratio between L1 and L2 regularization
+    
+    RETURNS:
+        model: MachineLearningModel
+            Object with typical machine learning methods like train, predict etc.
+    &#34;&#34;&#34;
+    global _X_train, _y_train
+
+    model = models.sklearnElasticNetCV(
+        params={
+            &#39;name&#39;: name,
+            &#39;X_train&#39;: _X_train,
+            &#39;y_train&#39;: _y_train,
+        },
+        alphas = alphas,
+        l1_ratio = l1_ratio,
+    )
+
+    return model</code></pre>
+</details>
+</dd>
+<dt id="src.core.Ensemble"><code class="name flex">
+<span>def <span class="ident">Ensemble</span></span>(<span>name, modelList)</span>
+</code></dt>
+<dd>
+<div class="desc"><h2 id="function">Function</h2>
+<p>Used to create an Ensemble model, combining the prediction
+of n&gt;1 machine learning methods using a linear regressor</p>
+<h2 id="params">Params</h2>
+<p>name: str
+A name/alias given to the model by the user
+modelList: list of MachineLearningModel objects
+A list of machine learning models used to construct the Ensemble model</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>model</code></dt>
+<dd>EnsembleModel
+Ensemble model object which behaves the same as any other MachineLearningModel</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def Ensemble(name, modelList):
+    &#34;&#34;&#34;
+    FUNCTION:
+        Used to create an Ensemble model, combining the prediction
+        of n&gt;1 machine learning methods using a linear regressor
+    
+    PARAMS:
+        name: str
+            A name/alias given to the model by the user
+        modelList: list of MachineLearningModel objects
+            A list of machine learning models used to construct the Ensemble model
+    
+    RETURNS:
+        model: EnsembleModel
+            Ensemble model object which behaves the same as any other MachineLearningModel
+    &#34;&#34;&#34;
+    global _X_train, _y_train
+
+    model = models.ensembleModel(
+        params={
+            &#39;name&#39;: name,
+            &#39;X_train&#39;: _X_train,
+            &#39;y_train&#39;: _y_train,
+        },
+        models=modelList,
+    )
+
+    return model</code></pre>
+</details>
+</dd>
+<dt id="src.core.GRU"><code class="name flex">
+<span>def <span class="ident">GRU</span></span>(<span>name, layers=[128], dropout=0.0, recurrentDropout=0.0, alpha=None, training=False, enrolWindow=12, activation='tanh', loss='mean_absolute_error', optimizer='adam', metrics=['mean_absolute_error'], epochs=500, batchSize=256, verbose=1, validationSize=0.2, testSize=0.2, callbacks=[&lt;keras.callbacks.callbacks.EarlyStopping object&gt;, &lt;keras.callbacks.callbacks.ReduceLROnPlateau object&gt;])</span>
+</code></dt>
+<dd>
+<div class="desc"><h2 id="function">Function</h2>
+<p>Used to create a Recurrent Neural Network model using
+Long-Short Term Memory neurons (LSTM). Uses
+traditional dropout as regularization method</p>
+<h2 id="params">Params</h2>
+<p>name: str
+A name/alias given to the model by the user
+layers: list of integers
+List of neuron size for each layer
+dropout: float
+Level of dropout
+recurrentDropout: float
+Level of recurrent dropout
+alpha: float
+Alpha of the leaky relu function
+training: boolean
+Whether dropout should be use at time of prediction
+enrolWindow: int
+Number of samples used to make each prediction</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>model</code></dt>
+<dd>MachineLearningModel
+Object with typical machine learning methods like train, predict etc.</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def GRU(
+    name,
+    layers=[128],
+    dropout=0.0,
+    recurrentDropout=0.0,
+    alpha=None,
+    training=False,
+    enrolWindow=_default_LSTM_args[&#39;enrolWindow&#39;],
+    activation=_default_LSTM_args[&#39;activation&#39;],
+    loss=_default_LSTM_args[&#39;loss&#39;],
+    optimizer=_default_LSTM_args[&#39;optimizer&#39;],
+    metrics=_default_LSTM_args[&#39;metrics&#39;],
+    epochs=_default_LSTM_args[&#39;epochs&#39;],
+    batchSize=_default_LSTM_args[&#39;batchSize&#39;],
+    verbose=_default_LSTM_args[&#39;verbose&#39;],
+    validationSize=_default_LSTM_args[&#39;validationSize&#39;],
+    testSize=_default_LSTM_args[&#39;testSize&#39;],
+    callbacks=_default_LSTM_args[&#39;callbacks&#39;],
+    ):
+    &#34;&#34;&#34;
+    FUNCTION:
+        Used to create a Recurrent Neural Network model using
+        Long-Short Term Memory neurons (LSTM). Uses 
+        traditional dropout as regularization method
+    
+    PARAMS:
+        name: str
+            A name/alias given to the model by the user
+        layers: list of integers
+            List of neuron size for each layer
+        dropout: float
+            Level of dropout
+        recurrentDropout: float
+            Level of recurrent dropout
+        alpha: float
+            Alpha of the leaky relu function
+        training: boolean
+            Whether dropout should be use at time of prediction
+        enrolWindow: int
+            Number of samples used to make each prediction
+    
+    RETURNS:
+        model: MachineLearningModel
+            Object with typical machine learning methods like train, predict etc.
+    &#34;&#34;&#34;
+    global _X_train, _y_train, _default_LSTM_args
+
+    model = models.kerasGRU(
+        params = {
+            &#39;name&#39;: name,
+            &#39;X_train&#39;: _X_train,
+            &#39;y_train&#39;: _y_train,
+            &#39;args&#39;: {
+                &#39;activation&#39;: activation,
+                &#39;loss&#39;: loss,
+                &#39;optimizer&#39;: optimizer,
+                &#39;metrics&#39;: metrics,
+                &#39;epochs&#39;: epochs,
+                &#39;batchSize&#39;: batchSize,
+                &#39;verbose&#39;: verbose,
+                &#39;callbacks&#39;: callbacks,
+                &#39;enrolWindow&#39;: enrolWindow,
+                &#39;validationSize&#39;: validationSize,
+                &#39;testSize&#39;: testSize,
+            },
+        },
+        layers=layers,
+        dropout=dropout,
+        recurrentDropout=recurrentDropout,
+        alpha=alpha,
+        training=training,
+    )
+    
+    return model</code></pre>
+</details>
+</dd>
+<dt id="src.core.LSTM"><code class="name flex">
+<span>def <span class="ident">LSTM</span></span>(<span>name, layers=[128], dropout=0.0, recurrentDropout=0.0, alpha=None, training=False, enrolWindow=12, activation='tanh', loss='mean_absolute_error', optimizer='adam', metrics=['mean_absolute_error'], epochs=500, batchSize=256, verbose=1, validationSize=0.2, testSize=0.2, callbacks=[&lt;keras.callbacks.callbacks.EarlyStopping object&gt;, &lt;keras.callbacks.callbacks.ReduceLROnPlateau object&gt;])</span>
+</code></dt>
+<dd>
+<div class="desc"><h2 id="function">Function</h2>
+<p>Used to create a Recurrent Neural Network model using
+Long-Short Term Memory neurons (LSTM). Uses
+traditional dropout as regularization method</p>
+<h2 id="params">Params</h2>
+<p>name: str
+A name/alias given to the model by the user
+layers: list of integers
+List of neuron size for each layer
+dropout: float
+Level of dropout
+recurrentDropout: float
+Level of recurrent dropout
+alpha: float
+Alpha of the leaky relu function
+training: boolean
+Whether dropout should be use at time of prediction
+enrolWindow: int
+Number of samples used to make each prediction</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>model</code></dt>
+<dd>MachineLearningModel
+Object with typical machine learning methods like train, predict etc.</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def LSTM(
+    name,
+    layers=[128],
+    dropout=0.0,
+    recurrentDropout=0.0,
+    alpha=None,
+    training=False,
+    enrolWindow=_default_LSTM_args[&#39;enrolWindow&#39;],
+    activation=_default_LSTM_args[&#39;activation&#39;],
+    loss=_default_LSTM_args[&#39;loss&#39;],
+    optimizer=_default_LSTM_args[&#39;optimizer&#39;],
+    metrics=_default_LSTM_args[&#39;metrics&#39;],
+    epochs=_default_LSTM_args[&#39;epochs&#39;],
+    batchSize=_default_LSTM_args[&#39;batchSize&#39;],
+    verbose=_default_LSTM_args[&#39;verbose&#39;],
+    validationSize=_default_LSTM_args[&#39;validationSize&#39;],
+    testSize=_default_LSTM_args[&#39;testSize&#39;],
+    callbacks=_default_LSTM_args[&#39;callbacks&#39;],
+    ):
+    &#34;&#34;&#34;
+    FUNCTION:
+        Used to create a Recurrent Neural Network model using
+        Long-Short Term Memory neurons (LSTM). Uses 
+        traditional dropout as regularization method
+    
+    PARAMS:
+        name: str
+            A name/alias given to the model by the user
+        layers: list of integers
+            List of neuron size for each layer
+        dropout: float
+            Level of dropout
+        recurrentDropout: float
+            Level of recurrent dropout
+        alpha: float
+            Alpha of the leaky relu function
+        training: boolean
+            Whether dropout should be use at time of prediction
+        enrolWindow: int
+            Number of samples used to make each prediction
+    
+    RETURNS:
+        model: MachineLearningModel
+            Object with typical machine learning methods like train, predict etc.
+    &#34;&#34;&#34;
+    global _X_train, _y_train, _default_LSTM_args
+
+    model = models.kerasLSTM(
+        params = {
+            &#39;name&#39;: name,
+            &#39;X_train&#39;: _X_train,
+            &#39;y_train&#39;: _y_train,
+            &#39;args&#39;: {
+                &#39;activation&#39;: activation,
+                &#39;loss&#39;: loss,
+                &#39;optimizer&#39;: optimizer,
+                &#39;metrics&#39;: metrics,
+                &#39;epochs&#39;: epochs,
+                &#39;batchSize&#39;: batchSize,
+                &#39;verbose&#39;: verbose,
+                &#39;callbacks&#39;: callbacks,
+                &#39;enrolWindow&#39;: enrolWindow,
+                &#39;validationSize&#39;: validationSize,
+                &#39;testSize&#39;: testSize,
+            },
+        },
+        layers=layers,
+        dropout=dropout,
+        recurrentDropout=recurrentDropout,
+        alpha=alpha,
+        training=training,
+    )
+    
+    return model</code></pre>
+</details>
+</dd>
+<dt id="src.core.Linear"><code class="name flex">
+<span>def <span class="ident">Linear</span></span>(<span>name)</span>
+</code></dt>
+<dd>
+<div class="desc"><h2 id="function">Function</h2>
+<p>Used to create a Linear Machine Learning model</p>
+<h2 id="params">Params</h2>
+<p>name: str
+A name/alias given to the model by the user</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>model</code></dt>
+<dd>MachineLearningModel
+Object with typical machine learning methods like train, predict etc.</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def Linear(
+    name,
+    ):
+    &#34;&#34;&#34;
+    FUNCTION:
+        Used to create a Linear Machine Learning model
+    
+    PARAMS:
+        name: str
+            A name/alias given to the model by the user
+    
+    RETURNS:
+        model: MachineLearningModel
+            Object with typical machine learning methods like train, predict etc.
+    &#34;&#34;&#34;
+    global _X_train, _y_train
+
+    model = models.sklearnLinear(
+        params={
+            &#39;name&#39;: name,
+            &#39;X_train&#39;: _X_train,
+            &#39;y_train&#39;: _y_train,
+        },
+    )
+
+    return model</code></pre>
+</details>
+</dd>
+<dt id="src.core.Linear_Regularized"><code class="name flex">
+<span>def <span class="ident">Linear_Regularized</span></span>(<span>name, alphas=(0.1, 1.0, 10.0), folds=10)</span>
+</code></dt>
+<dd>
+<div class="desc"><h2 id="function">Function</h2>
+<p>Used to create a Linear Machine Learning model with built-in
+regularization and cross validation</p>
+<h2 id="params">Params</h2>
+<p>name: str
+A name/alias given to the model by the user
+alphas: tuple of floats
+Set of regluarization strenght parameters to try
+folds: int
+Number of cross validation folds</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>model</code></dt>
+<dd>MachineLearningModel
+Object with typical machine learning methods like train, predict etc.</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def Linear_Regularized(
+    name,
+    alphas=(0.1, 1.0, 10.0),
+    folds=10,
+    ):
+    &#34;&#34;&#34;
+    FUNCTION:
+        Used to create a Linear Machine Learning model with built-in
+        regularization and cross validation
+    
+    PARAMS:
+        name: str
+            A name/alias given to the model by the user
+        alphas: tuple of floats
+            Set of regluarization strenght parameters to try
+        folds: int
+            Number of cross validation folds
+    
+    RETURNS:
+        model: MachineLearningModel
+            Object with typical machine learning methods like train, predict etc.
+    &#34;&#34;&#34;
+    global _X_train, _y_train
+
+    model = models.sklearnRidgeCV(
+        params={
+            &#39;name&#39;: name,
+            &#39;X_train&#39;: _X_train,
+            &#39;y_train&#39;: _y_train,
+        },
+        alphas = alphas,
+        folds = folds,
+    )
+
+    return model</code></pre>
+</details>
+</dd>
+<dt id="src.core.MLP"><code class="name flex">
+<span>def <span class="ident">MLP</span></span>(<span>name, layers=[128], dropout=None, l1_rate=0.0, l2_rate=0.0, activation='relu', loss='mean_absolute_error', optimizer='adam', metrics=['mean_absolute_error'], epochs=500, batchSize=256, verbose=1, validationSize=0.2, testSize=0.2, callbacks=[&lt;keras.callbacks.callbacks.EarlyStopping object&gt;, &lt;keras.callbacks.callbacks.ReduceLROnPlateau object&gt;])</span>
+</code></dt>
+<dd>
+<div class="desc"><h2 id="function">Function</h2>
+<p>Used to create a Neural Network model using multilayer perceptron</p>
+<h2 id="params">Params</h2>
+<p>name: str
+A name/alias given to the model by the user
+layers: list of integers
+List of neuron size for each layer
+dropout: float
+Level of dropout regularization
+l1_rate: float
+Level of l1 (Lasso) regularization
+l2_rate: float
+Level of l2 (Ridge) regularization</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>model</code></dt>
+<dd>MachineLearningModel
+Object with typical machine learning methods like train, predict etc.</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def MLP(
+        name,
+        layers=[128],
+        dropout=None,
+        l1_rate=0.0,
+        l2_rate=0.0,
+        activation=_default_MLP_args[&#39;activation&#39;],
+        loss=_default_MLP_args[&#39;loss&#39;],
+        optimizer=_default_MLP_args[&#39;optimizer&#39;],
+        metrics=_default_MLP_args[&#39;metrics&#39;],
+        epochs=_default_MLP_args[&#39;epochs&#39;],
+        batchSize=_default_MLP_args[&#39;batchSize&#39;],
+        verbose=_default_MLP_args[&#39;verbose&#39;],
+        validationSize=_default_MLP_args[&#39;validationSize&#39;],
+        testSize=_default_MLP_args[&#39;testSize&#39;],
+        callbacks=_default_MLP_args[&#39;callbacks&#39;],
+    ):
+    &#34;&#34;&#34;
+    FUNCTION:
+        Used to create a Neural Network model using multilayer perceptron
+    
+    PARAMS:
+        name: str
+            A name/alias given to the model by the user
+        layers: list of integers
+            List of neuron size for each layer
+        dropout: float
+            Level of dropout regularization
+        l1_rate: float
+            Level of l1 (Lasso) regularization
+        l2_rate: float
+            Level of l2 (Ridge) regularization
+
+    RETURNS:
+        model: MachineLearningModel
+            Object with typical machine learning methods like train, predict etc.
+    &#34;&#34;&#34;
+    global _X_train, _y_train, _default_MLP_args
+
+    mlpLayers = []
+    for layerSize in layers:
+        mlpLayers.append([layerSize, activation])
+
+    model = models.kerasMLP(
+        params = {
+            &#39;name&#39;: name,
+            &#39;X_train&#39;: _X_train,
+            &#39;y_train&#39;: _y_train,
+            &#39;args&#39;: {
+                &#39;activation&#39;: activation,
+                &#39;loss&#39;: loss,
+                &#39;optimizer&#39;: optimizer,
+                &#39;metrics&#39;: metrics,
+                &#39;epochs&#39;: epochs,
+                &#39;batchSize&#39;: batchSize,
+                &#39;verbose&#39;: verbose,
+                &#39;callbacks&#39;: callbacks,
+                &#39;enrolWindow&#39;: 0,
+                &#39;validationSize&#39;: validationSize,
+                &#39;testSize&#39;: testSize,
+            },
+        },
+        structure = mlpLayers,
+        dropout = dropout,
+        l1_rate = l1_rate,
+        l2_rate = l2_rate,
+    )
+
+    return model</code></pre>
+</details>
+</dd>
+<dt id="src.core.RandomForest"><code class="name flex">
+<span>def <span class="ident">RandomForest</span></span>(<span>name)</span>
+</code></dt>
+<dd>
+<div class="desc"><h2 id="function">Function</h2>
+<p>Used to create a random forest (decision) tree regressor</p>
+<h2 id="params">Params</h2>
+<p>name: str
+A name/alias given to the model by the user</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>model</code></dt>
+<dd>MachineLearningModel
+Object with typical machine learning methods like train, predict etc.</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def RandomForest(
+    name,
+    ):
+    &#34;&#34;&#34;
+    FUNCTION:
+        Used to create a random forest (decision) tree regressor
+
+    PARAMS:
+        name: str
+            A name/alias given to the model by the user
+    
+    RETURNS:
+        model: MachineLearningModel
+            Object with typical machine learning methods like train, predict etc.
+    &#34;&#34;&#34;
+    global _X_train, _y_train
+
+    model = models.sklearnRandomForest(
+        params={
+            &#39;name&#39;: name,
+            &#39;X_train&#39;: _X_train,
+            &#39;y_train&#39;: _y_train,
+        },
+    )
+
+    return model</code></pre>
+</details>
+</dd>
+<dt id="src.core.SupportVectorMachine"><code class="name flex">
+<span>def <span class="ident">SupportVectorMachine</span></span>(<span>name)</span>
+</code></dt>
+<dd>
+<div class="desc"><h2 id="function">Function</h2>
+<p>Used to create a Support Vector Machine regressor</p>
+<h2 id="params">Params</h2>
+<p>name: str
+A name/alias given to the model by the user</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>model</code></dt>
+<dd>MachineLearningModel
+Object with typical machine learning methods like train, predict etc.</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def SupportVectorMachine(
+    name,
+    ):
+    &#34;&#34;&#34;
+    FUNCTION:
+        Used to create a Support Vector Machine regressor
+
+    PARAMS:
+        name: str
+            A name/alias given to the model by the user
+    
+    RETURNS:
+        model: MachineLearningModel
+            Object with typical machine learning methods like train, predict etc.
+    &#34;&#34;&#34;
+    global _X_train, _y_train
+
+    model = models.sklearnSVM(
+        params={
+            &#39;name&#39;: name,
+            &#39;X_train&#39;: _X_train,
+            &#39;y_train&#39;: _y_train,
+        },
+    )
+
+    return model</code></pre>
+</details>
+</dd>
+<dt id="src.core.correlationDifferencePlot"><code class="name flex">
+<span>def <span class="ident">correlationDifferencePlot</span></span>(<span>df1, df2, title='Correlation difference plot')</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def correlationDifferencePlot(df1, df2, title=&#34;Correlation difference plot&#34;):
+    return analysis.correlationDifferencePlot(df1, df2, title)</code></pre>
+</details>
+</dd>
+<dt id="src.core.correlationDuoPlot"><code class="name flex">
+<span>def <span class="ident">correlationDuoPlot</span></span>(<span>df1, df2, title1='Correlation plot 1', title2='Correlation plot 2')</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def correlationDuoPlot(df1, df2, title1=&#34;Correlation plot 1&#34;, title2=&#34;Correlation plot 2&#34;):
+    return analysis.correlationDuoPlot(df1, df2, title1, title2)</code></pre>
+</details>
+</dd>
+<dt id="src.core.correlationMatrix"><code class="name flex">
+<span>def <span class="ident">correlationMatrix</span></span>(<span>df)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def correlationMatrix(df):
+    return analysis.correlationMatrix(df)</code></pre>
+</details>
+</dd>
+<dt id="src.core.correlationPlot"><code class="name flex">
+<span>def <span class="ident">correlationPlot</span></span>(<span>df, title='Correlation plot')</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def correlationPlot(df, title=&#34;Correlation plot&#34;):
+    return analysis.correlationPlot(df, title)</code></pre>
+</details>
+</dd>
+<dt id="src.core.getCallbacks"><code class="name flex">
+<span>def <span class="ident">getCallbacks</span></span>(<span>patience_es, patience_rlr)</span>
+</code></dt>
+<dd>
+<div class="desc"><h2 id="function">Function</h2>
+<p>Returns a list of callbacks with the provided properties</p>
+<h2 id="params">Params</h2>
+<p>patience_es: int
+Number of iterations to wait before EarlyStopping is performed
+patience_rlr: int
+Number of iterations to wait before ReduceLearningRate is performed</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>List</code> of <code>callbacks</code></dt>
+<dd>&nbsp;</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def getCallbacks(patience_es, patience_rlr):
+    &#34;&#34;&#34;
+    FUNCTION:
+        Returns a list of callbacks with the provided properties
+    
+    PARAMS:
+        patience_es: int
+            Number of iterations to wait before EarlyStopping is performed
+        patience_rlr: int
+            Number of iterations to wait before ReduceLearningRate is performed
+    
+    RETURNS:
+        List of callbacks
+    &#34;&#34;&#34;
+    return modelFuncs.getBasicCallbacks(patience_es=patience_es, patience_rlr=patience_rlr)</code></pre>
+</details>
+</dd>
+<dt id="src.core.getFeatureTargetSplit"><code class="name flex">
+<span>def <span class="ident">getFeatureTargetSplit</span></span>(<span>targetColumns)</span>
+</code></dt>
+<dd>
+<div class="desc"><h2 id="function">Function</h2>
+<p>Used to split feature and target columns into separate arrays</p>
+<h2 id="params">Params</h2>
+<p>targetColumns: List of strings
+names of columns present in the dataset used as output(target) values</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>List[X_train, y_train, X_test, y_test]</code></dt>
+<dd>[Numpy array, Numpy array, Numpy array, Numpy array]
+Arrays of feature and target values for training and testing</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def getFeatureTargetSplit(targetColumns):
+    &#34;&#34;&#34;
+    FUNCTION:
+        Used to split feature and target columns into separate arrays
+    
+    PARAMS:
+        targetColumns: List of strings
+            names of columns present in the dataset used as output(target) values
+    
+    RETURNS:
+        List[X_train, y_train, X_test, y_test]: [Numpy array, Numpy array, Numpy array, Numpy array]
+            Arrays of feature and target values for training and testing
+    &#34;&#34;&#34;
+    global _targetColumns, _X_train, _y_train, _X_test, _y_test
+
+    _targetColumns = targetColumns
+
+    X_train, y_train, X_test, y_test =  utilities.getFeatureTargetSplit(
+        _df_train,
+        _df_test,
+        targetColumns,
+    )
+
+    _X_train = X_train
+    _y_train = y_train
+    _X_test = X_test
+    _y_test = y_test
+
+    return [X_train, y_train, X_test, y_test]</code></pre>
+</details>
+</dd>
+<dt id="src.core.getTestTrainSplit"><code class="name flex">
+<span>def <span class="ident">getTestTrainSplit</span></span>(<span>traintime, testtime)</span>
+</code></dt>
+<dd>
+<div class="desc"><h2 id="function">Function</h2>
+<p>Used to split training and testing rows into separate data frames</p>
+<h2 id="params">Params</h2>
+<p>traintime: List of list of string pairs
+start and end times indicating periods used for training
+testtime: List of string pair
+start and end time indicating period used for testing
+preferably the entire period of the dataset</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>List[df_train, df_test]</code></dt>
+<dd>[Pandas dataframe, Pandas dataframe]
+Dataframes of training and testing dataset rows</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def getTestTrainSplit(traintime, testtime):
+    &#34;&#34;&#34;
+    FUNCTION:
+        Used to split training and testing rows into separate data frames
+    
+    PARAMS:
+        traintime: List of list of string pairs
+            start and end times indicating periods used for training
+        testtime: List of string pair
+            start and end time indicating period used for testing
+            preferably the entire period of the dataset
+    
+    RETURNS:
+        List[df_train, df_test]: [Pandas dataframe, Pandas dataframe]
+            Dataframes of training and testing dataset rows
+    &#34;&#34;&#34;
+    global _traintime, _testtime, _df, _df_train, _df_test
+
+    _traintime = traintime
+    _testtime = testtime
+
+    df_train, df_test = utilities.getTestTrainSplit(
+        _df,
+        traintime,
+        testtime,
+    )
+
+    _df_train = df_train
+    _df_test = df_test
+
+    return [df_train, df_test]</code></pre>
+</details>
+</dd>
+<dt id="src.core.initDataframe"><code class="name flex">
+<span>def <span class="ident">initDataframe</span></span>(<span>filename, columns, irrelevantColumns)</span>
+</code></dt>
+<dd>
+<div class="desc"><h2 id="function">Function</h2>
+<p>Used to initiate a pandas dataframe from file and provided metadata</p>
+<h2 id="params">Params</h2>
+<p>filename: str
+location of dataset file on disk in .csv format
+columns: List of list of column data
+Provided metadata of column names, column descriptions and column units
+irrelevantColumns: List of strings
+columnNames excluded from the dataset</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>df</code></dt>
+<dd>Pandas dataframe
+Dataframe generated from file and metadata</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def initDataframe(filename, columns, irrelevantColumns):
+    &#34;&#34;&#34;
+    FUNCTION:
+        Used to initiate a pandas dataframe from file and provided metadata
+    
+    PARAMS:
+        filename: str
+            location of dataset file on disk in .csv format
+        columns: List of list of column data
+            Provided metadata of column names, column descriptions and column units
+        irrelevantColumns: List of strings
+            columnNames excluded from the dataset
+    
+    RETURNS:
+        df: Pandas dataframe
+            Dataframe generated from file and metadata
+    &#34;&#34;&#34;
+    global _filename, _relevantColumns, _columnDescriptions, _columnUnits, _columnNames, _df
+
+    columnNames = list(map(lambda el: el[0], columns))
+    descriptions = list(map(lambda el: el[1], columns))
+    units = list(map(lambda el: el[2], columns))
+
+    relevantColumns = list(filter(lambda col: col not in irrelevantColumns, map(lambda el: el[0], columns)))
+    columnUnits = dict(zip(columnNames, units))
+    columnDescriptions = dict(zip(columnNames, descriptions))
+
+    _filename = filename
+    _relevantColumns = relevantColumns
+    _columnDescriptions = columnDescriptions
+    _columnUnits = columnUnits
+    _columnNames = columnNames
+    
+    df = utilities.initDataframe(
+        filename,
+        relevantColumns,
+        columnDescriptions,
+    )
+
+    _df = df
+
+    return df</code></pre>
+</details>
+</dd>
+<dt id="src.core.initModels"><code class="name flex">
+<span>def <span class="ident">initModels</span></span>(<span>modelList)</span>
+</code></dt>
+<dd>
+<div class="desc"><h2 id="function">Function</h2>
+<p>Used to initiate the provided models by calculating required model parameters</p>
+<h2 id="params">Params</h2>
+<p>modelList: list of MachineLearningModel/EnsembleModel objects
+The models used to make predictions</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>None</code></dt>
+<dd>&nbsp;</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def initModels(modelList):
+    &#34;&#34;&#34;
+    FUNCTION:
+        Used to initiate the provided models by calculating required model parameters
+    
+    PARAMS:
+        modelList: list of MachineLearningModel/EnsembleModel objects
+            The models used to make predictions
+    
+    RETURNS:
+        None
+    &#34;&#34;&#34;
+    global _maxEnrolWindow, _indexColumn, _modelList, _df_test
+
+    _maxEnrolWindow = utilities.findMaxEnrolWindow(modelList)
+    _indexColumn = _df_test.iloc[_maxEnrolWindow:].index
+    _modelList = modelList</code></pre>
+</details>
+</dd>
+<dt id="src.core.pairplot"><code class="name flex">
+<span>def <span class="ident">pairplot</span></span>(<span>df)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def pairplot(df):
+    return analysis.pairplot(df)</code></pre>
+</details>
+</dd>
+<dt id="src.core.pca"><code class="name flex">
+<span>def <span class="ident">pca</span></span>(<span>df, numberOfComponents, relevantColumns=None, columnDescriptions=None)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def pca(df, numberOfComponents, relevantColumns=None, columnDescriptions=None):
+    return analysis.pca(df, numberOfComponents, relevantColumns, columnDescriptions)</code></pre>
+</details>
+</dd>
+<dt id="src.core.pcaDuoPlot"><code class="name flex">
+<span>def <span class="ident">pcaDuoPlot</span></span>(<span>df_train, df_test_1, df_test_2, plotTitle=None)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def pcaDuoPlot(df_train, df_test_1, df_test_2, plotTitle=None):
+    return analysis.pcaDuoPlot(df_train, df_test_1, df_test_2, plotTitle)</code></pre>
+</details>
+</dd>
+<dt id="src.core.pcaPlot"><code class="name flex">
+<span>def <span class="ident">pcaPlot</span></span>(<span>df, timestamps=None, plotTitle=None)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def pcaPlot(df, timestamps=None, plotTitle=None):
+    return analysis.pcaPlot(df, timestamps, plotTitle)</code></pre>
+</details>
+</dd>
+<dt id="src.core.predictWithAutoencoderModels"><code class="name flex">
+<span>def <span class="ident">predictWithAutoencoderModels</span></span>(<span>)</span>
+</code></dt>
+<dd>
+<div class="desc"><h2 id="function">Function</h2>
+<p>Used to make predictions in the case where all
+models in self.modelList are of type AutoencoderModel</p>
+<h2 id="params">Params</h2>
+<p>None</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>None</code></dt>
+<dd>&nbsp;</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def predictWithAutoencoderModels():
+    &#34;&#34;&#34;
+    FUNCTION:
+        Used to make predictions in the case where all
+        models in self.modelList are of type AutoencoderModel
+    
+    PARAMS:
+        None
+    
+    RETURNS:
+        None
+    &#34;&#34;&#34;
+    global _modelList, _df_test, _X_test
+
+    utilities.predictWithAutoencoderModels(
+        _modelList,
+        _df_test,
+        _X_test
+    )</code></pre>
+</details>
+</dd>
+<dt id="src.core.predictWithModels"><code class="name flex">
+<span>def <span class="ident">predictWithModels</span></span>(<span>plot=True, interpol=False, score=True)</span>
+</code></dt>
+<dd>
+<div class="desc"><h2 id="function">Function</h2>
+<p>Used to make predictions using previously defined models</p>
+<h2 id="params">Params</h2>
+<p>plot: boolean
+Indicates if plots of the calculated predictions are desired
+interpol: boolean
+Indicates if interpolated functions for predictions should be plotted
+score : boolean
+Indicates if scores should be printed</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>List[modelNames, metrics_train, metrics_test, columnsList, deviationsList]:</code></dt>
+<dd>[list(Str), list(float), list(float), list(obj), list(obj)]
+Lists containing the names and train/test scores of the provided models,
+as well as the actual predictions wrapped in objects used for printing</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def predictWithModels(plot=True, interpol=False, score=True):
+    &#34;&#34;&#34;
+    FUNCTION:
+        Used to make predictions using previously defined models
+    
+    PARAMS:
+        plot: boolean
+            Indicates if plots of the calculated predictions are desired
+        interpol: boolean
+            Indicates if interpolated functions for predictions should be plotted
+        score : boolean
+            Indicates if scores should be printed
+    
+    RETURNS:
+        List[modelNames, metrics_train, metrics_test, columnsList, deviationsList]:
+            [list(Str), list(float), list(float), list(obj), list(obj)]
+            Lists containing the names and train/test scores of the provided models,
+            as well as the actual predictions wrapped in objects used for printing
+    &#34;&#34;&#34;
+    global _modelList, _X_train, _y_train, _X_test, _y_test, _targetColumns, _indexColumn, _columnDescriptions, _columnUnits, _traintime
+
+    modelNames, metrics_train, metrics_test, deviationsList, columnsList = utilities.predictWithModels(
+        _modelList,
+        _X_train,
+        _y_train,
+        _X_test,
+        _y_test,
+        _targetColumns 
+    )
+
+    if score:
+        prints.printModelScores(
+            modelNames,
+            metrics_train,
+            metrics_test
+        )
+    if plot:
+        plots.plotModelPredictions(
+            plt,
+            deviationsList,
+            columnsList,
+            _indexColumn,
+            _columnDescriptions,
+            _columnUnits,
+            _traintime,
+            interpol=interpol,
+        )
+    if score:
+        plots.plotModelScores(
+            plt,
+            modelNames,
+            metrics_train,
+            metrics_test
+        )
+
+    return [modelNames, metrics_train, metrics_test, columnsList, deviationsList]</code></pre>
+</details>
+</dd>
+<dt id="src.core.predictWithModelsUsingDropout"><code class="name flex">
+<span>def <span class="ident">predictWithModelsUsingDropout</span></span>(<span>numberOfPredictions=20)</span>
+</code></dt>
+<dd>
+<div class="desc"><h2 id="function">Function</h2>
+<p>Used to make predictions with RNN models using dropout
+at predict time. Requires that the provided models
+have training=True, otherwise mean and std will be zero</p>
+<h2 id="params">Params</h2>
+<p>numberOfPredictions: int
+How many predictions to average in the result</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>List[predictions, means, standarddevs]</code></dt>
+<dd>[list(float), list(float), list(float)]
+Lists containing the predicted values and their means and stds</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def predictWithModelsUsingDropout(numberOfPredictions=20):
+    &#34;&#34;&#34;
+    FUNCTION:
+        Used to make predictions with RNN models using dropout
+        at predict time. Requires that the provided models
+        have training=True, otherwise mean and std will be zero
+    
+    PARAMS:
+        numberOfPredictions: int
+            How many predictions to average in the result
+    
+    RETURNS:
+        List[predictions, means, standarddevs]: [list(float), list(float), list(float)]
+            Lists containing the predicted values and their means and stds
+    &#34;&#34;&#34;
+    global _modelList, _X_test, _y_test
+
+    return utilities.predictMultipleWithModels(
+        _modelList,
+        _X_test,
+        _y_test,
+        numberOfPredictions,
+    )</code></pre>
+</details>
+</dd>
+<dt id="src.core.prepareDataframe"><code class="name flex">
+<span>def <span class="ident">prepareDataframe</span></span>(<span>df, traintime, testtime, targetColumns)</span>
+</code></dt>
+<dd>
+<div class="desc"><h2 id="function">Function</h2>
+<p>Combination of getTestTrainingSplit and getFeatureTargetSplit
+Used for even higher level programs where df_train and df_test are not needed</p>
+<h2 id="params">Params</h2>
+<p>df: Pandas dataframe
+dataframe generated from provided metadata
+traintime: List of list of string pairs
+start and end times indicating periods used for training
+testtime: List of string pair
+start and end time indicating period used for testing
+preferably the entire period of the dataset
+targetColumns: List of strings
+names of columns present in the dataset used as output(target) values</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>List[X_train, y_train, X_test, y_test]</code></dt>
+<dd>[Numpy array, Numpy array, Numpy array, Numpy array]
+Arrays of feature and target values for training and testing</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def prepareDataframe(df, traintime, testtime, targetColumns):
+    &#34;&#34;&#34;
+    FUNCTION:
+        Combination of getTestTrainingSplit and getFeatureTargetSplit
+        Used for even higher level programs where df_train and df_test are not needed
+    
+    PARAMS:
+        df: Pandas dataframe
+            dataframe generated from provided metadata
+        traintime: List of list of string pairs
+            start and end times indicating periods used for training
+        testtime: List of string pair
+            start and end time indicating period used for testing
+            preferably the entire period of the dataset
+        targetColumns: List of strings
+            names of columns present in the dataset used as output(target) values
+    
+    RETURNS:
+        List[X_train, y_train, X_test, y_test]: [Numpy array, Numpy array, Numpy array, Numpy array]
+            Arrays of feature and target values for training and testing
+    &#34;&#34;&#34;
+
+    df_train, df_test = getTestTrainSplit(
+        df,
+        traintime,
+        testtime,
+    )
+
+    return getFeatureTargetSplit(
+        df_train,
+        df_test,
+        targetColumns,
+    )</code></pre>
+</details>
+</dd>
+<dt id="src.core.printCorrelationMatrix"><code class="name flex">
+<span>def <span class="ident">printCorrelationMatrix</span></span>(<span>covmat, df, columnNames=None)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def printCorrelationMatrix(covmat, df, columnNames=None):
+    return prints.printCorrelationMatrix(covmat, df, columnNames)</code></pre>
+</details>
+</dd>
+<dt id="src.core.printExplainedVarianceRatio"><code class="name flex">
+<span>def <span class="ident">printExplainedVarianceRatio</span></span>(<span>pca)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def printExplainedVarianceRatio(pca):
+    return prints.printExplainedVarianceRatio(pca)</code></pre>
+</details>
+</dd>
+<dt id="src.core.reset"><code class="name flex">
+<span>def <span class="ident">reset</span></span>(<span>)</span>
+</code></dt>
+<dd>
+<div class="desc"><h2 id="function">Function</h2>
+<p>Resets the state of the module</p>
+<h2 id="params">Params</h2>
+<p>None</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>None</code></dt>
+<dd>&nbsp;</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def reset():
+    &#34;&#34;&#34;
+    FUNCTION:
+        Resets the state of the module
+    
+    PARAMS:
+        None
+
+    RETURNS:
+        None
+    &#34;&#34;&#34;
+    global _filename, _names, _descriptions, _units, _relevantColumns, _columnDescriptions, _columnUnits, _columnNames, _df, _traintime, _testtime, _df_train, _df_test, _targetColumns, _modelList, _X_train, _y_train, _X_test, _y_test, _maxEnrolWindow, _indexColumn
+    _filename = None
+    _names = None
+    _descriptions = None
+    _units = None
+    _relevantColumns = None
+    _columnDescriptions = None
+    _columnUnits = None
+    _columnNames = None
+    _df = None
+    _traintime = None
+    _testtime = None
+    _df_train = None
+    _df_test = None
+    _targetColumns = None
+    _modelList = None
+    _X_train = None
+    _y_train = None
+    _X_test = None
+    _y_test = None
+    _maxEnrolWindow = None
+    _indexColumn = None</code></pre>
+</details>
+</dd>
+<dt id="src.core.scatterplot"><code class="name flex">
+<span>def <span class="ident">scatterplot</span></span>(<span>df)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def scatterplot(df):
+    return analysis.scatterplot(df)</code></pre>
+</details>
+</dd>
+<dt id="src.core.setLSTMCallbacks"><code class="name flex">
+<span>def <span class="ident">setLSTMCallbacks</span></span>(<span>patience_es, patience_rlr)</span>
+</code></dt>
+<dd>
+<div class="desc"><h2 id="function">Function</h2>
+<p>Redefines the default LSTM callbacks
+NB: only for current state</p>
+<h2 id="params">Params</h2>
+<p>patience_es: int
+Number of iterations to wait before EarlyStopping is performed
+patience_rlr: int
+Number of iterations to wait before ReduceLearningRate is performed</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>None</code></dt>
+<dd>&nbsp;</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def setLSTMCallbacks(patience_es, patience_rlr):
+    &#34;&#34;&#34;
+    FUNCTION:
+        Redefines the default LSTM callbacks
+        NB: only for current state
+    
+    PARAMS:
+        patience_es: int
+            Number of iterations to wait before EarlyStopping is performed
+        patience_rlr: int
+            Number of iterations to wait before ReduceLearningRate is performed
+    
+    RETURNS:
+        None
+    &#34;&#34;&#34;
+    global _default_LSTM_args
+    _default_LSTM_args[&#39;callbacks&#39;] = modelFuncs.getBasicCallbacks(patience_es=patience_es, patience_rlr=patrience_rlr)</code></pre>
+</details>
+</dd>
+<dt id="src.core.setMLPCallbacks"><code class="name flex">
+<span>def <span class="ident">setMLPCallbacks</span></span>(<span>patience_es, patience_rlr)</span>
+</code></dt>
+<dd>
+<div class="desc"><h2 id="function">Function</h2>
+<p>Redefines the default MLP callbacks
+NB: only for current state</p>
+<h2 id="params">Params</h2>
+<p>patience_es: int
+Number of iterations to wait before EarlyStopping is performed
+patience_rlr: int
+Number of iterations to wait before ReduceLearningRate is performed</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>None</code></dt>
+<dd>&nbsp;</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def setMLPCallbacks(patience_es, patience_rlr):
+    &#34;&#34;&#34;
+    FUNCTION:
+        Redefines the default MLP callbacks
+        NB: only for current state
+    
+    PARAMS:
+        patience_es: int
+            Number of iterations to wait before EarlyStopping is performed
+        patience_rlr: int
+            Number of iterations to wait before ReduceLearningRate is performed
+    
+    RETURNS:
+        None
+    &#34;&#34;&#34;
+    global _default_MLP_args
+    _default_MLP_args[&#39;callbacks&#39;] = modelFuncs.getBasicCallbacks(patience_es=patience_es, patience_rlr=patrience_rlr)</code></pre>
+</details>
+</dd>
+<dt id="src.core.trainModels"><code class="name flex">
+<span>def <span class="ident">trainModels</span></span>(<span>retrain=False)</span>
+</code></dt>
+<dd>
+<div class="desc"><h2 id="function">Function</h2>
+<p>Used to train the models previously provided in the initModels method</p>
+<h2 id="params">Params</h2>
+<p>retrain: boolean
+Indicates if the program should prefer to load existing models where possible</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>None</code></dt>
+<dd>&nbsp;</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def trainModels(retrain=False):
+    &#34;&#34;&#34;
+    FUNCTION:
+        Used to train the models previously provided in the initModels method
+    
+    PARAMS:
+        retrain: boolean
+            Indicates if the program should prefer to load existing models where possible
+    
+    RETURNS:
+        None
+    &#34;&#34;&#34;
+    global _modelList, _filename, _targetColumns
+
+    modelFuncs.trainModels(
+        _modelList,
+        _filename,
+        _targetColumns,
+        retrain
+    )</code></pre>
+</details>
+</dd>
+<dt id="src.core.valueDistribution"><code class="name flex">
+<span>def <span class="ident">valueDistribution</span></span>(<span>df, traintime, testtime, columnDescriptions, columnUnits)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def valueDistribution(df, traintime, testtime, columnDescriptions, columnUnits):
+    return analysis.valueDistribution(df, traintime, testtime, columnDescriptions, columnUnits)</code></pre>
+</details>
+</dd>
+</dl>
+</section>
+<section>
+</section>
+</article>
+<nav id="sidebar">
+<h1>Index</h1>
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="src" href="index.html">src</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-functions">Functions</a></h3>
+<ul class="">
+<li><code><a title="src.core.AdaBoostRegressor" href="#src.core.AdaBoostRegressor">AdaBoostRegressor</a></code></li>
+<li><code><a title="src.core.Autoencoder_Dropout" href="#src.core.Autoencoder_Dropout">Autoencoder_Dropout</a></code></li>
+<li><code><a title="src.core.Autoencoder_Regularized" href="#src.core.Autoencoder_Regularized">Autoencoder_Regularized</a></code></li>
+<li><code><a title="src.core.BaggingRegressor" href="#src.core.BaggingRegressor">BaggingRegressor</a></code></li>
+<li><code><a title="src.core.DecisionTree" href="#src.core.DecisionTree">DecisionTree</a></code></li>
+<li><code><a title="src.core.ElasticNet" href="#src.core.ElasticNet">ElasticNet</a></code></li>
+<li><code><a title="src.core.Ensemble" href="#src.core.Ensemble">Ensemble</a></code></li>
+<li><code><a title="src.core.GRU" href="#src.core.GRU">GRU</a></code></li>
+<li><code><a title="src.core.LSTM" href="#src.core.LSTM">LSTM</a></code></li>
+<li><code><a title="src.core.Linear" href="#src.core.Linear">Linear</a></code></li>
+<li><code><a title="src.core.Linear_Regularized" href="#src.core.Linear_Regularized">Linear_Regularized</a></code></li>
+<li><code><a title="src.core.MLP" href="#src.core.MLP">MLP</a></code></li>
+<li><code><a title="src.core.RandomForest" href="#src.core.RandomForest">RandomForest</a></code></li>
+<li><code><a title="src.core.SupportVectorMachine" href="#src.core.SupportVectorMachine">SupportVectorMachine</a></code></li>
+<li><code><a title="src.core.correlationDifferencePlot" href="#src.core.correlationDifferencePlot">correlationDifferencePlot</a></code></li>
+<li><code><a title="src.core.correlationDuoPlot" href="#src.core.correlationDuoPlot">correlationDuoPlot</a></code></li>
+<li><code><a title="src.core.correlationMatrix" href="#src.core.correlationMatrix">correlationMatrix</a></code></li>
+<li><code><a title="src.core.correlationPlot" href="#src.core.correlationPlot">correlationPlot</a></code></li>
+<li><code><a title="src.core.getCallbacks" href="#src.core.getCallbacks">getCallbacks</a></code></li>
+<li><code><a title="src.core.getFeatureTargetSplit" href="#src.core.getFeatureTargetSplit">getFeatureTargetSplit</a></code></li>
+<li><code><a title="src.core.getTestTrainSplit" href="#src.core.getTestTrainSplit">getTestTrainSplit</a></code></li>
+<li><code><a title="src.core.initDataframe" href="#src.core.initDataframe">initDataframe</a></code></li>
+<li><code><a title="src.core.initModels" href="#src.core.initModels">initModels</a></code></li>
+<li><code><a title="src.core.pairplot" href="#src.core.pairplot">pairplot</a></code></li>
+<li><code><a title="src.core.pca" href="#src.core.pca">pca</a></code></li>
+<li><code><a title="src.core.pcaDuoPlot" href="#src.core.pcaDuoPlot">pcaDuoPlot</a></code></li>
+<li><code><a title="src.core.pcaPlot" href="#src.core.pcaPlot">pcaPlot</a></code></li>
+<li><code><a title="src.core.predictWithAutoencoderModels" href="#src.core.predictWithAutoencoderModels">predictWithAutoencoderModels</a></code></li>
+<li><code><a title="src.core.predictWithModels" href="#src.core.predictWithModels">predictWithModels</a></code></li>
+<li><code><a title="src.core.predictWithModelsUsingDropout" href="#src.core.predictWithModelsUsingDropout">predictWithModelsUsingDropout</a></code></li>
+<li><code><a title="src.core.prepareDataframe" href="#src.core.prepareDataframe">prepareDataframe</a></code></li>
+<li><code><a title="src.core.printCorrelationMatrix" href="#src.core.printCorrelationMatrix">printCorrelationMatrix</a></code></li>
+<li><code><a title="src.core.printExplainedVarianceRatio" href="#src.core.printExplainedVarianceRatio">printExplainedVarianceRatio</a></code></li>
+<li><code><a title="src.core.reset" href="#src.core.reset">reset</a></code></li>
+<li><code><a title="src.core.scatterplot" href="#src.core.scatterplot">scatterplot</a></code></li>
+<li><code><a title="src.core.setLSTMCallbacks" href="#src.core.setLSTMCallbacks">setLSTMCallbacks</a></code></li>
+<li><code><a title="src.core.setMLPCallbacks" href="#src.core.setMLPCallbacks">setMLPCallbacks</a></code></li>
+<li><code><a title="src.core.trainModels" href="#src.core.trainModels">trainModels</a></code></li>
+<li><code><a title="src.core.valueDistribution" href="#src.core.valueDistribution">valueDistribution</a></code></li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.8.1</a>.</p>
+</footer>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+<script>hljs.initHighlightingOnLoad()</script>
+</body>
+</html>

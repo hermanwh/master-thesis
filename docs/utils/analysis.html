@@ -1,0 +1,844 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+<meta name="generator" content="pdoc 0.8.1" />
+<title>src.utils.analysis API documentation</title>
+<meta name="description" content="" />
+<link href='https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.0/normalize.min.css' rel='stylesheet'>
+<link href='https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/8.0.0/sanitize.min.css' rel='stylesheet'>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css" rel="stylesheet">
+<style>.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>src.utils.analysis</code></h1>
+</header>
+<section id="section-intro">
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">import sys, os
+ROOT_PATH = os.path.abspath(&#34;.&#34;).split(&#34;src&#34;)[0]
+module_path = os.path.abspath(os.path.join(ROOT_PATH+&#34;/src/utils/&#34;))
+if module_path not in sys.path:
+    sys.path.append(module_path)
+
+import utilities
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+from sklearn.preprocessing import StandardScaler
+from sklearn.decomposition import PCA
+
+np.random.seed(100)
+
+colors = list(utilities.getColorScheme().values())
+
+sns.set(context=&#39;paper&#39;, style=&#39;whitegrid&#39;, palette=sns.color_palette(colors))
+plt.style.use(ROOT_PATH + &#39;/src/utils/matplotlib_params.rc&#39;)
+
+def correlationMatrix(df):
+    # Calculates correlation matrix of a pandas dataframe
+
+    if &#39;Date&#39; in df.columns:
+        df = df.drop(&#39;Date&#39;, axis=1, inplace=False)
+    if &#39;Index&#39; in df.columns:
+        df = df.drop(&#39;Index&#39;, axis=1, inplace=False)
+
+    X = df.values
+    standardScaler = StandardScaler()
+    X = standardScaler.fit_transform(X)
+    covMat = np.cov(X.T)
+
+    return covMat
+
+def pca(df, numberOfComponents, relevantColumns=None, columnDescriptions=None):
+    # Calculates Principal Component Analysis of a pandas dataframe
+
+    if &#39;Date&#39; in df.columns:
+        df = df.drop(&#39;Date&#39;, axis=1, inplace=False)
+    if &#39;Index&#39; in df.columns:
+        df = df.drop(&#39;Index&#39;, axis=1, inplace=False)
+
+    X = df.values
+    standardScaler = StandardScaler()
+    X = standardScaler.fit_transform(X)
+
+    if numberOfComponents &lt; 1 or numberOfComponents &gt; df.shape[1]:
+        numberOfComponents = df.shape[1]
+
+    pca = PCA(n_components=numberOfComponents)
+    pca.fit(X)
+
+    return pca
+
+def pcaPlot(df, timestamps=None, plotTitle=None):
+    # Calculates and plots a 2D Principal Component Analysis decomposition of a pandas dataframe
+
+    if timestamps is not None:
+        traintime, testtime, validtime = timestamps
+        df_train, df_test = utilities.getTestTrainSplit(df, traintime, testtime)
+        train_vals = df_train.values
+    else:
+        train_vals = df.values
+
+    sc = StandardScaler()
+    train_vals = sc.fit_transform(train_vals)
+    
+    numberOfComponents = 2
+
+    pca = PCA(n_components=numberOfComponents)
+    pca.fit(train_vals)
+
+    X = df.values
+    X = sc.transform(X)
+    X = pca.transform(X)
+
+    df_pca = pd.DataFrame(data = X, index=df.index, columns=[&#39;pca1&#39;, &#39;pca2&#39;])
+    if timestamps is not None:
+        df_pca_train, df_pca_test = utilities.getTestTrainSplit(df_pca, traintime, testtime)
+    else:
+        df_pca_train, df_pca_test = None, df_pca
+
+    fig = plt.figure(figsize = (8,4))
+    ax = fig.add_subplot(1, 1, 1)
+    ax.set_xlabel(&#39;PCA 1&#39;, fontsize=10)
+    ax.set_ylabel(&#39;PCA 2&#39;, fontsize=10)
+    ax.set_title(((plotTitle + &#39;\n&#39;) if plotTitle is not None else &#39;&#39;) + &#39;PCA plot&#39;, fontsize=12)
+    cmap = sns.cubehelix_palette(as_cmap=True)
+    indexx = list(range(df_pca_test.shape[0]))
+    if df_pca_train is not None:
+        ax.scatter(df_pca_train[&#39;pca1&#39;], df_pca_train[&#39;pca2&#39;], c = &#39;red&#39;)
+    points = ax.scatter(df_pca_test[&#39;pca1&#39;], df_pca_test[&#39;pca2&#39;], c = indexx, cmap = cmap, alpha=0.7)
+    fig.colorbar(points)
+    plt.show()
+
+def pcaDuoPlot(df_1_train, df_1_test, df_2_test, plotTitle=None):
+    # Calculates and plots a 2D Principal Component Analysis decomposition
+    #   based on one training and two testing pandas dataframes
+
+    train_vals = df_1_train.values
+
+    sc = StandardScaler()
+    train_vals = sc.fit_transform(train_vals)
+    
+    numberOfComponents = 2
+
+    pca = PCA(n_components=numberOfComponents)
+    pca.fit(train_vals)
+
+    X_1_train = df_1_train.values
+    X_1_train = sc.transform(X_1_train)
+    X_1_train = pca.transform(X_1_train)
+    df_train1 = pd.DataFrame(data = X_1_train, index=df_1_train.index, columns=[&#39;pca1&#39;, &#39;pca2&#39;])
+    df_train1 = df_train1.resample(&#34;180min&#34;).mean()
+
+    X_1_test = df_1_test.values
+    X_1_test = sc.transform(X_1_test)
+    X_1_test = pca.transform(X_1_test)
+    df_test1 = pd.DataFrame(data = X_1_test, index=df_1_test.index, columns=[&#39;pca1&#39;, &#39;pca2&#39;])
+    df_test1 = df_test1.resample(&#34;180min&#34;).mean()
+
+    X_2_test = df_2_test.values
+    X_2_test = sc.transform(X_2_test)
+    X_2_test = pca.transform(X_2_test)
+    df_test2 = pd.DataFrame(data = X_2_test, index=df_2_test.index, columns=[&#39;pca1&#39;, &#39;pca2&#39;])
+    df_test2 = df_test2.resample(&#34;180min&#34;).mean()
+
+    fig,axs = plt.subplots(nrows=1, ncols=2, figsize=(10, 4), dpi=100)
+    fig.tight_layout(w_pad=3.0)
+
+    ax, ax2 = axs
+    
+    ax.set_xlabel(&#39;PCA 1&#39;, fontsize=10)
+    ax.set_ylabel(&#39;PCA 2&#39;, fontsize=10)
+    ax.set_title(((plotTitle + &#39;\n&#39;) if plotTitle is not None else &#39;&#39;) + &#39;PCA plot timeseries part 1&#39;, fontsize=12)
+    cmap1 = sns.cubehelix_palette(reverse=False, as_cmap=True)
+    cmap2 = sns.cubehelix_palette(reverse=False, start=50.0, rot=0.1, as_cmap=True)
+    index1 = list(range(df_test1.shape[0]))
+    index2 = list(range(df_test2.shape[0]))
+    ax.scatter(df_train1[&#39;pca1&#39;], df_train1[&#39;pca2&#39;], c = &#39;red&#39;, alpha=0.3)
+    points1 = ax.scatter(df_test1[&#39;pca1&#39;], df_test1[&#39;pca2&#39;], c = index1, cmap = cmap1, alpha=1.0)
+    
+    fig.colorbar(points1, ax=ax)
+
+    ax2.set_xlabel(&#39;PCA 1&#39;, fontsize=10)
+    ax2.set_ylabel(&#39;PCA 2&#39;, fontsize=10)
+    ax2.set_title(((plotTitle + &#39;\n&#39;) if plotTitle is not None else &#34;&#34;) + &#39;PCA plot timeseries part 2&#39;, fontsize=12)
+    cmap1 = sns.cubehelix_palette(reverse=False, as_cmap=True)
+    cmap2 = sns.cubehelix_palette(reverse=False, start=50.0, rot=0.1, as_cmap=True)
+    index1 = list(range(df_test1.shape[0]))
+    index2 = list(range(df_test2.shape[0]))
+    ax2.scatter(df_train1[&#39;pca1&#39;], df_train1[&#39;pca2&#39;], c = &#39;red&#39;, alpha=0.3)
+    points2 = ax2.scatter(df_test2[&#39;pca1&#39;], df_test2[&#39;pca2&#39;], c = index2, cmap = cmap2, alpha=1.0)
+    
+    fig.colorbar(points2, ax=ax2)
+    plt.show()
+
+def pairplot(df):
+    # Plots 2D pair plots of all columns in a pandas dataframe
+
+    scaler = StandardScaler()
+    scaled = scaler.fit_transform(df.values)
+    scaled_df = pd.DataFrame(scaled, index=df.index, columns=df.columns)
+    
+    if scaled_df.shape[0] &gt; 1000:
+        scaled_df = scaled_df.resample(&#39;H&#39;).mean()
+    sns.pairplot(scaled_df, vars=scaled_df.columns, height=1.1)
+    plt.show()
+
+def scatterplot(df):
+    # Plots 2D scatter plots of all columns in a pandas dataframe
+
+    pd.plotting.scatter_matrix(df, alpha=0.2, figsize=(6, 6), diagonal=&#39;kde&#39;)
+    plt.show()
+
+def correlationPlot(df, title=&#34;Correlation plot&#34;):
+    # Plots the correlation matrix of a pandas dataframe
+
+    scaler = StandardScaler()
+    scaled = scaler.fit_transform(df.values)
+    scaled_df = pd.DataFrame(scaled, index=df.index, columns=df.columns)
+
+    corr = scaled_df.corr()
+
+    mask = np.zeros_like(corr, dtype=np.bool)
+    mask[np.triu_indices_from(mask)] = True
+
+    f, ax = plt.subplots(figsize=(5,5), dpi=100)
+
+    cmap = sns.diverging_palette(220, 10, as_cmap=True)
+
+    sns.heatmap(corr, mask=mask, cmap=cmap,
+                square=True, linewidths=1, cbar_kws={&#34;shrink&#34;: .6}, vmin=-1, vmax=1)
+
+    ax.set_title(title)
+    
+    plt.show()
+
+def correlationDuoPlot(df1, df2, title1=&#34;Correlation plot&#34;, title2=&#34;Correlation plot&#34;):
+    # Plots the correlation matrix of two pandas dataframes side by side
+
+    scaler1 = StandardScaler()
+    scaled1 = scaler1.fit_transform(df1.values)
+    scaled_df1 = pd.DataFrame(scaled1, index=df1.index, columns=df1.columns)
+    
+    scaler2 = StandardScaler()
+    scaled2 = scaler2.fit_transform(df2.values)
+    scaled_df2 = pd.DataFrame(scaled2, index=df2.index, columns=df2.columns)
+
+    corr1 = scaled_df1.corr()
+    corr2 = scaled_df2.corr()
+
+    mask = np.zeros_like(corr1, dtype=np.bool)
+    mask[np.triu_indices_from(mask)] = True
+
+    fig,axs = plt.subplots(nrows=1, ncols=2, figsize=(10, 5), dpi=100)
+    fig.tight_layout(w_pad=8.0)
+
+    ax1, ax2 = axs
+
+    cmap = sns.diverging_palette(220, 10, as_cmap=True)
+
+    sns.heatmap(corr1, ax=ax1, mask=mask, cmap=cmap,
+                square=True, linewidths=1, cbar_kws={&#34;shrink&#34;: .6}, vmin=-1, vmax=1)
+    sns.heatmap(corr1, ax=ax2, mask=mask, cmap=cmap,
+                square=True, linewidths=1, cbar_kws={&#34;shrink&#34;: .6}, vmin=-1, vmax=1)
+
+    ax1.set_title(title1)
+    ax2.set_title(title2)
+    
+    plt.show()
+
+def correlationDifferencePlot(df1, df2, title=&#34;Correlation difference plot&#34;):
+    # Plots the correlation matrix difference between two pandas dataframes
+
+    scaler1 = StandardScaler()
+    scaled1 = scaler1.fit_transform(df1.values)
+    scaled_df1 = pd.DataFrame(scaled1, index=df1.index, columns=df1.columns)
+    scaler2 = StandardScaler()
+    scaled2 = scaler2.fit_transform(df2.values)
+    scaled_df2 = pd.DataFrame(scaled2, index=df2.index, columns=df2.columns)
+
+    corr1 = scaled_df1.corr()
+    corr2 = scaled_df2.corr()
+    corr_diff = corr1.sub(corr2)
+
+    mask = np.zeros_like(corr_diff, dtype=np.bool)
+    mask[np.triu_indices_from(mask)] = True
+
+    f, ax = plt.subplots(figsize=(5,5), dpi=100)
+
+    cmap = sns.diverging_palette(220, 10, as_cmap=True)
+
+    sns.heatmap(corr_diff, mask=mask, cmap=cmap,
+                square=True, linewidths=1, cbar_kws={&#34;shrink&#34;: .6}, vmin=-1, vmax=1)
+
+    ax.set_title(title)
+    
+    plt.show()
+
+def valueDistributionSingle(df, traintime, testtime):
+    # Plots values and value distributions for a pandas dataframe
+    # NB: all plots are put in a single figure with n rows
+
+    scaler = StandardScaler()
+    scaled = scaler.fit_transform(df.values)
+    scaled_df = pd.DataFrame(scaled, index=df.index, columns=df.columns)
+
+    df_train, df_test = utilities.getTestTrainSplit(scaled_df, traintime, testtime)    
+
+    height = df_train.shape[-1]*5
+    fig, axs = plt.subplots(nrows=df_train.shape[-1], ncols=2, figsize=(15,height), dpi=100)
+    #fig.tight_layout()
+    
+    for k in range(df_train.shape[-1]):
+        ax1, ax2 = axs[k, 0], axs[k, 1]
+        
+        trainEndStr=[item for sublist in traintime for item in sublist]
+        for i, trainEndString in enumerate(trainEndStr):
+            ax1.axvline(x=pd.to_datetime(trainEndString, dayfirst=True), color=&#39;black&#39; if i % 2 == 0 else &#39;blue&#39;, label=&#39;start training&#39; if i % 2 == 0 else &#39;end training&#39;)
+    
+        ax1.plot(df_train.iloc[:,k], label=&#34;train&#34;,
+                marker=&#34;o&#34;, ms=1.5, lw=0)
+        ax1.plot(df_test.iloc[:,k], label=&#34;test&#34;,
+                marker=&#34;o&#34;, ms=1.5, lw=0)
+        
+        ax1.set_xticks(ax1.get_xticks()[3::3])
+        ax1.set_ylabel(df_train.columns[k])
+        
+        sns.distplot(df_train.iloc[:,k], ax=ax2, label=&#34;train&#34;, kde=True, kde_kws={&#34;lw&#34;:2.5})
+        sns.distplot(df_test.iloc[:,k], ax=ax2, label=&#34;test&#34;, kde=True, kde_kws={&#34;lw&#34;:2.5})
+        
+        ax2.set_xlim((-3,3))
+        ax2.legend(loc=&#34;upper right&#34;)
+
+    plt.show()
+
+def valueDistribution(df, traintime, testtime, columnDescriptions, columnUnits):
+    # Plots values and value distributions for a pandas dataframe
+    # NB: all columns are plotted in separate figures
+
+    scaler = StandardScaler()
+    scaled = scaler.fit_transform(df.values)
+    scaled_df = pd.DataFrame(scaled, index=df.index, columns=df.columns)
+
+    df_train, df_test = utilities.getTestTrainSplit(scaled_df, traintime, testtime)    
+
+    for k, column in enumerate(df_train.columns):
+        fig, axs = plt.subplots(nrows=1, ncols=2, figsize=(10,3.0), dpi=100)
+        #fig.tight_layout()
+        ax1, ax2 = axs[0], axs[1]
+        
+        fig.suptitle(column + &#34; &#34; + columnDescriptions[column])
+
+        trainEndStr=[item for sublist in traintime for item in sublist]
+        for i, trainEndString in enumerate(trainEndStr):
+            ax1.axvline(x=pd.to_datetime(trainEndString, dayfirst=True), color=&#39;black&#39; if i % 2 == 0 else &#39;blue&#39;, label=&#39;start training&#39; if i % 2 == 0 else &#39;end training&#39;)
+    
+
+        ax1.plot(df_train.iloc[:,k], label=&#34;train&#34;,
+                marker=&#34;o&#34;, ms=1.5, lw=0)
+        ax1.plot(df_test.iloc[:,k], label=&#34;test&#34;,
+                marker=&#34;o&#34;, ms=1.5, lw=0)
+        
+        ax1.set_xticks(ax1.get_xticks()[3::3])
+        ax1.set_ylabel(columnUnits[column] + &#34;, standardized&#34;)
+        ax1.set_xlabel(&#39;Date&#39;)
+        
+        sns.distplot(df_train.iloc[:,k], ax=ax2, label=&#34;train&#34;, kde=True, kde_kws={&#34;lw&#34;:2.5})
+        sns.distplot(df_test.iloc[:,k], ax=ax2, label=&#34;test&#34;, kde=True, kde_kws={&#34;lw&#34;:2.5})
+        
+        ax2.set_xlim((-3,3))
+        ax2.legend(loc=&#34;upper right&#34;)
+        ax2.set_ylabel(&#39;Ratio&#39;)
+        ax2.set_xlabel(columnUnits[column] + &#34;, standardized&#34;)
+
+        plt.show()</code></pre>
+</details>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-functions">Functions</h2>
+<dl>
+<dt id="src.utils.analysis.correlationDifferencePlot"><code class="name flex">
+<span>def <span class="ident">correlationDifferencePlot</span></span>(<span>df1, df2, title='Correlation difference plot')</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def correlationDifferencePlot(df1, df2, title=&#34;Correlation difference plot&#34;):
+    # Plots the correlation matrix difference between two pandas dataframes
+
+    scaler1 = StandardScaler()
+    scaled1 = scaler1.fit_transform(df1.values)
+    scaled_df1 = pd.DataFrame(scaled1, index=df1.index, columns=df1.columns)
+    scaler2 = StandardScaler()
+    scaled2 = scaler2.fit_transform(df2.values)
+    scaled_df2 = pd.DataFrame(scaled2, index=df2.index, columns=df2.columns)
+
+    corr1 = scaled_df1.corr()
+    corr2 = scaled_df2.corr()
+    corr_diff = corr1.sub(corr2)
+
+    mask = np.zeros_like(corr_diff, dtype=np.bool)
+    mask[np.triu_indices_from(mask)] = True
+
+    f, ax = plt.subplots(figsize=(5,5), dpi=100)
+
+    cmap = sns.diverging_palette(220, 10, as_cmap=True)
+
+    sns.heatmap(corr_diff, mask=mask, cmap=cmap,
+                square=True, linewidths=1, cbar_kws={&#34;shrink&#34;: .6}, vmin=-1, vmax=1)
+
+    ax.set_title(title)
+    
+    plt.show()</code></pre>
+</details>
+</dd>
+<dt id="src.utils.analysis.correlationDuoPlot"><code class="name flex">
+<span>def <span class="ident">correlationDuoPlot</span></span>(<span>df1, df2, title1='Correlation plot', title2='Correlation plot')</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def correlationDuoPlot(df1, df2, title1=&#34;Correlation plot&#34;, title2=&#34;Correlation plot&#34;):
+    # Plots the correlation matrix of two pandas dataframes side by side
+
+    scaler1 = StandardScaler()
+    scaled1 = scaler1.fit_transform(df1.values)
+    scaled_df1 = pd.DataFrame(scaled1, index=df1.index, columns=df1.columns)
+    
+    scaler2 = StandardScaler()
+    scaled2 = scaler2.fit_transform(df2.values)
+    scaled_df2 = pd.DataFrame(scaled2, index=df2.index, columns=df2.columns)
+
+    corr1 = scaled_df1.corr()
+    corr2 = scaled_df2.corr()
+
+    mask = np.zeros_like(corr1, dtype=np.bool)
+    mask[np.triu_indices_from(mask)] = True
+
+    fig,axs = plt.subplots(nrows=1, ncols=2, figsize=(10, 5), dpi=100)
+    fig.tight_layout(w_pad=8.0)
+
+    ax1, ax2 = axs
+
+    cmap = sns.diverging_palette(220, 10, as_cmap=True)
+
+    sns.heatmap(corr1, ax=ax1, mask=mask, cmap=cmap,
+                square=True, linewidths=1, cbar_kws={&#34;shrink&#34;: .6}, vmin=-1, vmax=1)
+    sns.heatmap(corr1, ax=ax2, mask=mask, cmap=cmap,
+                square=True, linewidths=1, cbar_kws={&#34;shrink&#34;: .6}, vmin=-1, vmax=1)
+
+    ax1.set_title(title1)
+    ax2.set_title(title2)
+    
+    plt.show()</code></pre>
+</details>
+</dd>
+<dt id="src.utils.analysis.correlationMatrix"><code class="name flex">
+<span>def <span class="ident">correlationMatrix</span></span>(<span>df)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def correlationMatrix(df):
+    # Calculates correlation matrix of a pandas dataframe
+
+    if &#39;Date&#39; in df.columns:
+        df = df.drop(&#39;Date&#39;, axis=1, inplace=False)
+    if &#39;Index&#39; in df.columns:
+        df = df.drop(&#39;Index&#39;, axis=1, inplace=False)
+
+    X = df.values
+    standardScaler = StandardScaler()
+    X = standardScaler.fit_transform(X)
+    covMat = np.cov(X.T)
+
+    return covMat</code></pre>
+</details>
+</dd>
+<dt id="src.utils.analysis.correlationPlot"><code class="name flex">
+<span>def <span class="ident">correlationPlot</span></span>(<span>df, title='Correlation plot')</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def correlationPlot(df, title=&#34;Correlation plot&#34;):
+    # Plots the correlation matrix of a pandas dataframe
+
+    scaler = StandardScaler()
+    scaled = scaler.fit_transform(df.values)
+    scaled_df = pd.DataFrame(scaled, index=df.index, columns=df.columns)
+
+    corr = scaled_df.corr()
+
+    mask = np.zeros_like(corr, dtype=np.bool)
+    mask[np.triu_indices_from(mask)] = True
+
+    f, ax = plt.subplots(figsize=(5,5), dpi=100)
+
+    cmap = sns.diverging_palette(220, 10, as_cmap=True)
+
+    sns.heatmap(corr, mask=mask, cmap=cmap,
+                square=True, linewidths=1, cbar_kws={&#34;shrink&#34;: .6}, vmin=-1, vmax=1)
+
+    ax.set_title(title)
+    
+    plt.show()</code></pre>
+</details>
+</dd>
+<dt id="src.utils.analysis.pairplot"><code class="name flex">
+<span>def <span class="ident">pairplot</span></span>(<span>df)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def pairplot(df):
+    # Plots 2D pair plots of all columns in a pandas dataframe
+
+    scaler = StandardScaler()
+    scaled = scaler.fit_transform(df.values)
+    scaled_df = pd.DataFrame(scaled, index=df.index, columns=df.columns)
+    
+    if scaled_df.shape[0] &gt; 1000:
+        scaled_df = scaled_df.resample(&#39;H&#39;).mean()
+    sns.pairplot(scaled_df, vars=scaled_df.columns, height=1.1)
+    plt.show()</code></pre>
+</details>
+</dd>
+<dt id="src.utils.analysis.pca"><code class="name flex">
+<span>def <span class="ident">pca</span></span>(<span>df, numberOfComponents, relevantColumns=None, columnDescriptions=None)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def pca(df, numberOfComponents, relevantColumns=None, columnDescriptions=None):
+    # Calculates Principal Component Analysis of a pandas dataframe
+
+    if &#39;Date&#39; in df.columns:
+        df = df.drop(&#39;Date&#39;, axis=1, inplace=False)
+    if &#39;Index&#39; in df.columns:
+        df = df.drop(&#39;Index&#39;, axis=1, inplace=False)
+
+    X = df.values
+    standardScaler = StandardScaler()
+    X = standardScaler.fit_transform(X)
+
+    if numberOfComponents &lt; 1 or numberOfComponents &gt; df.shape[1]:
+        numberOfComponents = df.shape[1]
+
+    pca = PCA(n_components=numberOfComponents)
+    pca.fit(X)
+
+    return pca</code></pre>
+</details>
+</dd>
+<dt id="src.utils.analysis.pcaDuoPlot"><code class="name flex">
+<span>def <span class="ident">pcaDuoPlot</span></span>(<span>df_1_train, df_1_test, df_2_test, plotTitle=None)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def pcaDuoPlot(df_1_train, df_1_test, df_2_test, plotTitle=None):
+    # Calculates and plots a 2D Principal Component Analysis decomposition
+    #   based on one training and two testing pandas dataframes
+
+    train_vals = df_1_train.values
+
+    sc = StandardScaler()
+    train_vals = sc.fit_transform(train_vals)
+    
+    numberOfComponents = 2
+
+    pca = PCA(n_components=numberOfComponents)
+    pca.fit(train_vals)
+
+    X_1_train = df_1_train.values
+    X_1_train = sc.transform(X_1_train)
+    X_1_train = pca.transform(X_1_train)
+    df_train1 = pd.DataFrame(data = X_1_train, index=df_1_train.index, columns=[&#39;pca1&#39;, &#39;pca2&#39;])
+    df_train1 = df_train1.resample(&#34;180min&#34;).mean()
+
+    X_1_test = df_1_test.values
+    X_1_test = sc.transform(X_1_test)
+    X_1_test = pca.transform(X_1_test)
+    df_test1 = pd.DataFrame(data = X_1_test, index=df_1_test.index, columns=[&#39;pca1&#39;, &#39;pca2&#39;])
+    df_test1 = df_test1.resample(&#34;180min&#34;).mean()
+
+    X_2_test = df_2_test.values
+    X_2_test = sc.transform(X_2_test)
+    X_2_test = pca.transform(X_2_test)
+    df_test2 = pd.DataFrame(data = X_2_test, index=df_2_test.index, columns=[&#39;pca1&#39;, &#39;pca2&#39;])
+    df_test2 = df_test2.resample(&#34;180min&#34;).mean()
+
+    fig,axs = plt.subplots(nrows=1, ncols=2, figsize=(10, 4), dpi=100)
+    fig.tight_layout(w_pad=3.0)
+
+    ax, ax2 = axs
+    
+    ax.set_xlabel(&#39;PCA 1&#39;, fontsize=10)
+    ax.set_ylabel(&#39;PCA 2&#39;, fontsize=10)
+    ax.set_title(((plotTitle + &#39;\n&#39;) if plotTitle is not None else &#39;&#39;) + &#39;PCA plot timeseries part 1&#39;, fontsize=12)
+    cmap1 = sns.cubehelix_palette(reverse=False, as_cmap=True)
+    cmap2 = sns.cubehelix_palette(reverse=False, start=50.0, rot=0.1, as_cmap=True)
+    index1 = list(range(df_test1.shape[0]))
+    index2 = list(range(df_test2.shape[0]))
+    ax.scatter(df_train1[&#39;pca1&#39;], df_train1[&#39;pca2&#39;], c = &#39;red&#39;, alpha=0.3)
+    points1 = ax.scatter(df_test1[&#39;pca1&#39;], df_test1[&#39;pca2&#39;], c = index1, cmap = cmap1, alpha=1.0)
+    
+    fig.colorbar(points1, ax=ax)
+
+    ax2.set_xlabel(&#39;PCA 1&#39;, fontsize=10)
+    ax2.set_ylabel(&#39;PCA 2&#39;, fontsize=10)
+    ax2.set_title(((plotTitle + &#39;\n&#39;) if plotTitle is not None else &#34;&#34;) + &#39;PCA plot timeseries part 2&#39;, fontsize=12)
+    cmap1 = sns.cubehelix_palette(reverse=False, as_cmap=True)
+    cmap2 = sns.cubehelix_palette(reverse=False, start=50.0, rot=0.1, as_cmap=True)
+    index1 = list(range(df_test1.shape[0]))
+    index2 = list(range(df_test2.shape[0]))
+    ax2.scatter(df_train1[&#39;pca1&#39;], df_train1[&#39;pca2&#39;], c = &#39;red&#39;, alpha=0.3)
+    points2 = ax2.scatter(df_test2[&#39;pca1&#39;], df_test2[&#39;pca2&#39;], c = index2, cmap = cmap2, alpha=1.0)
+    
+    fig.colorbar(points2, ax=ax2)
+    plt.show()</code></pre>
+</details>
+</dd>
+<dt id="src.utils.analysis.pcaPlot"><code class="name flex">
+<span>def <span class="ident">pcaPlot</span></span>(<span>df, timestamps=None, plotTitle=None)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def pcaPlot(df, timestamps=None, plotTitle=None):
+    # Calculates and plots a 2D Principal Component Analysis decomposition of a pandas dataframe
+
+    if timestamps is not None:
+        traintime, testtime, validtime = timestamps
+        df_train, df_test = utilities.getTestTrainSplit(df, traintime, testtime)
+        train_vals = df_train.values
+    else:
+        train_vals = df.values
+
+    sc = StandardScaler()
+    train_vals = sc.fit_transform(train_vals)
+    
+    numberOfComponents = 2
+
+    pca = PCA(n_components=numberOfComponents)
+    pca.fit(train_vals)
+
+    X = df.values
+    X = sc.transform(X)
+    X = pca.transform(X)
+
+    df_pca = pd.DataFrame(data = X, index=df.index, columns=[&#39;pca1&#39;, &#39;pca2&#39;])
+    if timestamps is not None:
+        df_pca_train, df_pca_test = utilities.getTestTrainSplit(df_pca, traintime, testtime)
+    else:
+        df_pca_train, df_pca_test = None, df_pca
+
+    fig = plt.figure(figsize = (8,4))
+    ax = fig.add_subplot(1, 1, 1)
+    ax.set_xlabel(&#39;PCA 1&#39;, fontsize=10)
+    ax.set_ylabel(&#39;PCA 2&#39;, fontsize=10)
+    ax.set_title(((plotTitle + &#39;\n&#39;) if plotTitle is not None else &#39;&#39;) + &#39;PCA plot&#39;, fontsize=12)
+    cmap = sns.cubehelix_palette(as_cmap=True)
+    indexx = list(range(df_pca_test.shape[0]))
+    if df_pca_train is not None:
+        ax.scatter(df_pca_train[&#39;pca1&#39;], df_pca_train[&#39;pca2&#39;], c = &#39;red&#39;)
+    points = ax.scatter(df_pca_test[&#39;pca1&#39;], df_pca_test[&#39;pca2&#39;], c = indexx, cmap = cmap, alpha=0.7)
+    fig.colorbar(points)
+    plt.show()</code></pre>
+</details>
+</dd>
+<dt id="src.utils.analysis.scatterplot"><code class="name flex">
+<span>def <span class="ident">scatterplot</span></span>(<span>df)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def scatterplot(df):
+    # Plots 2D scatter plots of all columns in a pandas dataframe
+
+    pd.plotting.scatter_matrix(df, alpha=0.2, figsize=(6, 6), diagonal=&#39;kde&#39;)
+    plt.show()</code></pre>
+</details>
+</dd>
+<dt id="src.utils.analysis.valueDistribution"><code class="name flex">
+<span>def <span class="ident">valueDistribution</span></span>(<span>df, traintime, testtime, columnDescriptions, columnUnits)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def valueDistribution(df, traintime, testtime, columnDescriptions, columnUnits):
+    # Plots values and value distributions for a pandas dataframe
+    # NB: all columns are plotted in separate figures
+
+    scaler = StandardScaler()
+    scaled = scaler.fit_transform(df.values)
+    scaled_df = pd.DataFrame(scaled, index=df.index, columns=df.columns)
+
+    df_train, df_test = utilities.getTestTrainSplit(scaled_df, traintime, testtime)    
+
+    for k, column in enumerate(df_train.columns):
+        fig, axs = plt.subplots(nrows=1, ncols=2, figsize=(10,3.0), dpi=100)
+        #fig.tight_layout()
+        ax1, ax2 = axs[0], axs[1]
+        
+        fig.suptitle(column + &#34; &#34; + columnDescriptions[column])
+
+        trainEndStr=[item for sublist in traintime for item in sublist]
+        for i, trainEndString in enumerate(trainEndStr):
+            ax1.axvline(x=pd.to_datetime(trainEndString, dayfirst=True), color=&#39;black&#39; if i % 2 == 0 else &#39;blue&#39;, label=&#39;start training&#39; if i % 2 == 0 else &#39;end training&#39;)
+    
+
+        ax1.plot(df_train.iloc[:,k], label=&#34;train&#34;,
+                marker=&#34;o&#34;, ms=1.5, lw=0)
+        ax1.plot(df_test.iloc[:,k], label=&#34;test&#34;,
+                marker=&#34;o&#34;, ms=1.5, lw=0)
+        
+        ax1.set_xticks(ax1.get_xticks()[3::3])
+        ax1.set_ylabel(columnUnits[column] + &#34;, standardized&#34;)
+        ax1.set_xlabel(&#39;Date&#39;)
+        
+        sns.distplot(df_train.iloc[:,k], ax=ax2, label=&#34;train&#34;, kde=True, kde_kws={&#34;lw&#34;:2.5})
+        sns.distplot(df_test.iloc[:,k], ax=ax2, label=&#34;test&#34;, kde=True, kde_kws={&#34;lw&#34;:2.5})
+        
+        ax2.set_xlim((-3,3))
+        ax2.legend(loc=&#34;upper right&#34;)
+        ax2.set_ylabel(&#39;Ratio&#39;)
+        ax2.set_xlabel(columnUnits[column] + &#34;, standardized&#34;)
+
+        plt.show()</code></pre>
+</details>
+</dd>
+<dt id="src.utils.analysis.valueDistributionSingle"><code class="name flex">
+<span>def <span class="ident">valueDistributionSingle</span></span>(<span>df, traintime, testtime)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def valueDistributionSingle(df, traintime, testtime):
+    # Plots values and value distributions for a pandas dataframe
+    # NB: all plots are put in a single figure with n rows
+
+    scaler = StandardScaler()
+    scaled = scaler.fit_transform(df.values)
+    scaled_df = pd.DataFrame(scaled, index=df.index, columns=df.columns)
+
+    df_train, df_test = utilities.getTestTrainSplit(scaled_df, traintime, testtime)    
+
+    height = df_train.shape[-1]*5
+    fig, axs = plt.subplots(nrows=df_train.shape[-1], ncols=2, figsize=(15,height), dpi=100)
+    #fig.tight_layout()
+    
+    for k in range(df_train.shape[-1]):
+        ax1, ax2 = axs[k, 0], axs[k, 1]
+        
+        trainEndStr=[item for sublist in traintime for item in sublist]
+        for i, trainEndString in enumerate(trainEndStr):
+            ax1.axvline(x=pd.to_datetime(trainEndString, dayfirst=True), color=&#39;black&#39; if i % 2 == 0 else &#39;blue&#39;, label=&#39;start training&#39; if i % 2 == 0 else &#39;end training&#39;)
+    
+        ax1.plot(df_train.iloc[:,k], label=&#34;train&#34;,
+                marker=&#34;o&#34;, ms=1.5, lw=0)
+        ax1.plot(df_test.iloc[:,k], label=&#34;test&#34;,
+                marker=&#34;o&#34;, ms=1.5, lw=0)
+        
+        ax1.set_xticks(ax1.get_xticks()[3::3])
+        ax1.set_ylabel(df_train.columns[k])
+        
+        sns.distplot(df_train.iloc[:,k], ax=ax2, label=&#34;train&#34;, kde=True, kde_kws={&#34;lw&#34;:2.5})
+        sns.distplot(df_test.iloc[:,k], ax=ax2, label=&#34;test&#34;, kde=True, kde_kws={&#34;lw&#34;:2.5})
+        
+        ax2.set_xlim((-3,3))
+        ax2.legend(loc=&#34;upper right&#34;)
+
+    plt.show()</code></pre>
+</details>
+</dd>
+</dl>
+</section>
+<section>
+</section>
+</article>
+<nav id="sidebar">
+<h1>Index</h1>
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="src.utils" href="index.html">src.utils</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-functions">Functions</a></h3>
+<ul class="">
+<li><code><a title="src.utils.analysis.correlationDifferencePlot" href="#src.utils.analysis.correlationDifferencePlot">correlationDifferencePlot</a></code></li>
+<li><code><a title="src.utils.analysis.correlationDuoPlot" href="#src.utils.analysis.correlationDuoPlot">correlationDuoPlot</a></code></li>
+<li><code><a title="src.utils.analysis.correlationMatrix" href="#src.utils.analysis.correlationMatrix">correlationMatrix</a></code></li>
+<li><code><a title="src.utils.analysis.correlationPlot" href="#src.utils.analysis.correlationPlot">correlationPlot</a></code></li>
+<li><code><a title="src.utils.analysis.pairplot" href="#src.utils.analysis.pairplot">pairplot</a></code></li>
+<li><code><a title="src.utils.analysis.pca" href="#src.utils.analysis.pca">pca</a></code></li>
+<li><code><a title="src.utils.analysis.pcaDuoPlot" href="#src.utils.analysis.pcaDuoPlot">pcaDuoPlot</a></code></li>
+<li><code><a title="src.utils.analysis.pcaPlot" href="#src.utils.analysis.pcaPlot">pcaPlot</a></code></li>
+<li><code><a title="src.utils.analysis.scatterplot" href="#src.utils.analysis.scatterplot">scatterplot</a></code></li>
+<li><code><a title="src.utils.analysis.valueDistribution" href="#src.utils.analysis.valueDistribution">valueDistribution</a></code></li>
+<li><code><a title="src.utils.analysis.valueDistributionSingle" href="#src.utils.analysis.valueDistributionSingle">valueDistributionSingle</a></code></li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.8.1</a>.</p>
+</footer>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+<script>hljs.initHighlightingOnLoad()</script>
+</body>
+</html>
