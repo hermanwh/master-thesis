@@ -1,8 +1,33 @@
-# Condition Monitoring of Heat Exchangers using Machine Learning
+# Master thesis: Condition Monitoring of Heat Exchangers using Machine Learning
+By Herman Wika Horn
+
 This is the code repository for my thesis, which concludes a Master of Science degree at the Norwegian University of Science and Technology (NTNU), as part of the Engineering and ICT study program with a specialization in ICT and Mechanical Engineering. The presented study is a collaboration between Equinor ASA and the Department of Mechanical and Industrial Engineering (MTP), focusing on the application of machine learning methods for the oil and gas domain.
 
-The contents of this repository has also been made into a Python package, available at the following URL: [pypi](https://pypi.org/)
+#### Repository intent
+This repository hosts the code used through my research, and to obtain the final results. The code may be used by forking or otherwise downloading the code. Additionally, the same functionality is exported as a PyPi package which can be installed using pip
 
+#### PyPi package of this project
+A Python package with similar functionality is available at the following URL: [pypi](https://pypi.org/)
+
+#### Contents
+The repository contains:
+- Notebook examples (".ipynb" files at the top level)
+- Python examples ("py_examples" folder, NB: highly recommend using the notebook examples instead)
+- Dataset profiling ("profiling" folder, NB: highly recommend using the "profiling" notebooks first)
+- Code documentation ("docs" folder, NB: use [htmlpreview.github.io](https://htmlpreview.github.io/?) to view .html files)
+- Source code ("src" folder)
+- Installation guide (below)
+- Thesis summary (below)
+
+The source code is structured as follows:
+- core.py: high-level stateful module (relevant)
+- core_stateless.py: high-level stateless module (relevant)
+- core_configs.py: used for specific datasets, which are not available for the reader (not relevant)
+- data folder: runnable .py files for various preprocessing use cases (not relevant)
+- ml folder: runnable .py files for various machine learning use cases + trained ML models (not relevant)
+- utils: low-level implementation (relevant)
+
+#### Installing required packages
 To install the required packages for running this project, do the following:
 1. Install Python 3.6 (no need to put in path)  
 
