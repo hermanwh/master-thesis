@@ -185,7 +185,21 @@ def trainModels(modelList, filename, targetColumns, retrain=False):
         retrain
     )
 
-def predictWithModels(modelList, X_train, y_train, X_test, y_test, targetColumns, indexColumn, columnDescriptions, columnUnits, traintime, plot=True, interpol=False, score=True):
+def predictWithModels(
+        modelList,
+        X_train,
+        y_train,
+        X_test,
+        y_test,
+        targetColumns,
+        indexColumn,
+        columnDescriptions,
+        columnUnits,
+        traintime,
+        plot=True,
+        interpol=False,
+        score=True,
+    ):
     """
     FUNCTION:
         Used to make predictions using previously defined models
@@ -212,8 +226,10 @@ def predictWithModels(modelList, X_train, y_train, X_test, y_test, targetColumns
             Indicates if interpolated functions for predictions should be plotted
     
     RETURNS:
-        List[modelNames, metrics_train, metrics_test]: [list(Str), list(float), list(float)]
-            Lists containing the names and train/test scores of the provided models
+        List[modelNames, metrics_train, metrics_test, columnsList, deviationsList]:
+            [list(Str), list(float), list(float), list(obj), list(obj)]
+            Lists containing the names and train/test scores of the provided models,
+            as well as the actual predictions wrapped in objects used for printing
     """
     
     modelNames, metrics_train, metrics_test, deviationsList, columnsList = utilities.predictWithModels(
@@ -370,6 +386,8 @@ def LSTM(
             Level of recurrent dropout
         alpha: float
             Alpha of the leaky relu function
+        training: boolean
+            Whether dropout should be use at time of prediction
         enrolWindow: int
             Number of samples used to make each prediction
     
@@ -449,6 +467,8 @@ def GRU(
             Level of recurrent dropout
         alpha: float
             Alpha of the leaky relu function
+        training: boolean
+            Whether dropout should be use at time of prediction
         enrolWindow: int
             Number of samples used to make each prediction
     

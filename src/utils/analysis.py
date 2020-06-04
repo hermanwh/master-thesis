@@ -19,8 +19,9 @@ colors = list(utilities.getColorScheme().values())
 sns.set(context='paper', style='whitegrid', palette=sns.color_palette(colors))
 plt.style.use(ROOT_PATH + '/src/utils/matplotlib_params.rc')
 
-# Calculates correlation matrix of a pandas dataframe
 def correlationMatrix(df):
+    # Calculates correlation matrix of a pandas dataframe
+
     if 'Date' in df.columns:
         df = df.drop('Date', axis=1, inplace=False)
     if 'Index' in df.columns:
@@ -33,8 +34,9 @@ def correlationMatrix(df):
 
     return covMat
 
-# Calculates Principal Component Analysis of a pandas dataframe
 def pca(df, numberOfComponents, relevantColumns=None, columnDescriptions=None):
+    # Calculates Principal Component Analysis of a pandas dataframe
+
     if 'Date' in df.columns:
         df = df.drop('Date', axis=1, inplace=False)
     if 'Index' in df.columns:
@@ -52,8 +54,9 @@ def pca(df, numberOfComponents, relevantColumns=None, columnDescriptions=None):
 
     return pca
 
-# Calculates and plots a 2D Principal Component Analysis decomposition of a pandas dataframe
 def pcaPlot(df, timestamps=None, plotTitle=None):
+    # Calculates and plots a 2D Principal Component Analysis decomposition of a pandas dataframe
+
     if timestamps is not None:
         traintime, testtime, validtime = timestamps
         df_train, df_test = utilities.getTestTrainSplit(df, traintime, testtime)
@@ -92,9 +95,10 @@ def pcaPlot(df, timestamps=None, plotTitle=None):
     fig.colorbar(points)
     plt.show()
 
-# Calculates and plots a 2D Principal Component Analysis decomposition
-#   based on one training and two testing pandas dataframes
 def pcaDuoPlot(df_1_train, df_1_test, df_2_test, plotTitle=None):
+    # Calculates and plots a 2D Principal Component Analysis decomposition
+    #   based on one training and two testing pandas dataframes
+
     train_vals = df_1_train.values
 
     sc = StandardScaler()
@@ -153,8 +157,9 @@ def pcaDuoPlot(df_1_train, df_1_test, df_2_test, plotTitle=None):
     fig.colorbar(points2, ax=ax2)
     plt.show()
 
-# Plots 2D pair plots of all columns in a pandas dataframe
 def pairplot(df):
+    # Plots 2D pair plots of all columns in a pandas dataframe
+
     scaler = StandardScaler()
     scaled = scaler.fit_transform(df.values)
     scaled_df = pd.DataFrame(scaled, index=df.index, columns=df.columns)
@@ -164,13 +169,15 @@ def pairplot(df):
     sns.pairplot(scaled_df, vars=scaled_df.columns, height=1.1)
     plt.show()
 
-# Plots 2D scatter plots of all columns in a pandas dataframe
 def scatterplot(df):
+    # Plots 2D scatter plots of all columns in a pandas dataframe
+
     pd.plotting.scatter_matrix(df, alpha=0.2, figsize=(6, 6), diagonal='kde')
     plt.show()
 
-# Plots the correlation matrix of a pandas dataframe
 def correlationPlot(df, title="Correlation plot"):
+    # Plots the correlation matrix of a pandas dataframe
+
     scaler = StandardScaler()
     scaled = scaler.fit_transform(df.values)
     scaled_df = pd.DataFrame(scaled, index=df.index, columns=df.columns)
@@ -191,8 +198,9 @@ def correlationPlot(df, title="Correlation plot"):
     
     plt.show()
 
-# Plots the correlation matrix of two pandas dataframes side by side
 def correlationDuoPlot(df1, df2, title1="Correlation plot", title2="Correlation plot"):
+    # Plots the correlation matrix of two pandas dataframes side by side
+
     scaler1 = StandardScaler()
     scaled1 = scaler1.fit_transform(df1.values)
     scaled_df1 = pd.DataFrame(scaled1, index=df1.index, columns=df1.columns)
@@ -224,8 +232,9 @@ def correlationDuoPlot(df1, df2, title1="Correlation plot", title2="Correlation 
     
     plt.show()
 
-# Plots the correlation matrix difference between two pandas dataframes
 def correlationDifferencePlot(df1, df2, title="Correlation difference plot"):
+    # Plots the correlation matrix difference between two pandas dataframes
+
     scaler1 = StandardScaler()
     scaled1 = scaler1.fit_transform(df1.values)
     scaled_df1 = pd.DataFrame(scaled1, index=df1.index, columns=df1.columns)
@@ -251,9 +260,10 @@ def correlationDifferencePlot(df1, df2, title="Correlation difference plot"):
     
     plt.show()
 
-# Plots values and value distributions for a pandas dataframe
-# NB: all plots are put in a single figure with n rows
 def valueDistributionSingle(df, traintime, testtime):
+    # Plots values and value distributions for a pandas dataframe
+    # NB: all plots are put in a single figure with n rows
+
     scaler = StandardScaler()
     scaled = scaler.fit_transform(df.values)
     scaled_df = pd.DataFrame(scaled, index=df.index, columns=df.columns)
@@ -287,9 +297,10 @@ def valueDistributionSingle(df, traintime, testtime):
 
     plt.show()
 
-# Plots values and value distributions for a pandas dataframe
-# NB: all columns are plotted in separate figures
 def valueDistribution(df, traintime, testtime, columnDescriptions, columnUnits):
+    # Plots values and value distributions for a pandas dataframe
+    # NB: all columns are plotted in separate figures
+
     scaler = StandardScaler()
     scaled = scaler.fit_transform(df.values)
     scaled_df = pd.DataFrame(scaled, index=df.index, columns=df.columns)

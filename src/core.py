@@ -285,10 +285,14 @@ def predictWithModels(plot=True, interpol=False, score=True):
             Indicates if plots of the calculated predictions are desired
         interpol: boolean
             Indicates if interpolated functions for predictions should be plotted
+        score : boolean
+            Indicates if scores should be printed
     
     RETURNS:
-        List[modelNames, metrics_train, metrics_test]: [list(Str), list(float), list(float)]
-            Lists containing the names and train/test scores of the provided models
+        List[modelNames, metrics_train, metrics_test, columnsList, deviationsList]:
+            [list(Str), list(float), list(float), list(obj), list(obj)]
+            Lists containing the names and train/test scores of the provided models,
+            as well as the actual predictions wrapped in objects used for printing
     """
     global _modelList, _X_train, _y_train, _X_test, _y_test, _targetColumns, _indexColumn, _columnDescriptions, _columnUnits, _traintime
 
@@ -333,6 +337,12 @@ def predictWithAutoencoderModels():
     FUNCTION:
         Used to make predictions in the case where all
         models in self.modelList are of type AutoencoderModel
+    
+    PARAMS:
+        None
+    
+    RETURNS:
+        None
     """
     global _modelList, _df_test, _X_test
 
@@ -448,6 +458,8 @@ def LSTM(
             Level of recurrent dropout
         alpha: float
             Alpha of the leaky relu function
+        training: boolean
+            Whether dropout should be use at time of prediction
         enrolWindow: int
             Number of samples used to make each prediction
     
@@ -521,6 +533,8 @@ def GRU(
             Level of recurrent dropout
         alpha: float
             Alpha of the leaky relu function
+        training: boolean
+            Whether dropout should be use at time of prediction
         enrolWindow: int
             Number of samples used to make each prediction
     

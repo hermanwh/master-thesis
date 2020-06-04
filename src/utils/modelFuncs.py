@@ -37,9 +37,10 @@ import random
 random.seed(100)
 np.random.seed(100)
 
-# Prints the model summary of a machine learning model
-# The model summary is a list of structure and number of parameters
 def printModelSummary(model):
+    # Prints the model summary of a machine learning model
+    # The model summary is a list of structure and number of parameters
+
     if hasattr(model, "summary"):
         # Keras Model object
         print(model.summary())
@@ -59,9 +60,10 @@ def printModelSummary(model):
     else:
         print("Simple models have no summary")
     
-# Prints the model weights of a machine learning model
-# The model weights combined with the model architecture is what calculates the output
 def printModelWeights(model):
+    # Prints the model weights of a machine learning model
+    # The model weights combined with the model architecture is what calculates the output
+
     if hasattr(model, "summary"):
         # Keras Model object
         for layer in model.layers: print(layer.get_config(), layer.get_weights())
@@ -84,14 +86,16 @@ def printModelWeights(model):
         else:
             print("No weights found")
 
-# Plots models using the built-in Keras plotting function
 def plotKerasModel(model):
+    # Plots models using the built-in Keras plotting function
+
     plot_model(model.model)
 
-# Two callbacks are used by default for all models:
-# - EarlyStopping (stop training when validation loss increases)
-# - ReduceLROnPlateau (reduce learning rate to facilitate continued learning)
 def getBasicCallbacks(monitor="val_loss", patience_es=200, patience_rlr=80):
+    # Two callbacks are used by default for all models:
+    # - EarlyStopping (stop training when validation loss increases)
+    # - ReduceLROnPlateau (reduce learning rate to facilitate continued learning)
+
     return [
         EarlyStopping(
             monitor = monitor, min_delta = 0.00001, patience = patience_es, mode = 'auto', restore_best_weights=True
@@ -101,8 +105,9 @@ def getBasicCallbacks(monitor="val_loss", patience_es=200, patience_rlr=80):
         )
     ]
 
-# Some default hyperparameters used
 def getBasicHyperparams():
+    # Some default hyperparameters used
+
     return {
         'activation': 'relu',
         'loss': 'mean_squared_error',
@@ -110,8 +115,9 @@ def getBasicHyperparams():
         'metrics': ['mean_squared_error'],
     }
 
-# Trains or loads each model of a provided list of models
 def trainModels(modelList, filename, targetColumns, retrain=False, save=True):
+    # Trains or loads each model of a provided list of models
+
     if retrain:
         for mod in modelList:
             print("Training model " + mod.name)
@@ -148,8 +154,9 @@ def trainModels(modelList, filename, targetColumns, retrain=False, save=True):
         prints.printTrainingSummary(trainingSummary)
         plots.plotTrainingSummary(trainingSummary)
 
-# Loads a single model based on a defined modelname-filename-targetColumns combination
 def loadModel(modelname, filename, targetColumns, ensembleName=None):
+    # Loads a single model based on a defined modelname-filename-targetColumns combination
+
     subdir = filename.split('/')[-2]
     datafile = filename.split('/')[-1].split('.')[0]
     joinedColumns = "_".join(targetColumns)
@@ -170,8 +177,9 @@ def loadModel(modelname, filename, targetColumns, ensembleName=None):
         history = None
     return [model, history]
 
-# Saves each model of a provided list of models
 def saveModels(modelList, filename, targetColumns):
+    # Saves each model of a provided list of models
+
     subdir = filename.split('/')[-2]
     datafile = filename.split('/')[-1].split('.')[0]
     joinedColumns = "_".join(targetColumns)
@@ -186,8 +194,9 @@ def saveModels(modelList, filename, targetColumns):
         metricsPath = directory + modName + '_' + joinedColumns + ".txt"
         model.save(modelPath, modelName)
 
-# Calculates relevant metrics such as validation loss, loss and length of model training
 def getTrainingSummary(modelList):
+    # Calculates relevant metrics such as validation loss, loss and length of model training
+
     loss_dict = {}
     modelNames = list(map(lambda mod: mod.name, modelList))
     for model in modelList:
@@ -232,9 +241,10 @@ def getTrainingSummary(modelList):
                     }
     return loss_dict
 
-# Splits a dataset into training and validation data for use in RNN networks
-# By default, 20% of data is used for validation
 def getRNNSplit(x_data, y_data, lookback, validation_split=0.2):
+    # Splits a dataset into training and validation data for use in RNN networks
+    # By default, 20% of data is used for validation
+
     num_x_signals = x_data.shape[1]
     num_y_signals = y_data.shape[1]
 
@@ -260,7 +270,6 @@ def getRNNSplit(x_data, y_data, lookback, validation_split=0.2):
     samples = list(range(num_x_samples-lookback))
     valid_samples = list(set(samples)-set(train_samples))    
 
-    # Fill the batch with random sequences of data.
     for i, sample in enumerate(train_samples):
         X[i] = x_data[sample:sample+lookback]
         Y[i] = y_data[sample+lookback]

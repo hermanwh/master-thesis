@@ -27,10 +27,10 @@ def initDataframe(filename, relevantColumns, labelNames):
 
     return df
 
-# Reads a provided filename string
-# NB1: requires .csv or .xls format
-# NB2: date column must be named 'Date' or 'time'
 def readDataFile(filename):
+    # Reads a provided filename string
+    # NB1: requires .csv or .xls format
+    # NB2: date column must be named 'Date' or 'time'
     ext = filename[-4:]
     if ext == '.csv':
         df = pd.read_csv(filename)
