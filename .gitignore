@@ -131,7 +131,5 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
-testing.py
-testing2.py
-testing3.py
-testing4.py
+# VS-code settings
+.vscode/

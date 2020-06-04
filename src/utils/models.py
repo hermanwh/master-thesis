@@ -501,7 +501,7 @@ def kerasMLP(
             Dense(
                 neurons,
                 activation=activation,
-                kernel_regularizer=l2(l1=l1_rate, l2=l2_rate),
+                kernel_regularizer=l1_l2(l1=l1_rate, l2=l2_rate),
             )
         )
         if dropout is not None:
