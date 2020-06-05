@@ -65,8 +65,8 @@ def initDataframe(filename, columns, irrelevantColumns):
             columnNames excluded from the dataset
     
     RETURNS:
-        df: Pandas dataframe
-            Dataframe generated from file and metadata
+        List[relevantColumns, columnDescriptions, columnUnits, columnNames, df]:
+            [Dict, Dict, Dict, Dict, Pandas dataframe]
     """
     
     columnNames = list(map(lambda el: el[0], columns))
