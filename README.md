@@ -10,10 +10,11 @@ This repository hosts the code used through my research, and to obtain the final
 The repository contains:
 - Notebook examples (".ipynb" files at the top level)
 - Python examples ("py_examples" folder, NB: highly recommend using the notebook examples instead)
-- Dataset profiling ("profiling" folder, NB: highly recommend using the "profiling" notebooks first)
+- Dataset profiling ("profiling" folder, NB: highly recommend using the "profiling" notebooks instead)
 - Code documentation ("docs" folder, NB: use [htmlpreview.github.io](https://htmlpreview.github.io/?) to view .html files)
 - Source code ("src" folder)
 - Installation guide (below)
+- PyPi package guide (below)
 - Thesis summary (below)
 
 The code documentation can be viewed here: https://htmlpreview.github.io/?https://github.com/hermanwh/master-thesis/blob/master/docs/index.html
@@ -21,10 +22,25 @@ The code documentation can be viewed here: https://htmlpreview.github.io/?https:
 The source code is structured as follows:
 - core.py: high-level stateful module (relevant)
 - core_stateless.py: high-level stateless module (relevant)
-- core_configs.py: used for specific datasets, which are not available for the reader (not relevant)
+- core_configs.py: used for specific datasets, which are not available for the reader (not as relevant)
 - data folder: runnable .py files for various preprocessing use cases (not relevant)
 - ml folder: runnable .py files for various machine learning use cases + trained ML models (not relevant)
 - utils: low-level implementation (relevant)
+
+The Jupyter Notebook examples are as follows:
+- 0_profiling_X.ipynb: dataset profiling for datasets D, F and G, respectively
+- 1_correlation.ipynb: correlation analysis
+- 1_pca.ipynb: principal component analysis
+- 2_basic_example_D_c.ipynb: stateful module example for datasets D_c, D_h, F and G, respectively
+- 3_lstm_arch_comp.ipynb: LSTM architecture comparison
+- 3_lstm_dout_comp.ipynb: LSTM dropout regularization comparison
+- 3_mae_mse_comp.ipynb: Mean Absolute Error and Mean Squared Error comparison
+- 3_mlp_arch_comp.ipynb: MLP architecture comparison
+- 3_mlp_dout_comp.ipynb: MLP dropout regularization comparison
+- 3_mlp_regu_comp.ipynb: MLP LASSO regularization comparison
+- 3_model_comp_X.ipynb: Comparison of predictive models A-E using linear, MLP and LSTM models, respectively
+- 4_pred_cross_mod.ipynb: Comparison of predicting with models trained on different models
+- 4_pred_uncertainty.ipynb: Assessment of model uncertainty when using dropout regularization
 
 #### Installing required packages
 To install the required packages for running this project, do the following:
@@ -41,7 +57,7 @@ To install the required packages for running this project, do the following:
    python -m pip install --user virtualenv
 
 6. Create venv with Python 3.6  
-   python -m virtualenv -p path\to\python\3.6\python.exe venv  
+   python -m virtualenv -p path\to\python\3.6\python.exe nameOfVirtualEnv  
    e.g.  
    python -m virtualenv -p C:\Users\USERNAME\AppData\Local\Programs\Python\Python36\python.exe venv  
 
@@ -52,7 +68,8 @@ To install the required packages for running this project, do the following:
    pip install -r requirements.txt
 
 #### PyPi package of this project
-A Python package with similar functionality is available at the following URL: [https://pypi.org/project/howiml/](https://pypi.org/project/howiml/).
+A Python package with similar functionality is available at the following URL: [https://pypi.org/project/howiml/](https://pypi.org/project/howiml/).  
+The corresponding GitHub repository is available at: [https://github.com/hermanwh/howi-ml](https://github.com/hermanwh/howi-ml)  
 
 To install and use the PyPi package, do the following:
 1. Install Python 3.6 (no need to put in path)  
@@ -66,7 +83,7 @@ To install and use the PyPi package, do the following:
    python -m pip install --user virtualenv
 
 5. Create venv with Python 3.6  
-   python -m virtualenv -p path\to\python\3.6\python.exe venv  
+   python -m virtualenv -p path\to\python\3.6\python.exe nameOfVirtualEnv  
    e.g.  
    python -m virtualenv -p C:\Users\USERNAME\AppData\Local\Programs\Python\Python36\python.exe venv  
 
