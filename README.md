@@ -6,9 +6,6 @@ This is the code repository for my thesis, which concludes a Master of Science d
 #### Repository intent
 This repository hosts the code used through my research, and to obtain the final results. The code may be used by forking or otherwise downloading the code. Additionally, the same functionality is exported as a PyPi package which can be installed using pip
 
-#### PyPi package of this project
-A Python package with similar functionality is available at the following URL: [pypi](https://pypi.org/)
-
 #### Contents
 The repository contains:
 - Notebook examples (".ipynb" files at the top level)
@@ -53,6 +50,32 @@ To install the required packages for running this project, do the following:
 
 8. Install packages using requirements_local.txt  
    pip install -r requirements.txt
+
+#### PyPi package of this project
+A Python package with similar functionality is available at the following URL: [https://pypi.org/project/howiml/](https://pypi.org/project/howiml/).
+
+To install and use the PyPi package, do the following:
+1. Install Python 3.6 (no need to put in path)  
+
+2. Create a new project folder  
+
+3. Update pip  
+   python -m pip install --upgrade pip  
+
+4. Install virtualenv  
+   python -m pip install --user virtualenv
+
+5. Create venv with Python 3.6  
+   python -m virtualenv -p path\to\python\3.6\python.exe venv  
+   e.g.  
+   python -m virtualenv -p C:\Users\USERNAME\AppData\Local\Programs\Python\Python36\python.exe venv  
+
+6. Activate virtual environment  
+   venv\scripts\activate  
+
+7. Install PyPi package using pip  
+   pip install howiml
+
 
 ## Abstract
 Heat exchangers are among the key components in oil and gas processing, by facilitating heat transfer between separated fluids. Optimal utilisation of this capability is necessary to ensure high energy efficiency in processing facilities. During operation, heat exchangers experience accumulation of unwanted material on the heat transfer surfaces, which reduces thermal conductivity and hinders fluid flow. Because of this, implementing condition monitoring to estimate heat exchanger performance is vital. Traditional monitoring techniques have proven unreliable in practice. Hence, Equinor is looking to incorporate machine learning methods in the evaluation of heat exchanger performance. Additionally, it is desirable to determine a minimal set of sensors that suffice to monitor heat exchangers for future, potentially unmanned, processing facilities.
