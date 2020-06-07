@@ -1,10 +1,10 @@
-# Master thesis: Condition Monitoring of Heat Exchangers using Machine Learning
+# Master thesis: Condition Monitoring of Heat Exchangers Using Machine Learning
 By Herman Wika Horn
 
 This is the code repository for my thesis, which concludes a Master of Science degree at the Norwegian University of Science and Technology (NTNU), as part of the Engineering and ICT study program with a specialization in ICT and Mechanical Engineering. The presented study is a collaboration between Equinor ASA and the Department of Mechanical and Industrial Engineering (MTP), focusing on the application of machine learning methods for the oil and gas domain.
 
 #### Repository intent
-This repository hosts the code used through my research, and to obtain the final results. The code may be used by forking or otherwise downloading the code. Additionally, the same functionality is exported as a PyPi package which can be installed using pip
+This repository hosts the code used through my research, and to obtain the final results. The code may be used by forking or otherwise downloading the code. Additionally, the same functionality is exported as a PyPi package which can be installed using pip.
 
 #### Contents
 The repository contains:
@@ -135,7 +135,7 @@ Use of both the high-level module and additional functionality is demonstrated t
 The reader is referred to the notebooks for the practical demonstration. Data profiling is performed for each facility. Unsupervised methods include PCA and correlation analysis. Supervised methods include applying the predictive models A-E to each facility, as well as extensive comparison of network architectures, regularization parameters and loss metrics. Experimental use cases include performing predictions with models trained on different datasets, as well as model uncertainty assessment.
 
 ## Results
-Predictive models A and C are found to accurately estimate the level of fouling. Predictive models B, D and E are found to experience problems with overfitting for the coolant valve opening parameter.
+Predictive models A and C are found to accurately estimate the level of fouling. Predictive models B, D and E are found to experience problems with overfitting for the coolant valve opening parameter. Peformance of LSTM models is considered particularly promising.
 
 ### Linear model, dataset D
 ![Prediction linear model, dataset D](https://github.com/hermanwh/master-thesis/blob/master/figures/pred_1.png?raw=true)
