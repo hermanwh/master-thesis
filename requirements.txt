@@ -102,7 +102,7 @@ six==1.14.0
 sklearn==0.0
 tangled-up-in-unicode==0.0.3
 tensorboard==2.1.1
-tensorflow==2.1.0
+tensorflow==2.1.2
 tensorflow-estimator==2.1.0
 termcolor==1.1.0
 terminado==0.8.3
