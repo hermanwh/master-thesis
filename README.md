@@ -117,10 +117,10 @@ Because the fouling level for real processing facilities cannot be measured dire
 
 To facilitate evaluation of the proposed fouling indicators for a controlled and deterministic fouling environment, the use of simulated data for model benchmarking is suggested. During system simulations using appropriate process modeling software, the fouling factor of a heat exchanger module can be set explicitly. Because fouling factor in itself is immeasurable in practice, using simulated data is the only way of comparing predictive results with factual data. Fouling indicators can be reevaluated and applied for real facilities based on their ability to predict the added level of fouling for simulated datasets. For this reason, datasets obtained both through simulations and gathered from real facilities are used throughout this thesis.
 
-Equations are derived that justify the prediction of coolant outlet temperature with the use of coolant inlet temperture, process inlet temperture, process outlet temperture, and process flow rate. Predictive models are defined as follows:
+Equations are derived that justify the prediction of coolant outlet temperature with the use of coolant inlet temperture, process inlet temperture, process outlet temperture, and process flow rate. Predictive models are defined as follows:  
 ![Predictive models A-E](https://github.com/hermanwh/master-thesis/blob/master/figures/predictive_models.PNG?raw=true)
 
-The predictive models are based on the following hypotheses:
+The predictive models are based on the following hypotheses:  
 ![Hypotheses](https://github.com/hermanwh/master-thesis/blob/master/figures/hypotheses.PNG?raw=true)
 
 Performance is known for simulated dataset D, while for real facilities it can be roughly estimated based on inspection of heat exchanger data and knowledge of maintenance dates. Separate testing sets are not used to validate the trained models. Model performance is primarily evaluated based on empirical interpretation of predictions performed on a portion of data not used for training or validation, in addition to calculated metrics like validation loss and coefficient of determination. Using empirical analysis to evaluate model performance has obvious drawbacks, as it does not generalize well for arbitrary processing facilities and requires extensive domain knowledge. However, with the shortcomings of simple metrics and the otherwise large scope of this thesis, it is considered unproducable to implement more advanced evaluation metrics.
